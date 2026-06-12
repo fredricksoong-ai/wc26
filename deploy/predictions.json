@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-06-12 17:48 UTC",
+  "generated_utc": "2026-06-12 18:07 UTC",
   "model": "Dixon-Coles (xi=0.001) + Elo ensemble (w_DC=0.6), neutral venues",
   "scoring": {
     "result_pts": 2,
@@ -161,10 +161,11 @@
       "p_home": 0.463,
       "p_draw": 0.291,
       "p_away": 0.246,
-      "model_pick": "1-0",
-      "model_pick_result": "home",
-      "model_pick_prob": 0.131,
-      "exp_pts": 1.32,
+      "model_pick": "1-1",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.142,
+      "xg_home": 1.26,
+      "xg_away": 0.92,
       "top_scores": [
         [
           "1-1",
@@ -191,7 +192,7 @@
           0.082
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -208,10 +209,11 @@
       "p_home": 0.415,
       "p_draw": 0.309,
       "p_away": 0.277,
-      "model_pick": "1-0",
-      "model_pick_result": "home",
-      "model_pick_prob": 0.138,
-      "exp_pts": 1.242,
+      "model_pick": "0-0",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.147,
+      "xg_home": 1.1,
+      "xg_away": 0.9,
       "top_scores": [
         [
           "0-0",
@@ -238,7 +240,7 @@
           0.074
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -258,7 +260,8 @@
       "model_pick": "0-1",
       "model_pick_result": "away",
       "model_pick_prob": 0.15,
-      "exp_pts": 1.621,
+      "xg_home": 0.72,
+      "xg_away": 1.56,
       "top_scores": [
         [
           "0-1",
@@ -285,7 +288,7 @@
           0.065
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -305,7 +308,8 @@
       "model_pick": "0-1",
       "model_pick_result": "away",
       "model_pick_prob": 0.161,
-      "exp_pts": 1.723,
+      "xg_home": 0.65,
+      "xg_away": 1.57,
       "top_scores": [
         [
           "0-1",
@@ -332,7 +336,7 @@
           0.07
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -352,7 +356,8 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.177,
-      "exp_pts": 1.86,
+      "xg_home": 1.73,
+      "xg_away": 0.51,
       "top_scores": [
         [
           "1-0",
@@ -379,7 +384,7 @@
           0.081
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -399,7 +404,8 @@
       "model_pick": "0-2",
       "model_pick_result": "away",
       "model_pick_prob": 0.115,
-      "exp_pts": 1.864,
+      "xg_home": 0.81,
+      "xg_away": 2.46,
       "top_scores": [
         [
           "0-2",
@@ -426,7 +432,7 @@
           0.076
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -446,7 +452,8 @@
       "model_pick": "2-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.143,
-      "exp_pts": 1.865,
+      "xg_home": 2.13,
+      "xg_away": 0.64,
       "top_scores": [
         [
           "2-0",
@@ -473,7 +480,7 @@
           0.07
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -493,7 +500,8 @@
       "model_pick": "2-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.143,
-      "exp_pts": 1.851,
+      "xg_home": 2.01,
+      "xg_away": 0.64,
       "top_scores": [
         [
           "2-0",
@@ -520,7 +528,7 @@
           0.078
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -537,10 +545,11 @@
       "p_home": 0.373,
       "p_draw": 0.303,
       "p_away": 0.324,
-      "model_pick": "1-0",
-      "model_pick_result": "home",
-      "model_pick_prob": 0.111,
-      "exp_pts": 1.08,
+      "model_pick": "1-1",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.146,
+      "xg_home": 1.07,
+      "xg_away": 1.1,
       "top_scores": [
         [
           "1-1",
@@ -567,7 +576,7 @@
           0.072
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -584,10 +593,11 @@
       "p_home": 0.377,
       "p_draw": 0.289,
       "p_away": 0.334,
-      "model_pick": "1-0",
-      "model_pick_result": "home",
-      "model_pick_prob": 0.091,
-      "exp_pts": 1.027,
+      "model_pick": "1-1",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.14,
+      "xg_home": 1.17,
+      "xg_away": 1.27,
       "top_scores": [
         [
           "1-1",
@@ -614,7 +624,7 @@
           0.076
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -631,10 +641,11 @@
       "p_home": 0.436,
       "p_draw": 0.316,
       "p_away": 0.248,
-      "model_pick": "1-0",
-      "model_pick_result": "home",
-      "model_pick_prob": 0.169,
-      "exp_pts": 1.381,
+      "model_pick": "0-0",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.173,
+      "xg_home": 1.11,
+      "xg_away": 0.71,
       "top_scores": [
         [
           "0-0",
@@ -661,7 +672,7 @@
           0.071
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -678,10 +689,11 @@
       "p_home": 0.22,
       "p_draw": 0.257,
       "p_away": 0.524,
-      "model_pick": "0-1",
-      "model_pick_result": "away",
-      "model_pick_prob": 0.098,
-      "exp_pts": 1.343,
+      "model_pick": "1-1",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.127,
+      "xg_home": 1.08,
+      "xg_away": 1.63,
       "top_scores": [
         [
           "1-1",
@@ -708,7 +720,7 @@
           0.063
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -728,7 +740,8 @@
       "model_pick": "0-1",
       "model_pick_result": "away",
       "model_pick_prob": 0.197,
-      "exp_pts": 1.709,
+      "xg_home": 0.52,
+      "xg_away": 1.36,
       "top_scores": [
         [
           "0-1",
@@ -755,7 +768,7 @@
           0.071
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -775,7 +788,8 @@
       "model_pick": "3-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.124,
-      "exp_pts": 2.083,
+      "xg_home": 3.45,
+      "xg_away": 0.56,
       "top_scores": [
         [
           "3-0",
@@ -802,7 +816,7 @@
           0.061
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -822,7 +836,8 @@
       "model_pick": "0-2",
       "model_pick_result": "away",
       "model_pick_prob": 0.134,
-      "exp_pts": 1.845,
+      "xg_home": 0.63,
+      "xg_away": 2.57,
       "top_scores": [
         [
           "0-2",
@@ -849,7 +864,7 @@
           0.073
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -869,7 +884,8 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.177,
-      "exp_pts": 1.964,
+      "xg_home": 1.83,
+      "xg_away": 0.47,
       "top_scores": [
         [
           "1-0",
@@ -896,7 +912,7 @@
           0.079
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -913,10 +929,11 @@
       "p_home": 0.258,
       "p_draw": 0.293,
       "p_away": 0.449,
-      "model_pick": "0-1",
-      "model_pick_result": "away",
-      "model_pick_prob": 0.132,
-      "exp_pts": 1.295,
+      "model_pick": "1-1",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.139,
+      "xg_home": 0.9,
+      "xg_away": 1.35,
       "top_scores": [
         [
           "1-1",
@@ -943,7 +960,7 @@
           0.084
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -960,10 +977,11 @@
       "p_home": 0.407,
       "p_draw": 0.287,
       "p_away": 0.306,
-      "model_pick": "1-0",
-      "model_pick_result": "home",
-      "model_pick_prob": 0.134,
-      "exp_pts": 1.217,
+      "model_pick": "1-1",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.135,
+      "xg_home": 1.43,
+      "xg_away": 0.86,
       "top_scores": [
         [
           "1-1",
@@ -990,7 +1008,7 @@
           0.077
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -1007,10 +1025,11 @@
       "p_home": 0.272,
       "p_draw": 0.296,
       "p_away": 0.432,
-      "model_pick": "0-1",
-      "model_pick_result": "away",
-      "model_pick_prob": 0.129,
-      "exp_pts": 1.251,
+      "model_pick": "1-1",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.141,
+      "xg_home": 0.93,
+      "xg_away": 1.3,
       "top_scores": [
         [
           "1-1",
@@ -1037,7 +1056,7 @@
           0.085
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -1057,7 +1076,8 @@
       "model_pick": "0-1",
       "model_pick_result": "away",
       "model_pick_prob": 0.137,
-      "exp_pts": 1.258,
+      "xg_home": 0.83,
+      "xg_away": 1.48,
       "top_scores": [
         [
           "0-1",
@@ -1084,7 +1104,7 @@
           0.072
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -1101,10 +1121,11 @@
       "p_home": 0.392,
       "p_draw": 0.263,
       "p_away": 0.345,
-      "model_pick": "2-1",
-      "model_pick_result": "home",
-      "model_pick_prob": 0.076,
-      "exp_pts": 1.012,
+      "model_pick": "1-1",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.122,
+      "xg_home": 1.35,
+      "xg_away": 1.6,
       "top_scores": [
         [
           "1-1",
@@ -1131,7 +1152,7 @@
           0.061
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -1151,7 +1172,8 @@
       "model_pick": "0-0",
       "model_pick_result": "draw",
       "model_pick_prob": 0.202,
-      "exp_pts": 1.277,
+      "xg_home": 0.86,
+      "xg_away": 0.8,
       "top_scores": [
         [
           "0-0",
@@ -1178,7 +1200,7 @@
           0.061
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -1198,7 +1220,8 @@
       "model_pick": "3-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.115,
-      "exp_pts": 2.016,
+      "xg_home": 3.04,
+      "xg_away": 0.67,
       "top_scores": [
         [
           "3-0",
@@ -1225,7 +1248,7 @@
           0.07
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -1242,10 +1265,11 @@
       "p_home": 0.153,
       "p_draw": 0.306,
       "p_away": 0.541,
-      "model_pick": "0-1",
-      "model_pick_result": "away",
-      "model_pick_prob": 0.224,
-      "exp_pts": 1.754,
+      "model_pick": "0-0",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.233,
+      "xg_home": 0.46,
+      "xg_away": 1.04,
       "top_scores": [
         [
           "0-0",
@@ -1272,7 +1296,7 @@
           0.055
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -1289,10 +1313,11 @@
       "p_home": 0.532,
       "p_draw": 0.261,
       "p_away": 0.207,
-      "model_pick": "1-0",
-      "model_pick_result": "home",
-      "model_pick_prob": 0.118,
-      "exp_pts": 1.419,
+      "model_pick": "1-1",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.135,
+      "xg_home": 1.46,
+      "xg_away": 0.97,
       "top_scores": [
         [
           "1-1",
@@ -1319,7 +1344,7 @@
           0.075
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -1339,7 +1364,8 @@
       "model_pick": "2-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.196,
-      "exp_pts": 2.219,
+      "xg_home": 2.16,
+      "xg_away": 0.32,
       "top_scores": [
         [
           "2-0",
@@ -1366,7 +1392,7 @@
           0.062
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -1386,7 +1412,8 @@
       "model_pick": "0-1",
       "model_pick_result": "away",
       "model_pick_prob": 0.16,
-      "exp_pts": 1.768,
+      "xg_home": 0.58,
+      "xg_away": 1.76,
       "top_scores": [
         [
           "0-1",
@@ -1413,7 +1440,7 @@
           0.087
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -1433,7 +1460,8 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.153,
-      "exp_pts": 1.279,
+      "xg_home": 1.19,
+      "xg_away": 0.79,
       "top_scores": [
         [
           "1-0",
@@ -1460,7 +1488,7 @@
           0.077
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -1477,10 +1505,11 @@
       "p_home": 0.297,
       "p_draw": 0.292,
       "p_away": 0.411,
-      "model_pick": "0-1",
-      "model_pick_result": "away",
-      "model_pick_prob": 0.126,
-      "exp_pts": 1.199,
+      "model_pick": "1-1",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.138,
+      "xg_home": 0.93,
+      "xg_away": 1.39,
       "top_scores": [
         [
           "1-1",
@@ -1507,7 +1536,7 @@
           0.081
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -1524,10 +1553,11 @@
       "p_home": 0.366,
       "p_draw": 0.3,
       "p_away": 0.334,
-      "model_pick": "1-0",
-      "model_pick_result": "home",
-      "model_pick_prob": 0.105,
-      "exp_pts": 1.046,
+      "model_pick": "1-1",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.144,
+      "xg_home": 1.1,
+      "xg_away": 1.15,
       "top_scores": [
         [
           "1-1",
@@ -1554,7 +1584,7 @@
           0.073
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -1574,7 +1604,8 @@
       "model_pick": "2-1",
       "model_pick_result": "home",
       "model_pick_prob": 0.098,
-      "exp_pts": 1.587,
+      "xg_home": 2.24,
+      "xg_away": 1.05,
       "top_scores": [
         [
           "2-1",
@@ -1601,7 +1632,7 @@
           0.07
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -1621,7 +1652,8 @@
       "model_pick": "0-1",
       "model_pick_result": "away",
       "model_pick_prob": 0.201,
-      "exp_pts": 1.891,
+      "xg_home": 0.48,
+      "xg_away": 1.46,
       "top_scores": [
         [
           "0-1",
@@ -1648,7 +1680,7 @@
           0.073
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -1668,7 +1700,8 @@
       "model_pick": "2-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.135,
-      "exp_pts": 1.77,
+      "xg_home": 2.18,
+      "xg_away": 0.69,
       "top_scores": [
         [
           "2-0",
@@ -1695,7 +1728,7 @@
           0.067
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -1715,7 +1748,8 @@
       "model_pick": "0-1",
       "model_pick_result": "away",
       "model_pick_prob": 0.152,
-      "exp_pts": 1.683,
+      "xg_home": 0.73,
+      "xg_away": 1.49,
       "top_scores": [
         [
           "0-1",
@@ -1742,7 +1776,7 @@
           0.069
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -1762,7 +1796,8 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.156,
-      "exp_pts": 1.448,
+      "xg_home": 1.22,
+      "xg_away": 0.77,
       "top_scores": [
         [
           "1-0",
@@ -1789,7 +1824,7 @@
           0.078
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -1809,7 +1844,8 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.139,
-      "exp_pts": 1.495,
+      "xg_home": 1.46,
+      "xg_away": 0.82,
       "top_scores": [
         [
           "1-0",
@@ -1836,7 +1872,7 @@
           0.074
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -1853,10 +1889,11 @@
       "p_home": 0.386,
       "p_draw": 0.293,
       "p_away": 0.322,
-      "model_pick": "1-0",
-      "model_pick_result": "home",
-      "model_pick_prob": 0.1,
-      "exp_pts": 1.071,
+      "model_pick": "1-1",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.142,
+      "xg_home": 1.21,
+      "xg_away": 1.18,
       "top_scores": [
         [
           "1-1",
@@ -1883,7 +1920,7 @@
           0.077
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -1900,10 +1937,11 @@
       "p_home": 0.276,
       "p_draw": 0.321,
       "p_away": 0.402,
-      "model_pick": "0-1",
-      "model_pick_result": "away",
-      "model_pick_prob": 0.15,
-      "exp_pts": 1.253,
+      "model_pick": "0-0",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.18,
+      "xg_home": 0.83,
+      "xg_away": 0.95,
       "top_scores": [
         [
           "0-0",
@@ -1930,7 +1968,7 @@
           0.063
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -1947,10 +1985,11 @@
       "p_home": 0.239,
       "p_draw": 0.31,
       "p_away": 0.45,
-      "model_pick": "0-1",
-      "model_pick_result": "away",
-      "model_pick_prob": 0.163,
-      "exp_pts": 1.391,
+      "model_pick": "0-0",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.164,
+      "xg_home": 0.74,
+      "xg_away": 1.13,
       "top_scores": [
         [
           "0-0",
@@ -1977,7 +2016,7 @@
           0.073
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -1994,10 +2033,11 @@
       "p_home": 0.173,
       "p_draw": 0.248,
       "p_away": 0.579,
-      "model_pick": "0-1",
-      "model_pick_result": "away",
+      "model_pick": "1-1",
+      "model_pick_result": "draw",
       "model_pick_prob": 0.129,
-      "exp_pts": 1.544,
+      "xg_home": 0.86,
+      "xg_away": 1.56,
       "top_scores": [
         [
           "1-1",
@@ -2024,7 +2064,7 @@
           0.066
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -2044,7 +2084,8 @@
       "model_pick": "2-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.16,
-      "exp_pts": 2.205,
+      "xg_home": 2.57,
+      "xg_away": 0.46,
       "top_scores": [
         [
           "2-0",
@@ -2071,7 +2112,7 @@
           0.063
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -2091,7 +2132,8 @@
       "model_pick": "0-1",
       "model_pick_result": "away",
       "model_pick_prob": 0.231,
-      "exp_pts": 1.992,
+      "xg_home": 0.38,
+      "xg_away": 1.39,
       "top_scores": [
         [
           "0-1",
@@ -2118,7 +2160,7 @@
           0.062
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -2138,7 +2180,8 @@
       "model_pick": "2-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.166,
-      "exp_pts": 2.068,
+      "xg_home": 1.93,
+      "xg_away": 0.49,
       "top_scores": [
         [
           "2-0",
@@ -2165,7 +2208,7 @@
           0.081
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -2185,7 +2228,8 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.199,
-      "exp_pts": 2.086,
+      "xg_home": 1.85,
+      "xg_away": 0.35,
       "top_scores": [
         [
           "1-0",
@@ -2212,7 +2256,7 @@
           0.067
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -2229,10 +2273,11 @@
       "p_home": 0.257,
       "p_draw": 0.329,
       "p_away": 0.414,
-      "model_pick": "0-1",
-      "model_pick_result": "away",
-      "model_pick_prob": 0.174,
-      "exp_pts": 1.35,
+      "model_pick": "0-0",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.199,
+      "xg_home": 0.69,
+      "xg_away": 0.98,
       "top_scores": [
         [
           "0-0",
@@ -2259,7 +2304,7 @@
           0.062
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -2276,10 +2321,11 @@
       "p_home": 0.24,
       "p_draw": 0.284,
       "p_away": 0.476,
-      "model_pick": "0-1",
-      "model_pick_result": "away",
-      "model_pick_prob": 0.135,
-      "exp_pts": 1.358,
+      "model_pick": "0-0",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.16,
+      "xg_home": 0.92,
+      "xg_away": 0.98,
       "top_scores": [
         [
           "0-0",
@@ -2306,7 +2352,7 @@
           0.066
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -2323,10 +2369,11 @@
       "p_home": 0.519,
       "p_draw": 0.27,
       "p_away": 0.211,
-      "model_pick": "1-0",
-      "model_pick_result": "home",
-      "model_pick_prob": 0.131,
-      "exp_pts": 1.432,
+      "model_pick": "1-1",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.141,
+      "xg_home": 1.3,
+      "xg_away": 0.91,
       "top_scores": [
         [
           "1-1",
@@ -2353,7 +2400,7 @@
           0.085
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -2373,7 +2420,8 @@
       "model_pick": "0-1",
       "model_pick_result": "away",
       "model_pick_prob": 0.154,
-      "exp_pts": 1.639,
+      "xg_home": 0.72,
+      "xg_away": 1.47,
       "top_scores": [
         [
           "0-1",
@@ -2400,7 +2448,7 @@
           0.071
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -2420,7 +2468,8 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.18,
-      "exp_pts": 1.939,
+      "xg_home": 1.61,
+      "xg_away": 0.54,
       "top_scores": [
         [
           "1-0",
@@ -2447,7 +2496,7 @@
           0.081
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -2464,10 +2513,11 @@
       "p_home": 0.382,
       "p_draw": 0.29,
       "p_away": 0.328,
-      "model_pick": "1-0",
-      "model_pick_result": "home",
-      "model_pick_prob": 0.095,
-      "exp_pts": 1.049,
+      "model_pick": "1-1",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.141,
+      "xg_home": 1.19,
+      "xg_away": 1.23,
       "top_scores": [
         [
           "1-1",
@@ -2494,7 +2544,7 @@
           0.077
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -2511,10 +2561,11 @@
       "p_home": 0.23,
       "p_draw": 0.263,
       "p_away": 0.507,
-      "model_pick": "0-1",
-      "model_pick_result": "away",
-      "model_pick_prob": 0.1,
-      "exp_pts": 1.315,
+      "model_pick": "1-1",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.129,
+      "xg_home": 1.08,
+      "xg_away": 1.59,
       "top_scores": [
         [
           "1-1",
@@ -2541,7 +2592,7 @@
           0.065
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -2561,7 +2612,8 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.189,
-      "exp_pts": 1.641,
+      "xg_home": 1.25,
+      "xg_away": 0.59,
       "top_scores": [
         [
           "1-0",
@@ -2588,7 +2640,7 @@
           0.073
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -2608,7 +2660,8 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.193,
-      "exp_pts": 1.985,
+      "xg_home": 1.73,
+      "xg_away": 0.43,
       "top_scores": [
         [
           "1-0",
@@ -2635,7 +2688,7 @@
           0.074
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -2652,10 +2705,11 @@
       "p_home": 0.503,
       "p_draw": 0.268,
       "p_away": 0.229,
-      "model_pick": "1-0",
-      "model_pick_result": "home",
-      "model_pick_prob": 0.108,
-      "exp_pts": 1.329,
+      "model_pick": "1-1",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.129,
+      "xg_home": 1.59,
+      "xg_away": 1.01,
       "top_scores": [
         [
           "1-1",
@@ -2682,7 +2736,7 @@
           0.065
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -2702,7 +2756,8 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.192,
-      "exp_pts": 2.022,
+      "xg_home": 1.85,
+      "xg_away": 0.38,
       "top_scores": [
         [
           "1-0",
@@ -2729,7 +2784,7 @@
           0.07
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -2746,10 +2801,11 @@
       "p_home": 0.207,
       "p_draw": 0.257,
       "p_away": 0.535,
-      "model_pick": "0-1",
-      "model_pick_result": "away",
-      "model_pick_prob": 0.108,
-      "exp_pts": 1.394,
+      "model_pick": "1-1",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.12,
+      "xg_home": 0.94,
+      "xg_away": 1.77,
       "top_scores": [
         [
           "1-1",
@@ -2776,7 +2832,7 @@
           0.061
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -2793,10 +2849,11 @@
       "p_home": 0.374,
       "p_draw": 0.303,
       "p_away": 0.323,
-      "model_pick": "1-0",
-      "model_pick_result": "home",
-      "model_pick_prob": 0.122,
-      "exp_pts": 1.113,
+      "model_pick": "1-1",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.144,
+      "xg_home": 1.2,
+      "xg_away": 1.0,
       "top_scores": [
         [
           "1-1",
@@ -2823,7 +2880,7 @@
           0.079
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -2843,7 +2900,8 @@
       "model_pick": "0-2",
       "model_pick_result": "away",
       "model_pick_prob": 0.169,
-      "exp_pts": 2.204,
+      "xg_home": 0.36,
+      "xg_away": 2.74,
       "top_scores": [
         [
           "0-2",
@@ -2870,7 +2928,7 @@
           0.058
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -2890,7 +2948,8 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.196,
-      "exp_pts": 1.83,
+      "xg_home": 1.35,
+      "xg_away": 0.53,
       "top_scores": [
         [
           "1-0",
@@ -2917,7 +2976,7 @@
           0.072
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -2937,7 +2996,8 @@
       "model_pick": "0-1",
       "model_pick_result": "away",
       "model_pick_prob": 0.179,
-      "exp_pts": 1.816,
+      "xg_home": 0.54,
+      "xg_away": 1.63,
       "top_scores": [
         [
           "0-1",
@@ -2964,7 +3024,7 @@
           0.082
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -2984,7 +3044,8 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.161,
-      "exp_pts": 1.602,
+      "xg_home": 1.35,
+      "xg_away": 0.72,
       "top_scores": [
         [
           "1-0",
@@ -3011,7 +3072,7 @@
           0.08
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -3031,7 +3092,8 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.208,
-      "exp_pts": 2.009,
+      "xg_home": 1.62,
+      "xg_away": 0.4,
       "top_scores": [
         [
           "1-0",
@@ -3058,7 +3120,7 @@
           0.07
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -3075,10 +3137,11 @@
       "p_home": 0.444,
       "p_draw": 0.285,
       "p_away": 0.271,
-      "model_pick": "1-0",
-      "model_pick_result": "home",
-      "model_pick_prob": 0.122,
-      "exp_pts": 1.254,
+      "model_pick": "1-1",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.133,
+      "xg_home": 1.49,
+      "xg_away": 0.93,
       "top_scores": [
         [
           "1-1",
@@ -3105,7 +3168,7 @@
           0.072
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -3125,7 +3188,8 @@
       "model_pick": "0-0",
       "model_pick_result": "draw",
       "model_pick_prob": 0.266,
-      "exp_pts": 1.511,
+      "xg_home": 0.58,
+      "xg_away": 0.78,
       "top_scores": [
         [
           "0-0",
@@ -3152,7 +3216,7 @@
           0.045
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -3172,7 +3236,8 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.163,
-      "exp_pts": 1.508,
+      "xg_home": 1.33,
+      "xg_away": 0.71,
       "top_scores": [
         [
           "1-0",
@@ -3199,7 +3264,7 @@
           0.082
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -3216,10 +3281,11 @@
       "p_home": 0.23,
       "p_draw": 0.265,
       "p_away": 0.506,
-      "model_pick": "0-1",
-      "model_pick_result": "away",
-      "model_pick_prob": 0.116,
-      "exp_pts": 1.359,
+      "model_pick": "1-1",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.142,
+      "xg_home": 1.03,
+      "xg_away": 1.27,
       "top_scores": [
         [
           "1-1",
@@ -3246,7 +3312,7 @@
           0.081
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -3266,7 +3332,8 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.177,
-      "exp_pts": 2.096,
+      "xg_home": 1.89,
+      "xg_away": 0.44,
       "top_scores": [
         [
           "1-0",
@@ -3293,7 +3360,7 @@
           0.076
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -3310,10 +3377,11 @@
       "p_home": 0.203,
       "p_draw": 0.262,
       "p_away": 0.536,
-      "model_pick": "0-1",
-      "model_pick_result": "away",
-      "model_pick_prob": 0.119,
-      "exp_pts": 1.427,
+      "model_pick": "1-1",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.125,
+      "xg_home": 0.9,
+      "xg_away": 1.67,
       "top_scores": [
         [
           "1-1",
@@ -3340,7 +3408,7 @@
           0.06
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -3360,7 +3428,8 @@
       "model_pick": "0-2",
       "model_pick_result": "away",
       "model_pick_prob": 0.152,
-      "exp_pts": 1.845,
+      "xg_home": 0.58,
+      "xg_away": 2.02,
       "top_scores": [
         [
           "0-2",
@@ -3387,7 +3456,7 @@
           0.082
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
@@ -3407,7 +3476,8 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.156,
-      "exp_pts": 1.79,
+      "xg_home": 1.56,
+      "xg_away": 0.68,
       "top_scores": [
         [
           "1-0",
@@ -3434,7 +3504,7 @@
           0.067
         ]
       ],
-      "updated_utc": "2026-06-12 17:48 UTC",
+      "updated_utc": "2026-06-12 18:07 UTC",
       "scored": false
     },
     {
