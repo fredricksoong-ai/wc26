@@ -1,0 +1,17 @@
+# secrets
+.env
+
+# data (downloaded / generated)
+data/raw/
+data/processed/
+*.csv
+!data/.gitkeep
+
+# python
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# os
+.DS_Store

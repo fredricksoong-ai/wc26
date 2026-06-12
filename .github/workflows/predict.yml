@@ -1,0 +1,44 @@
+name: Update predictions
+
+# Refreshes data + predictions and commits deploy/predictions.json.
+# Cloudflare Pages (watching this repo) then auto-deploys the dashboard.
+# No secrets required — all data sources are public.
+
+on:
+  schedule:
+    - cron: "0 9 * * *"     # 09:00 UTC daily
+    - cron: "0 21 * * *"    # 21:00 UTC daily (catch evening results during the tournament)
+  workflow_dispatch: {}      # manual "Run workflow" button
+
+permissions:
+  contents: write            # allow committing the refreshed JSON
+
+jobs:
+  predict:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install runtime deps
+        run: pip install pandas numpy scipy statsmodels requests
+
+      - name: Pull latest data (martj42 results + openfootball fixtures)
+        run: python scripts/update_data.py
+
+      - name: Validate the fixture list (104 games, 12 groups, dates)
+        run: python scripts/check_fixtures.py
+
+      - name: Generate predictions
+        run: python scripts/run_predictions.py
+
+      - name: Commit predictions.json if it changed
+        run: |
+          git config user.name  "wc-predictor-bot"
+          git config user.email "bot@local"
+          git add deploy/predictions.json
+          git diff --cached --quiet || git commit -m "Predictions $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git push

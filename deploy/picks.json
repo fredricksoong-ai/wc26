@@ -1,0 +1,288 @@
+{
+  "2026-06-11|Mexico|South Africa": {
+    "p_home": 0.666,
+    "p_draw": 0.228,
+    "p_away": 0.105,
+    "model_pick": "1-0",
+    "model_pick_result": "home",
+    "model_pick_prob": 0.194,
+    "exp_pts": 1.915,
+    "top_scores": [
+      [
+        "1-0",
+        0.194
+      ],
+      [
+        "2-0",
+        0.151
+      ],
+      [
+        "0-0",
+        0.145
+      ],
+      [
+        "1-1",
+        0.111
+      ],
+      [
+        "2-1",
+        0.076
+      ],
+      [
+        "3-0",
+        0.075
+      ]
+    ],
+    "updated_utc": "2026-06-12 17:07 UTC",
+    "played": true,
+    "scored": true,
+    "actual": [
+      2,
+      0
+    ],
+    "actual_outcome": "home",
+    "model_earned": 2,
+    "model_result_hit": true,
+    "model_exact_hit": false,
+    "max_points": 5,
+    "rps": 0.0614
+  },
+  "2026-06-11|South Korea|Czech Republic": {
+    "p_home": 0.525,
+    "p_draw": 0.264,
+    "p_away": 0.211,
+    "model_pick": "1-0",
+    "model_pick_result": "home",
+    "model_pick_prob": 0.116,
+    "exp_pts": 1.399,
+    "top_scores": [
+      [
+        "1-1",
+        0.126
+      ],
+      [
+        "1-0",
+        0.116
+      ],
+      [
+        "2-0",
+        0.104
+      ],
+      [
+        "2-1",
+        0.096
+      ],
+      [
+        "0-0",
+        0.086
+      ],
+      [
+        "0-1",
+        0.061
+      ]
+    ],
+    "updated_utc": "2026-06-12 17:07 UTC",
+    "played": true,
+    "scored": true,
+    "actual": [
+      2,
+      1
+    ],
+    "actual_outcome": "home",
+    "model_earned": 2,
+    "model_result_hit": true,
+    "model_exact_hit": false,
+    "max_points": 5,
+    "rps": 0.1351
+  },
+  "2026-06-12|Canada|Bosnia and Herzegovina": {
+    "p_home": 0.665,
+    "p_draw": 0.224,
+    "p_away": 0.111,
+    "model_pick": "1-0",
+    "model_pick_result": "home",
+    "model_pick_prob": 0.177,
+    "exp_pts": 1.86,
+    "top_scores": [
+      [
+        "1-0",
+        0.177
+      ],
+      [
+        "2-0",
+        0.16
+      ],
+      [
+        "0-0",
+        0.114
+      ],
+      [
+        "1-1",
+        0.101
+      ],
+      [
+        "3-0",
+        0.092
+      ],
+      [
+        "2-1",
+        0.081
+      ]
+    ],
+    "updated_utc": "2026-06-12 17:07 UTC",
+    "played": false,
+    "scored": false
+  },
+  "2026-06-12|United States|Paraguay": {
+    "p_home": 0.258,
+    "p_draw": 0.293,
+    "p_away": 0.449,
+    "model_pick": "0-1",
+    "model_pick_result": "away",
+    "model_pick_prob": 0.132,
+    "exp_pts": 1.295,
+    "top_scores": [
+      [
+        "1-1",
+        0.139
+      ],
+      [
+        "0-1",
+        0.132
+      ],
+      [
+        "0-0",
+        0.117
+      ],
+      [
+        "0-2",
+        0.096
+      ],
+      [
+        "1-2",
+        0.086
+      ],
+      [
+        "1-0",
+        0.084
+      ]
+    ],
+    "updated_utc": "2026-06-12 17:07 UTC",
+    "played": false,
+    "scored": false
+  },
+  "2026-06-13|Qatar|Switzerland": {
+    "p_home": 0.086,
+    "p_draw": 0.155,
+    "p_away": 0.759,
+    "model_pick": "0-2",
+    "model_pick_result": "away",
+    "model_pick_prob": 0.115,
+    "exp_pts": 1.864,
+    "top_scores": [
+      [
+        "0-2",
+        0.115
+      ],
+      [
+        "0-3",
+        0.095
+      ],
+      [
+        "1-2",
+        0.093
+      ],
+      [
+        "0-1",
+        0.087
+      ],
+      [
+        "1-1",
+        0.082
+      ],
+      [
+        "1-3",
+        0.076
+      ]
+    ],
+    "updated_utc": "2026-06-12 17:07 UTC",
+    "played": false,
+    "scored": false
+  },
+  "2026-06-13|Brazil|Morocco": {
+    "p_home": 0.436,
+    "p_draw": 0.316,
+    "p_away": 0.248,
+    "model_pick": "1-0",
+    "model_pick_result": "home",
+    "model_pick_prob": 0.169,
+    "exp_pts": 1.381,
+    "top_scores": [
+      [
+        "0-0",
+        0.173
+      ],
+      [
+        "1-0",
+        0.169
+      ],
+      [
+        "1-1",
+        0.138
+      ],
+      [
+        "0-1",
+        0.104
+      ],
+      [
+        "2-0",
+        0.1
+      ],
+      [
+        "2-1",
+        0.071
+      ]
+    ],
+    "updated_utc": "2026-06-12 17:07 UTC",
+    "played": false,
+    "scored": false
+  },
+  "2026-06-14|Germany|Cura\u00e7ao": {
+    "p_home": 0.836,
+    "p_draw": 0.112,
+    "p_away": 0.052,
+    "model_pick": "3-0",
+    "model_pick_result": "home",
+    "model_pick_prob": 0.115,
+    "exp_pts": 2.016,
+    "top_scores": [
+      [
+        "3-0",
+        0.115
+      ],
+      [
+        "2-0",
+        0.113
+      ],
+      [
+        "4-0",
+        0.087
+      ],
+      [
+        "3-1",
+        0.077
+      ],
+      [
+        "2-1",
+        0.076
+      ],
+      [
+        "1-0",
+        0.07
+      ]
+    ],
+    "updated_utc": "2026-06-12 17:07 UTC",
+    "played": false,
+    "scored": false
+  }
+}

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<title>WC2026 Predictor</title>
+<style>
+  :root{
+    --bg:#0b1220;--card:#121c2e;--card2:#0f1827;--line:#1f2c44;--ink:#e8eef7;--muted:#90a0b8;
+    --home:#3b82f6;--draw:#64748b;--away:#f59e0b;--good:#34d399;--bad:#f87171;--pick:#a78bfa;--you:#22d3ee;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;padding:env(safe-area-inset-top) 0 40px}
+  header{padding:18px 16px 6px} h1{font-size:19px;margin:0}
+  .sub{color:var(--muted);font-size:12px;margin-top:4px}
+  .metrics{display:flex;gap:8px;padding:10px 16px;flex-wrap:wrap}
+  .pill{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 11px;font-size:12px;color:var(--muted)}
+  .pill b{color:var(--ink)} .pill .g{color:var(--good)} .pill .y{color:var(--you)}
+  .tabs{display:flex;gap:6px;padding:8px 16px;position:sticky;top:0;background:var(--bg);z-index:5}
+  .tab{flex:1;text-align:center;padding:9px;border-radius:10px;background:var(--card2);border:1px solid var(--line);color:var(--muted);font-weight:600;font-size:13px;cursor:pointer}
+  .tab.active{background:var(--home);border-color:var(--home);color:#fff}
+  main{padding:4px 12px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 13px;margin:9px 2px}
+  .frow{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .teams{font-weight:600} .teams .v{color:var(--muted);font-weight:400;margin:0 6px}
+  .meta{color:var(--muted);font-size:11px;margin-top:2px}
+  .badge{border-radius:8px;padding:4px 9px;font-size:12px;white-space:nowrap;border:1px solid var(--line);background:var(--card2)}
+  .badge.m b{color:var(--pick)} .badge.y b{color:var(--you)}
+  .score{background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:4px 9px;font-weight:700;font-size:13px;white-space:nowrap}
+  .bar{display:flex;height:9px;border-radius:6px;overflow:hidden;margin-top:10px;background:var(--card2)}
+  .bar i{display:block} .bar .h{background:var(--home)} .bar .d{background:var(--draw)} .bar .a{background:var(--away)}
+  .legend{display:flex;justify-content:space-between;margin-top:5px;font-size:11px;color:var(--muted)} .legend b{color:var(--ink)}
+  .tops{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
+  .chip{background:var(--card2);border:1px solid var(--line);border-radius:7px;padding:3px 7px;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .chip.best{border-color:var(--pick);color:var(--ink)} .chip.mine{border-color:var(--you);color:var(--ink)}
+  .res{display:flex;align-items:center;gap:7px;font-size:12px;margin-top:9px;color:var(--muted);flex-wrap:wrap}
+  .tag{border-radius:6px;padding:2px 7px;font-size:11px;font-weight:700}
+  .tag.ok{background:rgba(52,211,153,.15);color:var(--good)} .tag.no{background:rgba(248,113,113,.13);color:var(--bad)}
+  .pts{margin-left:auto;font-weight:700;color:var(--good)} .pts.zero{color:var(--muted)}
+  .vs{font-size:11px;color:var(--muted);margin-top:6px}
+  .ratings .rrow{display:flex;align-items:center;gap:10px;padding:7px 2px;border-bottom:1px solid var(--line)} .ratings .rrow:last-child{border:0}
+  .rank{width:22px;text-align:right;color:var(--muted);font-size:12px} .rname{flex:1;font-weight:600} .relo{color:var(--muted);font-variant-numeric:tabular-nums}
+  .hidden{display:none} .err{padding:20px 16px;color:var(--away)}
+  footer{color:var(--muted);font-size:11px;text-align:center;padding:18px 16px 0}
+  .big{display:flex;gap:8px;padding:0 2px 6px}
+  .stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+  .stat .l{font-size:11px;color:var(--muted)} .stat .n{font-size:22px;font-weight:700;margin-top:2px}
+</style>
+</head>
+<body>
+<header><h1>⚽ World Cup 2026 — Predictor</h1><div class="sub" id="model">loading…</div></header>
+<div class="metrics" id="metrics"></div>
+<div class="tabs">
+  <div class="tab active" data-view="fixtures">Picks</div>
+  <div class="tab" data-view="results">Results</div>
+  <div class="tab" data-view="ratings">Ratings</div>
+</div>
+<main>
+  <div id="fixtures"></div>
+  <div id="results" class="hidden"></div>
+  <div id="ratings" class="hidden ratings"></div>
+</main>
+<footer id="foot"></footer>
+
+<script>
+const $=s=>document.querySelector(s), pc=x=>Math.round((x||0)*100);
+const sc=a=>Array.isArray(a)?`${a[0]}-${a[1]}`:a;
+const RES={home:f=>f.team1,draw:()=>"Draw",away:f=>f.team2};
+fetch("predictions.json",{cache:"no-store"}).then(r=>r.json()).then(render)
+  .catch(e=>{$("#fixtures").innerHTML=`<div class="err">Couldn't load predictions.json.<br>${e}</div>`});
+
+function render(d){
+  const S=d.scoring||{result_pts:2,exact_pts:3}, su=d.summary||{}, bt=d.backtest||{};
+  $("#model").textContent=`${d.model||""} · pool: ${S.result_pts} result + ${S.exact_pts} exact`;
+  $("#metrics").innerHTML=[
+    `<span class="pill">you <b class="y">${su.your_points??0}</b>/${su.your_max??0}</span>`,
+    `<span class="pill">model <b>${su.model_points??0}</b></span>`,
+    `<span class="pill">live RPS <b>${su.live_rps??"–"}</b></span>`,
+  ].join("");
+  $("#foot").textContent=`Generated ${d.generated_utc||""} · neutral-venue predictions · your pick from my_picks.json`;
+
+  const fx=(d.fixtures||[]).filter(f=>f.resolved);
+  const up=fx.filter(f=>!f.played&&f.model_pick).sort((a,b)=>(a.date||"").localeCompare(b.date||""));
+  const done=fx.filter(f=>f.played&&f.scored).sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+
+  $("#fixtures").innerHTML=up.length?up.map(pickCard).join("")
+    :`<div class="err">No upcoming fixtures yet. Run update_data.py then run_predictions.py.</div>`;
+  $("#results").innerHTML=(done.length?scoreboard(su):"")+
+    (done.length?done.map(resultCard).join(""):`<div class="err">No games scored yet.</div>`);
+  $("#ratings").innerHTML=(d.ratings||[]).slice(0,40)
+    .map((r,i)=>`<div class="rrow"><div class="rank">${i+1}</div><div class="rname">${r.team}</div><div class="relo">${r.elo}</div></div>`).join("");
+}
+
+function pickCard(f){
+  const tops=(f.top_scores||[]).map(t=>`<span class="chip ${t[0]===f.model_pick?'best':''} ${t[0]===f.your_pick?'mine':''}">${t[0]} · ${pc(t[1])}%</span>`).join("");
+  const mprob=f.model_pick_prob!=null?` <span style="color:var(--muted);font-weight:400">${pc(f.model_pick_prob)}%</span>`:"";
+  const youBadge=f.your_pick?`<span class="badge y">you <b>${f.your_pick}</b></span>`:"";
+  return `<div class="card">
+    <div class="frow">
+      <div><div class="teams">${f.team1}<span class="v">v</span>${f.team2}</div>
+        <div class="meta">${f.kickoff_label||f.date||""} · ${f.group||f.round||""}</div></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+        <span class="badge m">model <b>${f.model_pick}</b>${mprob}</span>${youBadge}</div>
+    </div>
+    <div class="bar"><i class="h" style="width:${pc(f.p_home)}%"></i><i class="d" style="width:${pc(f.p_draw)}%"></i><i class="a" style="width:${pc(f.p_away)}%"></i></div>
+    <div class="legend"><span style="color:var(--home)">${f.team1} <b>${pc(f.p_home)}%</b></span><span>Draw <b>${pc(f.p_draw)}%</b></span><span style="color:var(--away)">${f.team2} <b>${pc(f.p_away)}%</b></span></div>
+    <div style="font-size:11px;color:var(--muted);margin:10px 0 5px">likeliest scorelines</div>
+    <div class="tops">${tops}</div>
+  </div>`;
+}
+
+function resultCard(f){
+  const hasYou="your_earned" in f;
+  const yr=hasYou?`<span class="tag ${f.your_result_hit?'ok':'no'}">${f.your_result_hit?'✓':'✗'} result</span>
+        <span class="tag ${f.your_exact_hit?'ok':'no'}">${f.your_exact_hit?'✓':'✗'} exact</span>
+        <span class="pts ${f.your_earned?'':'zero'}">+${f.your_earned}</span>`:`<span style="color:var(--muted)">no pick recorded</span>`;
+  const prob=f.your_pick_prob!=null?` <span style="color:var(--muted)">(${pc(f.your_pick_prob)}% chance)</span>`:"";
+  return `<div class="card">
+    <div class="frow">
+      <div><div class="teams">${f.team1}<span class="v">v</span>${f.team2}</div>
+        <div class="meta">${f.kickoff_label||f.date||""} · ${f.group||f.round||""}</div></div>
+      <div class="score">${sc(f.actual)}</div>
+    </div>
+    <div class="res"><span>you <b style="color:var(--you)">${f.your_pick||"–"}</b>${prob}</span>${yr}</div>
+    <div class="vs">model picked <b style="color:var(--pick)">${f.model_pick||"–"}</b> → +${f.model_earned??0} · RPS ${f.rps??"–"}</div>
+  </div>`;
+}
+
+function scoreboard(su){
+  return `<div class="big">
+    <div class="stat"><div class="l">Your points</div><div class="n" style="color:var(--you)">${su.your_points}/${su.your_max}</div></div>
+    <div class="stat"><div class="l">Results</div><div class="n">${su.your_result_hits}/${su.your_scored}</div></div>
+    <div class="stat"><div class="l">Model pts</div><div class="n">${su.model_points}</div></div>
+  </div>`;
+}
+
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active")); t.classList.add("active");
+  const v=t.dataset.view; ["fixtures","results","ratings"].forEach(id=>$("#"+id).classList.toggle("hidden", id!==v));
+}));
+</script>
+</body>
+</html>

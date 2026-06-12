@@ -1,0 +1,199 @@
+#!/usr/bin/env python3
+"""Fit the model, freeze picks, score results, write predictions.json.
+
+Two kinds of pick are tracked, kept separate:
+  * MODEL pick  — the expected-points-optimal scoreline the model recommends.
+                  Frozen in picks.json on the last run before kickoff.
+  * YOUR pick   — what you actually entered in the pool, from my_picks.json.
+                  You edit that file; this script scores it and shows where your
+                  chosen scoreline sat in the model's probabilities.
+
+The pool tally on the dashboard is YOUR points. The model's points are shown
+alongside so you can see whether you're beating your own model.
+
+my_picks.json format (key = "YYYY-MM-DD|team1|team2", value = "h-a"):
+  { "2026-06-11|Mexico|South Africa": "3-0" }
+
+Run after scripts/update_data.py. No API key required.
+"""
+from __future__ import annotations
+
+import json
+import os
+import re
+import sys
+from datetime import datetime, timedelta, timezone
+
+PROJ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(PROJ)
+
+from src import data, dixon_coles as dc, elo as E, evaluate, fixtures as fx, scoring
+
+RAW = os.path.join(PROJ, "data", "raw")
+DEPLOY = os.path.join(PROJ, "deploy")
+PICKS = os.path.join(DEPLOY, "picks.json")          # model picks, frozen ledger
+MY_PICKS = os.path.join(DEPLOY, "my_picks.json")     # YOUR pool entries (you edit)
+OUT = os.path.join(DEPLOY, "predictions.json")
+
+W_DC, RECENT_YEARS, MIN_MATCHES, XI = 0.6, 8, 10, 0.001
+RESULT_PTS, EXACT_PTS = scoring.RESULT_PTS, scoring.EXACT_PTS
+
+
+def _now():
+    return datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+
+
+def _key(date, t1, t2):
+    return f"{date}|{t1}|{t2}"
+
+
+def to_sgt(date, time_str):
+    """openfootball 'HH:MM UTC-6' + date -> (iso, friendly label) in Singapore time (UTC+8)."""
+    if not date or not time_str:
+        return None, None
+    m = re.match(r"(\d{1,2}):(\d{2})\s*UTC([+-]\d{1,2})", str(time_str))
+    if not m:
+        return None, None
+    hh, mm, off = int(m.group(1)), int(m.group(2)), int(m.group(3))
+    local = datetime.strptime(date, "%Y-%m-%d").replace(hour=hh, minute=mm)
+    sgt = local - timedelta(hours=off) + timedelta(hours=8)   # -> UTC -> +8
+    return sgt.strftime("%Y-%m-%dT%H:%M"), sgt.strftime("%a %d %b · %H:%M SGT")
+
+
+def _parse(s):
+    a, b = str(s).replace("–", "-").split("-")
+    return int(a), int(b)
+
+
+def backtest_rps(rec, full):
+    d = rec.sort_values("date"); cut = int(len(d) * 0.8)
+    tr, te = d.iloc[:cut], d.iloc[cut:]
+    dm = dc.fit(tr, xi=XI); em = E.fit(full[full["date"] < te["date"].min()])
+    known = set(dm.teams) & set(em.teams)
+    rows, outs = [], []
+    for r in te.itertuples():
+        if r.home_team in known and r.away_team in known:
+            p = E.ensemble_probs(dm.outcome_probs(r.home_team, r.away_team, neutral=False),
+                                 em.outcome_probs(r.home_team, r.away_team, neutral=False), W_DC)
+            rows.append([p["home"], p["draw"], p["away"]])
+            outs.append(evaluate.result_to_outcome(r.home_score, r.away_score))
+    ens = evaluate.mean_scores(rows, outs)
+    br = (tr.assign(o=[evaluate.result_to_outcome(h, a) for h, a in zip(tr.home_score, tr.away_score)])
+          ["o"].value_counts(normalize=True).reindex(["home", "draw", "away"]).fillna(0).values)
+    base = evaluate.mean_scores([br] * len(outs), outs)
+    return {"ensemble_rps": round(ens["rps"], 4), "baseline_rps": round(base["rps"], 4)}
+
+
+def main() -> int:
+    full = data.load_results(os.path.join(RAW, "results.csv"))
+    rec = data.filter_teams(data.filter_recent(full, years=RECENT_YEARS), MIN_MATCHES)
+    dm = dc.fit(rec, xi=XI)
+    em = E.fit(full)
+    known = set(dm.teams) & set(em.teams)
+
+    ledger = json.load(open(PICKS)) if os.path.exists(PICKS) else {}
+    my_picks = json.load(open(MY_PICKS)) if os.path.exists(MY_PICKS) else {}
+
+    fixtures_out = []
+    fpath = os.path.join(RAW, "worldcup2026.json")
+    if os.path.exists(fpath):
+        fdf, unmatched = fx.reconcile_names(fx.load_fixtures(fpath), known)
+        if unmatched:
+            print(f"  WARN unmatched fixture names (add to ALIASES): {sorted(unmatched)}")
+
+        for r in fdf.itertuples():
+            date = r.date.strftime("%Y-%m-%d") if r.date is not None else None
+            sgt_iso, sgt_label = to_sgt(date, getattr(r, "time", None))
+            meta = {"date": date, "round": r.round, "group": r.group, "ground": r.ground,
+                    "team1": r.team1, "team2": r.team2,
+                    "kickoff_sgt": sgt_iso, "kickoff_label": sgt_label,
+                    "resolved": bool(r.resolved), "played": bool(r.played)}
+            if not r.resolved or r.team1 not in known or r.team2 not in known:
+                fixtures_out.append(meta)
+                continue
+
+            k = _key(date, r.team1, r.team2)
+            entry = ledger.get(k)
+            matrix = dm.score_matrix(r.team1, r.team2, neutral=True)
+
+            if not r.played:
+                probs = E.ensemble_probs(dm.outcome_probs(r.team1, r.team2, neutral=True),
+                                         em.outcome_probs(r.team1, r.team2, neutral=True), W_DC)
+                pick = scoring.recommend_pick(matrix, probs, RESULT_PTS, EXACT_PTS)
+                pi, pj = pick["score"]
+                tops = [[f"{i}-{j}", round(p, 3)] for (i, j), p in scoring.top_scorelines(matrix, 6)]
+                entry = {"p_home": round(probs["home"], 3), "p_draw": round(probs["draw"], 3),
+                         "p_away": round(probs["away"], 3),
+                         "model_pick": f"{pi}-{pj}", "model_pick_result": pick["result"],
+                         "model_pick_prob": round(float(matrix[pi, pj]), 3), "exp_pts": pick["exp_pts"],
+                         "top_scores": tops, "updated_utc": _now(), "played": False, "scored": False}
+                ledger[k] = entry
+            elif entry is not None and not entry.get("scored"):
+                actual = [int(r.home_score), int(r.away_score)]
+                ao = evaluate.result_to_outcome(*actual)
+                mp = _parse(entry["model_pick"])
+                msc = scoring.score_pick(mp, actual, RESULT_PTS, EXACT_PTS)
+                entry.update(played=True, scored=True, actual=actual, actual_outcome=ao,
+                             model_earned=msc["points"], model_result_hit=msc["result_hit"],
+                             model_exact_hit=msc["exact_hit"], max_points=msc["max_points"],
+                             rps=round(evaluate.rps([entry["p_home"], entry["p_draw"], entry["p_away"]], ao), 4))
+                ledger[k] = entry
+            elif entry is None:
+                entry = {"played": True, "scored": False, "no_prematch_pick": True,
+                         "actual": [int(r.home_score), int(r.away_score)]}
+                ledger[k] = entry
+
+            out = {**meta, **entry}
+
+            # overlay YOUR pick (from my_picks.json) — scored deterministically
+            if k in my_picks:
+                yi, yj = _parse(my_picks[k])
+                out["your_pick"] = f"{yi}-{yj}"
+                out["your_pick_result"] = scoring._result(yi, yj)
+                if yi <= 10 and yj <= 10:
+                    out["your_pick_prob"] = round(float(matrix[yi, yj]), 3)
+                if r.played:
+                    ysc = scoring.score_pick((yi, yj), [int(r.home_score), int(r.away_score)],
+                                             RESULT_PTS, EXACT_PTS)
+                    out.update(your_earned=ysc["points"], your_result_hit=ysc["result_hit"],
+                               your_exact_hit=ysc["exact_hit"])
+            fixtures_out.append(out)
+    else:
+        print("  WARN no worldcup2026.json — run scripts/update_data.py first.")
+
+    json.dump(ledger, open(PICKS, "w"), indent=2)
+
+    scored = [f for f in fixtures_out if f.get("scored")]
+    your = [f for f in fixtures_out if "your_earned" in f]
+    summary = {
+        "model_scored": len(scored),
+        "model_points": sum(f["model_earned"] for f in scored),
+        "live_rps": round(sum(f["rps"] for f in scored) / len(scored), 4) if scored else None,
+        "your_scored": len(your),
+        "your_points": sum(f["your_earned"] for f in your),
+        "your_max": (RESULT_PTS + EXACT_PTS) * len(your),
+        "your_result_hits": sum(1 for f in your if f["your_result_hit"]),
+        "your_exact_hits": sum(1 for f in your if f["your_exact_hit"]),
+    }
+
+    payload = {
+        "generated_utc": _now(),
+        "model": f"Dixon-Coles (xi={XI}) + Elo ensemble (w_DC={W_DC}), neutral venues",
+        "scoring": {"result_pts": RESULT_PTS, "exact_pts": EXACT_PTS},
+        "backtest": backtest_rps(rec, full),
+        "summary": summary,
+        "n_fixtures": len(fixtures_out),
+        "fixtures": fixtures_out,
+        "ratings": [{"team": t, "elo": round(em.rating(t))}
+                    for t in sorted(known, key=lambda x: -em.rating(x))],
+    }
+    json.dump(payload, open(OUT, "w"), indent=2)
+    print(f"wrote {OUT}")
+    print(f"  fixtures {len(fixtures_out)} | you {summary['your_points']}/{summary['your_max']} "
+          f"({summary['your_result_hits']}R {summary['your_exact_hits']}E) "
+          f"| model {summary['model_points']} over {summary['model_scored']} | live RPS {summary['live_rps']}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
