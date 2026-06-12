@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-06-12 18:07 UTC",
+  "generated_utc": "2026-06-12 22:22 UTC",
   "model": "Dixon-Coles (xi=0.001) + Elo ensemble (w_DC=0.6), neutral venues",
   "scoring": {
     "result_pts": 2,
@@ -10,9 +10,9 @@
     "baseline_rps": 0.2282
   },
   "summary": {
-    "model_scored": 2,
+    "model_scored": 3,
     "model_points": 4,
-    "live_rps": 0.0983,
+    "live_rps": 0.1413,
     "your_scored": 2,
     "your_points": 2,
     "your_max": 10,
@@ -192,7 +192,7 @@
           0.082
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -240,7 +240,7 @@
           0.074
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -288,7 +288,7 @@
           0.065
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -336,7 +336,7 @@
           0.07
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -349,15 +349,14 @@
       "kickoff_sgt": "2026-06-13T03:00",
       "kickoff_label": "Sat 13 Jun \u00b7 03:00 SGT",
       "resolved": true,
-      "played": false,
+      "played": true,
       "p_home": 0.665,
       "p_draw": 0.224,
       "p_away": 0.111,
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.177,
-      "xg_home": 1.73,
-      "xg_away": 0.51,
+      "exp_pts": 1.86,
       "top_scores": [
         [
           "1-0",
@@ -384,8 +383,18 @@
           0.081
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
-      "scored": false
+      "updated_utc": "2026-06-12 17:07 UTC",
+      "scored": true,
+      "actual": [
+        1,
+        1
+      ],
+      "actual_outcome": "draw",
+      "model_earned": 0,
+      "model_result_hit": false,
+      "model_exact_hit": false,
+      "max_points": 5,
+      "rps": 0.2273
     },
     {
       "date": "2026-06-13",
@@ -432,7 +441,7 @@
           0.076
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -480,7 +489,7 @@
           0.07
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -528,7 +537,7 @@
           0.078
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -576,7 +585,7 @@
           0.072
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -624,7 +633,7 @@
           0.076
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -672,7 +681,7 @@
           0.071
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -720,7 +729,7 @@
           0.063
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -768,7 +777,7 @@
           0.071
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -816,7 +825,7 @@
           0.061
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -864,7 +873,7 @@
           0.073
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -912,7 +921,7 @@
           0.079
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -960,7 +969,7 @@
           0.084
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -1008,7 +1017,7 @@
           0.077
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -1056,7 +1065,7 @@
           0.085
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -1104,7 +1113,7 @@
           0.072
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -1152,7 +1161,7 @@
           0.061
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -1200,7 +1209,7 @@
           0.061
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -1248,7 +1257,7 @@
           0.07
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -1296,7 +1305,7 @@
           0.055
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -1344,7 +1353,7 @@
           0.075
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -1392,7 +1401,7 @@
           0.062
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -1440,7 +1449,7 @@
           0.087
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -1488,7 +1497,7 @@
           0.077
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -1536,7 +1545,7 @@
           0.081
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -1584,7 +1593,7 @@
           0.073
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -1632,7 +1641,7 @@
           0.07
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -1680,7 +1689,7 @@
           0.073
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -1728,7 +1737,7 @@
           0.067
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -1776,7 +1785,7 @@
           0.069
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -1824,7 +1833,7 @@
           0.078
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -1872,7 +1881,7 @@
           0.074
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -1920,7 +1929,7 @@
           0.077
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -1968,7 +1977,7 @@
           0.063
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -2016,7 +2025,7 @@
           0.073
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -2064,7 +2073,7 @@
           0.066
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -2112,7 +2121,7 @@
           0.063
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -2160,7 +2169,7 @@
           0.062
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -2208,7 +2217,7 @@
           0.081
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -2256,7 +2265,7 @@
           0.067
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -2304,7 +2313,7 @@
           0.062
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -2352,7 +2361,7 @@
           0.066
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -2400,7 +2409,7 @@
           0.085
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -2448,7 +2457,7 @@
           0.071
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -2496,7 +2505,7 @@
           0.081
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -2544,7 +2553,7 @@
           0.077
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -2592,7 +2601,7 @@
           0.065
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -2640,7 +2649,7 @@
           0.073
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -2688,7 +2697,7 @@
           0.074
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -2736,7 +2745,7 @@
           0.065
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -2784,7 +2793,7 @@
           0.07
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -2832,7 +2841,7 @@
           0.061
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -2880,7 +2889,7 @@
           0.079
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -2928,7 +2937,7 @@
           0.058
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -2976,7 +2985,7 @@
           0.072
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -3024,7 +3033,7 @@
           0.082
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -3072,7 +3081,7 @@
           0.08
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -3120,7 +3129,7 @@
           0.07
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -3168,7 +3177,7 @@
           0.072
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -3216,7 +3225,7 @@
           0.045
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -3264,7 +3273,7 @@
           0.082
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -3312,7 +3321,7 @@
           0.081
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -3360,7 +3369,7 @@
           0.076
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -3408,7 +3417,7 @@
           0.06
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -3456,7 +3465,7 @@
           0.082
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
@@ -3504,7 +3513,7 @@
           0.067
         ]
       ],
-      "updated_utc": "2026-06-12 18:07 UTC",
+      "updated_utc": "2026-06-12 22:22 UTC",
       "scored": false
     },
     {
