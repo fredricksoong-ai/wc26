@@ -19,6 +19,7 @@ Run after scripts/update_data.py. No API key required.
 from __future__ import annotations
 
 import json
+import math
 import os
 import re
 import sys
@@ -45,6 +46,27 @@ def _now():
 
 def _key(date, t1, t2):
     return f"{date}|{t1}|{t2}"
+
+
+def clean(o):
+    """Replace NaN/Inf (e.g. pandas group=NaN on knockout rows) with None.
+
+    Python's json writes bare NaN/Infinity tokens that browsers' JSON.parse
+    rejects — which silently breaks the whole dashboard. Sanitise before dump.
+    """
+    if isinstance(o, float):
+        return None if (math.isnan(o) or math.isinf(o)) else o
+    if isinstance(o, dict):
+        return {k: clean(v) for k, v in o.items()}
+    if isinstance(o, list):
+        return [clean(v) for v in o]
+    return o
+
+
+def dump_json(obj, path):
+    """Write strictly-valid JSON (allow_nan=False) so a stray NaN fails loudly."""
+    with open(path, "w") as f:
+        json.dump(clean(obj), f, indent=2, allow_nan=False)
 
 
 def to_sgt(date, time_str):
@@ -161,7 +183,7 @@ def main() -> int:
     else:
         print("  WARN no worldcup2026.json — run scripts/update_data.py first.")
 
-    json.dump(ledger, open(PICKS, "w"), indent=2)
+    dump_json(ledger, PICKS)
 
     scored = [f for f in fixtures_out if f.get("scored")]
     your = [f for f in fixtures_out if "your_earned" in f]
@@ -187,7 +209,7 @@ def main() -> int:
         "ratings": [{"team": t, "elo": round(em.rating(t))}
                     for t in sorted(known, key=lambda x: -em.rating(x))],
     }
-    json.dump(payload, open(OUT, "w"), indent=2)
+    dump_json(payload, OUT)
     print(f"wrote {OUT}")
     print(f"  fixtures {len(fixtures_out)} | you {summary['your_points']}/{summary['your_max']} "
           f"({summary['your_result_hits']}R {summary['your_exact_hits']}E) "
