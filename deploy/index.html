@@ -12,13 +12,15 @@
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;padding:env(safe-area-inset-top) 0 40px}
-  header{padding:18px 16px 6px} h1{font-size:19px;margin:0}
+  header{padding:18px 16px 4px} h1{font-size:19px;margin:0}
   .sub{color:var(--muted);font-size:12px;margin-top:4px}
+  .updated{color:var(--muted);font-size:11px;margin-top:6px}
+  .updated b{color:var(--ink)}
   .metrics{display:flex;gap:8px;padding:10px 16px;flex-wrap:wrap}
   .pill{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 11px;font-size:12px;color:var(--muted)}
-  .pill b{color:var(--ink)} .pill .g{color:var(--good)} .pill .y{color:var(--you)}
-  .tabs{display:flex;gap:6px;padding:8px 16px;position:sticky;top:0;background:var(--bg);z-index:5}
-  .tab{flex:1;text-align:center;padding:9px;border-radius:10px;background:var(--card2);border:1px solid var(--line);color:var(--muted);font-weight:600;font-size:13px;cursor:pointer}
+  .pill b{color:var(--ink)} .pill .y{color:var(--you)} .pill .p{color:var(--pick)}
+  .tabs{display:flex;gap:6px;padding:8px 12px;position:sticky;top:0;background:var(--bg);z-index:5;overflow-x:auto}
+  .tab{flex:1;min-width:74px;text-align:center;padding:9px 6px;border-radius:10px;background:var(--card2);border:1px solid var(--line);color:var(--muted);font-weight:600;font-size:13px;cursor:pointer;white-space:nowrap}
   .tab.active{background:var(--home);border-color:var(--home);color:#fff}
   main{padding:4px 12px}
   .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 13px;margin:9px 2px}
@@ -26,7 +28,7 @@
   .teams{font-weight:600} .teams .v{color:var(--muted);font-weight:400;margin:0 6px}
   .meta{color:var(--muted);font-size:11px;margin-top:2px}
   .badge{border-radius:8px;padding:4px 9px;font-size:12px;white-space:nowrap;border:1px solid var(--line);background:var(--card2)}
-  .badge.m b{color:var(--pick)} .badge.y b{color:var(--you)}
+  .badge.m b{color:var(--pick)}
   .score{background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:4px 9px;font-weight:700;font-size:13px;white-space:nowrap}
   .bar{display:flex;height:9px;border-radius:6px;overflow:hidden;margin-top:10px;background:var(--card2)}
   .bar i{display:block} .bar .h{background:var(--home)} .bar .d{background:var(--draw)} .bar .a{background:var(--away)}
@@ -34,110 +36,200 @@
   .tops{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
   .chip{background:var(--card2);border:1px solid var(--line);border-radius:7px;padding:3px 7px;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
   .chip.best{border-color:var(--pick);color:var(--ink)} .chip.mine{border-color:var(--you);color:var(--ink)}
+  .pickbox{display:flex;align-items:center;gap:8px;margin-top:11px;padding-top:10px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);flex-wrap:wrap}
+  .pickbox select{background:var(--card2);color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:5px 7px;font-size:14px;font-variant-numeric:tabular-nums}
+  .pickbox .lk{color:var(--you);font-weight:700} .pickbox .locked{color:var(--muted)}
   .res{display:flex;align-items:center;gap:7px;font-size:12px;margin-top:9px;color:var(--muted);flex-wrap:wrap}
   .tag{border-radius:6px;padding:2px 7px;font-size:11px;font-weight:700}
   .tag.ok{background:rgba(52,211,153,.15);color:var(--good)} .tag.no{background:rgba(248,113,113,.13);color:var(--bad)}
   .pts{margin-left:auto;font-weight:700;color:var(--good)} .pts.zero{color:var(--muted)}
   .vs{font-size:11px;color:var(--muted);margin-top:6px}
-  .ratings .rrow{display:flex;align-items:center;gap:10px;padding:7px 2px;border-bottom:1px solid var(--line)} .ratings .rrow:last-child{border:0}
-  .rank{width:22px;text-align:right;color:var(--muted);font-size:12px} .rname{flex:1;font-weight:600} .relo{color:var(--muted);font-variant-numeric:tabular-nums}
-  .hidden{display:none} .err{padding:20px 16px;color:var(--away)}
-  footer{color:var(--muted);font-size:11px;text-align:center;padding:18px 16px 0}
   .big{display:flex;gap:8px;padding:0 2px 6px}
   .stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
   .stat .l{font-size:11px;color:var(--muted)} .stat .n{font-size:22px;font-weight:700;margin-top:2px}
+  .subline{padding:0 4px 8px;color:var(--muted);font-size:12px}
+  .ratings .rrow{display:flex;align-items:center;gap:10px;padding:7px 2px;border-bottom:1px solid var(--line)} .ratings .rrow:last-child{border:0}
+  .rank{width:22px;text-align:right;color:var(--muted);font-size:12px} .rname{flex:1;font-weight:600} .relo{color:var(--muted);font-variant-numeric:tabular-nums}
+  .exp h3{font-size:14px;margin:16px 2px 6px} .exp p{font-size:13px;color:var(--muted);margin:0 2px 8px;line-height:1.55}
+  .exp .k{color:var(--ink);font-weight:600} .exp .dot{display:inline-block;width:10px;height:10px;border-radius:2px;vertical-align:-1px;margin-right:4px}
+  .dayhdr{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin:16px 4px 2px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .hidden{display:none} .err{padding:20px 16px;color:var(--away)}
+  footer{color:var(--muted);font-size:11px;text-align:center;padding:18px 16px 0}
 </style>
 </head>
 <body>
-<header><h1>⚽ World Cup 2026 — Predictor</h1><div class="sub" id="model">loading…</div></header>
+<header>
+  <h1>⚽ World Cup 2026 — Predictor</h1>
+  <div class="sub" id="model">loading…</div>
+  <div class="updated" id="updated"></div>
+</header>
 <div class="metrics" id="metrics"></div>
 <div class="tabs">
   <div class="tab active" data-view="fixtures">Picks</div>
   <div class="tab" data-view="results">Results</div>
   <div class="tab" data-view="ratings">Ratings</div>
+  <div class="tab" data-view="explainer">Explainer</div>
 </div>
 <main>
   <div id="fixtures"></div>
   <div id="results" class="hidden"></div>
   <div id="ratings" class="hidden ratings"></div>
+  <div id="explainer" class="hidden exp"></div>
 </main>
 <footer id="foot"></footer>
 
 <script>
 const $=s=>document.querySelector(s), pc=x=>Math.round((x||0)*100);
-const sc=a=>Array.isArray(a)?`${a[0]}-${a[1]}`:a;
-const RES={home:f=>f.team1,draw:()=>"Draw",away:f=>f.team2};
-fetch("predictions.json",{cache:"no-store"}).then(r=>r.json()).then(render)
+const LSKEY="wc26picks";
+let DATA=null, RP=2, EP=3, ALLFIX=[];
+
+const loadPicks=()=>{try{return JSON.parse(localStorage.getItem(LSKEY))||{}}catch(e){return{}}};
+const savePicks=o=>localStorage.setItem(LSKEY,JSON.stringify(o));
+const keyOf=f=>`${f.date}|${f.team1}|${f.team2}`;
+function seedArr(f){ if(f.your_pick){const[a,b]=f.your_pick.split("-");return[+a,+b]} return null; }
+function pickArr(f){ const P=loadPicks(); if(P[keyOf(f)])return P[keyOf(f)]; return seedArr(f); }
+function isLocked(f){ if(f.played)return true; if(!f.kickoff_sgt)return false; return Date.now()>=Date.parse(f.kickoff_sgt+":00+08:00"); }
+const resultOf=(h,a)=>h>a?"home":h<a?"away":"draw";
+function scorePick(p,act){ if(!p||p[0]==null||p[1]==null||!act)return null;
+  const rh=resultOf(p[0],p[1])===resultOf(act[0],act[1]); const eh=p[0]===act[0]&&p[1]===act[1];
+  return {pts:(rh?RP:0)+(eh?EP:0), rh, eh}; }
+
+fetch("predictions.json",{cache:"no-store"}).then(r=>r.json()).then(d=>{DATA=d;init(d)})
   .catch(e=>{$("#fixtures").innerHTML=`<div class="err">Couldn't load predictions.json.<br>${e}</div>`});
 
-function render(d){
-  const S=d.scoring||{result_pts:2,exact_pts:3}, su=d.summary||{}, bt=d.backtest||{};
-  $("#model").textContent=`${d.model||""} · pool: ${S.result_pts} result + ${S.exact_pts} exact`;
-  $("#metrics").innerHTML=[
-    `<span class="pill">you <b class="y">${su.your_points??0}</b>/${su.your_max??0}</span>`,
-    `<span class="pill">model <b>${su.model_points??0}</b></span>`,
-    `<span class="pill">live RPS <b>${su.live_rps??"–"}</b></span>`,
-  ].join("");
-  $("#foot").textContent=`Generated ${d.generated_utc||""} · neutral-venue predictions · your pick from my_picks.json`;
-
-  const fx=(d.fixtures||[]).filter(f=>f.resolved);
-  const up=fx.filter(f=>!f.played&&f.model_pick).sort((a,b)=>(a.date||"").localeCompare(b.date||""));
-  const done=fx.filter(f=>f.played&&f.scored).sort((a,b)=>(b.date||"").localeCompare(a.date||""));
-
-  $("#fixtures").innerHTML=up.length?up.map(pickCard).join("")
-    :`<div class="err">No upcoming fixtures yet. Run update_data.py then run_predictions.py.</div>`;
-  $("#results").innerHTML=(done.length?scoreboard(su):"")+
-    (done.length?done.map(resultCard).join(""):`<div class="err">No games scored yet.</div>`);
+function init(d){
+  RP=(d.scoring||{}).result_pts??2; EP=(d.scoring||{}).exact_pts??3;
+  ALLFIX=(d.fixtures||[]).filter(f=>f.resolved);
+  $("#model").textContent=`${d.model||""} · pool: ${RP} result + ${EP} exact`;
+  $("#updated").innerHTML=`Last updated <b>${toSGT(d.generated_utc)}</b> · refreshes ~twice daily`;
+  $("#explainer").innerHTML=explainerHTML();
   $("#ratings").innerHTML=(d.ratings||[]).slice(0,40)
     .map((r,i)=>`<div class="rrow"><div class="rank">${i+1}</div><div class="rname">${r.team}</div><div class="relo">${r.elo}</div></div>`).join("");
+  renderAll();
 }
 
+function tallies(){
+  let yP=0,yMax=0,yN=0,yR=0,yE=0, mP=0,mMax=0,mN=0;
+  ALLFIX.forEach(f=>{
+    if(!f.played||!f.actual)return;
+    const yp=pickArr(f), ys=scorePick(yp,f.actual);
+    if(ys){yP+=ys.pts;yMax+=RP+EP;yN++; if(ys.rh)yR++; if(ys.eh)yE++;}
+    if(f.model_pick){const ms=scorePick(f.model_pick.split("-").map(Number),f.actual); if(ms){mP+=ms.pts;mMax+=RP+EP;mN++;}}
+  });
+  return {yP,yMax,yN,yR,yE,mP,mMax,mN};
+}
+
+function renderAll(){
+  const t=tallies(), d=DATA;
+  $("#metrics").innerHTML=[
+    `<span class="pill">you <b class="y">${t.yP}</b>/${t.yMax}</span>`,
+    `<span class="pill">model <b class="p">${t.mP}</b>/${t.mMax}</span>`,
+    `<span class="pill">accuracy (RPS) <b>${(d.summary||{}).live_rps??"–"}</b></span>`,
+  ].join("");
+  $("#foot").textContent="Lower RPS = more accurate · picks lock at kickoff (SGT) · saved on this device";
+
+  const up=ALLFIX.filter(f=>!f.played).sort((a,b)=>(a.kickoff_sgt||"").localeCompare(b.kickoff_sgt||""));
+  const done=ALLFIX.filter(f=>f.played&&f.actual).sort((a,b)=>(b.kickoff_sgt||"").localeCompare(a.kickoff_sgt||""));
+  $("#fixtures").innerHTML=up.length?renderGroup(up,pickCard)
+    :`<div class="err">No upcoming fixtures with predictions.</div>`;
+  $("#results").innerHTML=(done.length?scoreboard(t):"")+(done.length?renderGroup(done,resultCard):`<div class="err">No games scored yet.</div>`);
+}
+
+const dayKey=f=>(f.kickoff_sgt||f.date||"").slice(0,10);
+function dayLabel(k){ if(!k)return""; const [y,m,d]=k.split("-").map(Number);
+  return new Date(Date.UTC(y,m-1,d)).toLocaleDateString("en-GB",{weekday:"long",day:"2-digit",month:"long",timeZone:"UTC"}); }
+function timeOnly(f){ const m=(f.kickoff_label||"").match(/·\s*(.+)$/); return m?m[1]:(f.kickoff_label||f.date||""); }
+function renderGroup(list,cardFn){ let html="",cur=null;
+  list.forEach(f=>{ const k=dayKey(f); if(k!==cur){cur=k; html+=`<div class="dayhdr">${dayLabel(k)}</div>`;} html+=cardFn(f); });
+  return html; }
+
+function selOpts(sel){let s="";for(let i=0;i<=7;i++)s+=`<option value="${i}" ${sel===i?"selected":""}>${i}</option>`;return `<option value="" ${sel==null?"selected":""}>–</option>`+s;}
+
 function pickCard(f){
-  const tops=(f.top_scores||[]).map(t=>`<span class="chip ${t[0]===f.model_pick?'best':''} ${t[0]===f.your_pick?'mine':''}">${t[0]} · ${pc(t[1])}%</span>`).join("");
+  const i=ALLFIX.indexOf(f);
+  const tops=(f.top_scores||[]).map(t=>`<span class="chip ${t[0]===f.model_pick?'best':''}">${t[0]} · ${pc(t[1])}%</span>`).join("");
   const mprob=f.model_pick_prob!=null?` <span style="color:var(--muted);font-weight:400">${pc(f.model_pick_prob)}%</span>`:"";
-  const youBadge=f.your_pick?`<span class="badge y">you <b>${f.your_pick}</b></span>`:"";
+  const yp=pickArr(f), locked=isLocked(f);
+  const ytxt=yp&&yp[0]!=null&&yp[1]!=null?`${yp[0]}-${yp[1]}`:"not set";
+  const pickUI=locked
+    ? `<span class="locked">🔒 your pick: <b class="lk" style="color:var(--you)">${ytxt}</b> (locked)</span>`
+    : `<span>your pick</span><select onchange="setPick(${i},0,this.value)">${selOpts(yp?yp[0]:null)}</select>
+       <span>–</span><select onchange="setPick(${i},1,this.value)">${selOpts(yp?yp[1]:null)}</select>
+       <span style="color:var(--you)">${yp&&yp[0]!=null&&yp[1]!=null?'saved ✓':''}</span>`;
   return `<div class="card">
     <div class="frow">
       <div><div class="teams">${f.team1}<span class="v">v</span>${f.team2}</div>
-        <div class="meta">${f.kickoff_label||f.date||""} · ${f.group||f.round||""}</div></div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
-        <span class="badge m">model <b>${f.model_pick}</b>${mprob}</span>${youBadge}</div>
+        <div class="meta">${timeOnly(f)} · ${f.group||f.round||""}</div></div>
+      <span class="badge m">model <b>${f.model_pick}</b>${mprob}</span>
     </div>
     <div class="bar"><i class="h" style="width:${pc(f.p_home)}%"></i><i class="d" style="width:${pc(f.p_draw)}%"></i><i class="a" style="width:${pc(f.p_away)}%"></i></div>
     <div class="legend"><span style="color:var(--home)">${f.team1} <b>${pc(f.p_home)}%</b></span><span>Draw <b>${pc(f.p_draw)}%</b></span><span style="color:var(--away)">${f.team2} <b>${pc(f.p_away)}%</b></span></div>
     <div style="font-size:11px;color:var(--muted);margin:10px 0 5px">likeliest scorelines</div>
     <div class="tops">${tops}</div>
+    <div class="pickbox">${pickUI}</div>
   </div>`;
+}
+
+function setPick(i,side,val){
+  const f=ALLFIX[i],k=keyOf(f),P=loadPicks();
+  const cur=P[k]||pickArr(f)||[null,null];
+  cur[side]=val===""?null:+val;
+  P[k]=cur; savePicks(P); renderAll();
 }
 
 function resultCard(f){
-  const hasYou="your_earned" in f;
-  const yr=hasYou?`<span class="tag ${f.your_result_hit?'ok':'no'}">${f.your_result_hit?'✓':'✗'} result</span>
-        <span class="tag ${f.your_exact_hit?'ok':'no'}">${f.your_exact_hit?'✓':'✗'} exact</span>
-        <span class="pts ${f.your_earned?'':'zero'}">+${f.your_earned}</span>`:`<span style="color:var(--muted)">no pick recorded</span>`;
-  const prob=f.your_pick_prob!=null?` <span style="color:var(--muted)">(${pc(f.your_pick_prob)}% chance)</span>`:"";
+  const yp=pickArr(f), ys=scorePick(yp,f.actual);
+  const ms=f.model_pick?scorePick(f.model_pick.split("-").map(Number),f.actual):null;
+  const ytxt=yp&&yp[0]!=null?`${yp[0]}-${yp[1]}`:"–";
+  const yrow=ys?`<span class="tag ${ys.rh?'ok':'no'}">${ys.rh?'✓':'✗'} result</span><span class="tag ${ys.eh?'ok':'no'}">${ys.eh?'✓':'✗'} exact</span><span class="pts ${ys.pts?'':'zero'}">+${ys.pts}</span>`:`<span style="color:var(--muted)">no pick made</span>`;
   return `<div class="card">
     <div class="frow">
       <div><div class="teams">${f.team1}<span class="v">v</span>${f.team2}</div>
-        <div class="meta">${f.kickoff_label||f.date||""} · ${f.group||f.round||""}</div></div>
-      <div class="score">${sc(f.actual)}</div>
+        <div class="meta">${timeOnly(f)} · ${f.group||f.round||""}</div></div>
+      <div class="score">${f.actual[0]}–${f.actual[1]}</div>
     </div>
-    <div class="res"><span>you <b style="color:var(--you)">${f.your_pick||"–"}</b>${prob}</span>${yr}</div>
-    <div class="vs">model picked <b style="color:var(--pick)">${f.model_pick||"–"}</b> → +${f.model_earned??0} · RPS ${f.rps??"–"}</div>
+    <div class="res"><span>you <b style="color:var(--you)">${ytxt}</b></span>${yrow}</div>
+    <div class="vs">model <b style="color:var(--pick)">${f.model_pick||"–"}</b> → +${ms?ms.pts:0}</div>
   </div>`;
 }
 
-function scoreboard(su){
+function scoreboard(t){
   return `<div class="big">
-    <div class="stat"><div class="l">Your points</div><div class="n" style="color:var(--you)">${su.your_points}/${su.your_max}</div></div>
-    <div class="stat"><div class="l">Results</div><div class="n">${su.your_result_hits}/${su.your_scored}</div></div>
-    <div class="stat"><div class="l">Model pts</div><div class="n">${su.model_points}</div></div>
-  </div>`;
+    <div class="stat"><div class="l">Your points</div><div class="n" style="color:var(--you)">${t.yP}/${t.yMax}</div></div>
+    <div class="stat"><div class="l">Model points</div><div class="n" style="color:var(--pick)">${t.mP}/${t.mMax}</div></div>
+  </div>
+  <div class="subline">You called the <b>correct result in ${t.yR} of ${t.yN}</b> games, and the <b>exact score in ${t.yE}</b>. (Result = ${RP} pts, exact = ${EP} pts.)</div>`;
 }
+
+function toSGT(utc){ if(!utc)return"–"; const m=utc.match(/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/); if(!m)return utc;
+  const d=new Date(Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5])); const s=new Date(d.getTime()+8*3600*1000);
+  return s.toLocaleString("en-GB",{weekday:"short",day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})+" SGT"; }
+
+function explainerHTML(){return `
+  <h3>What this is</h3>
+  <p>A statistical model predicts every World Cup match, then suggests a pick for your pool (<span class="k">${RP} pts</span> for the correct result, <span class="k">${EP} pts</span> for the exact score). You can override any pick.</p>
+  <h3>The win bar</h3>
+  <p><span class="dot" style="background:var(--home)"></span>team 1 win &nbsp; <span class="dot" style="background:var(--draw)"></span>draw &nbsp; <span class="dot" style="background:var(--away)"></span>team 2 win — the model's probability for each outcome. Wider = more likely.</p>
+  <h3>Model pick + %</h3>
+  <p>The single scoreline the model recommends to <span class="k">maximise your expected pool points</span>. The % is how likely that exact score is. It often plays safe (e.g. 1-0) to bank the result points.</p>
+  <h3>Likeliest scorelines</h3>
+  <p>The most probable exact scores with their chances. If you'd rather gamble for the ${EP}-point exact bonus, pick one of these instead of the safe model pick.</p>
+  <h3>Your pick</h3>
+  <p>Set a scoreline on each card; it saves on this device and <span class="k">locks at kickoff</span> (SGT). Once a game finishes, it's scored automatically and shows in Results.</p>
+  <h3>You vs Model</h3>
+  <p>Your pool points vs what the model's own picks would have scored over the same games — see if you can beat the algorithm.</p>
+  <h3>Accuracy (RPS)</h3>
+  <p>Ranked Probability Score grades how good the probabilities are — <span class="k">lower is better</span>. Roughly: 0.10 excellent, 0.20 average, 0.33 = random guessing.</p>
+  <h3>Dixon–Coles + Elo ensemble</h3>
+  <p>Two methods blended: <span class="k">Dixon–Coles</span> models goals from recent scoring form; <span class="k">Elo</span> is a running team-strength rating built from every international ever played. Combining them is more accurate than either alone, especially for teams with little recent data.</p>
+  <h3>Neutral venues</h3>
+  <p>Almost all World Cup games are at neutral sites, so the model removes home advantage from its predictions.</p>
+  <h3>Power ratings</h3>
+  <p>The Ratings tab is the Elo table — the model's view of who's strongest right now.</p>`;}
 
 document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
   document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active")); t.classList.add("active");
-  const v=t.dataset.view; ["fixtures","results","ratings"].forEach(id=>$("#"+id).classList.toggle("hidden", id!==v));
+  const v=t.dataset.view; ["fixtures","results","ratings","explainer"].forEach(id=>$("#"+id).classList.toggle("hidden", id!==v));
 }));
 </script>
 </body>

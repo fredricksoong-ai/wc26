@@ -109,6 +109,7 @@ def reconcile_names(fixtures: pd.DataFrame, model_teams, aliases: dict | None = 
     def m(name):
         if _is_placeholder(name):
             return name
+        name = name.replace(" & ", " and ")   # "Bosnia & Herzegovina" -> "...and..."
         return aliases.get(name, name)
 
     out = fixtures.copy()
