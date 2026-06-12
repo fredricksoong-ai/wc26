@@ -1,12 +1,12 @@
 {
-  "generated_utc": "2026-06-12 17:07 UTC",
+  "generated_utc": "2026-06-12 17:11 UTC",
   "model": "Dixon-Coles (xi=0.001) + Elo ensemble (w_DC=0.6), neutral venues",
   "scoring": {
     "result_pts": 2,
     "exact_pts": 3
   },
   "backtest": {
-    "ensemble_rps": 0.1675,
+    "ensemble_rps": 0.1676,
     "baseline_rps": 0.2282
   },
   "summary": {
@@ -19,7 +19,7 @@
     "your_result_hits": 1,
     "your_exact_hits": 0
   },
-  "n_fixtures": 7,
+  "n_fixtures": 104,
   "fixtures": [
     {
       "date": "2026-06-11",
@@ -88,7 +88,7 @@
       "date": "2026-06-11",
       "round": "Matchday 1",
       "group": "Group A",
-      "ground": "Guadalajara",
+      "ground": "Guadalajara (Zapopan)",
       "team1": "South Korea",
       "team2": "Czech Republic",
       "kickoff_sgt": "2026-06-12T10:00",
@@ -148,104 +148,210 @@
       "your_exact_hit": false
     },
     {
-      "date": "2026-06-12",
-      "round": "Matchday 2",
-      "group": "Group B",
-      "ground": "Toronto",
-      "team1": "Canada",
-      "team2": "Bosnia and Herzegovina",
-      "kickoff_sgt": "2026-06-13T03:00",
-      "kickoff_label": "Sat 13 Jun \u00b7 03:00 SGT",
+      "date": "2026-06-18",
+      "round": "Matchday 8",
+      "group": "Group A",
+      "ground": "Atlanta",
+      "team1": "Czech Republic",
+      "team2": "South Africa",
+      "kickoff_sgt": "2026-06-19T00:00",
+      "kickoff_label": "Fri 19 Jun \u00b7 00:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.665,
-      "p_draw": 0.224,
-      "p_away": 0.111,
+      "p_home": 0.463,
+      "p_draw": 0.291,
+      "p_away": 0.246,
       "model_pick": "1-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.177,
-      "exp_pts": 1.86,
+      "model_pick_prob": 0.131,
+      "exp_pts": 1.32,
       "top_scores": [
         [
-          "1-0",
-          0.177
+          "1-1",
+          0.142
         ],
         [
-          "2-0",
-          0.16
+          "1-0",
+          0.131
         ],
         [
           "0-0",
-          0.114
-        ],
-        [
-          "1-1",
-          0.101
-        ],
-        [
-          "3-0",
-          0.092
-        ],
-        [
-          "2-1",
-          0.081
-        ]
-      ],
-      "updated_utc": "2026-06-12 17:07 UTC",
-      "scored": false
-    },
-    {
-      "date": "2026-06-12",
-      "round": "Matchday 2",
-      "group": "Group D",
-      "ground": "Los Angeles",
-      "team1": "United States",
-      "team2": "Paraguay",
-      "kickoff_sgt": "2026-06-13T09:00",
-      "kickoff_label": "Sat 13 Jun \u00b7 09:00 SGT",
-      "resolved": true,
-      "played": false,
-      "p_home": 0.258,
-      "p_draw": 0.293,
-      "p_away": 0.449,
-      "model_pick": "0-1",
-      "model_pick_result": "away",
-      "model_pick_prob": 0.132,
-      "exp_pts": 1.295,
-      "top_scores": [
-        [
-          "1-1",
-          0.139
+          0.124
         ],
         [
           "0-1",
-          0.132
+          0.093
+        ],
+        [
+          "2-0",
+          0.089
+        ],
+        [
+          "2-1",
+          0.082
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-18",
+      "round": "Matchday 8",
+      "group": "Group A",
+      "ground": "Guadalajara (Zapopan)",
+      "team1": "Mexico",
+      "team2": "South Korea",
+      "kickoff_sgt": "2026-06-19T09:00",
+      "kickoff_label": "Fri 19 Jun \u00b7 09:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.415,
+      "p_draw": 0.309,
+      "p_away": 0.277,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.138,
+      "exp_pts": 1.242,
+      "top_scores": [
+        [
+          "0-0",
+          0.147
+        ],
+        [
+          "1-1",
+          0.145
+        ],
+        [
+          "1-0",
+          0.138
+        ],
+        [
+          "0-1",
+          0.111
+        ],
+        [
+          "2-0",
+          0.082
+        ],
+        [
+          "2-1",
+          0.074
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-24",
+      "round": "Matchday 14",
+      "group": "Group A",
+      "ground": "Mexico City",
+      "team1": "Czech Republic",
+      "team2": "Mexico",
+      "kickoff_sgt": "2026-06-25T09:00",
+      "kickoff_label": "Thu 25 Jun \u00b7 09:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.161,
+      "p_draw": 0.254,
+      "p_away": 0.585,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.15,
+      "exp_pts": 1.621,
+      "top_scores": [
+        [
+          "0-1",
+          0.15
+        ],
+        [
+          "1-1",
+          0.125
+        ],
+        [
+          "0-2",
+          0.124
+        ],
+        [
+          "0-0",
+          0.112
+        ],
+        [
+          "1-2",
+          0.089
+        ],
+        [
+          "0-3",
+          0.065
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-24",
+      "round": "Matchday 14",
+      "group": "Group A",
+      "ground": "Monterrey (Guadalupe)",
+      "team1": "South Africa",
+      "team2": "South Korea",
+      "kickoff_sgt": "2026-06-25T09:00",
+      "kickoff_label": "Thu 25 Jun \u00b7 09:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.138,
+      "p_draw": 0.242,
+      "p_away": 0.62,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.161,
+      "exp_pts": 1.723,
+      "top_scores": [
+        [
+          "0-1",
+          0.161
+        ],
+        [
+          "0-2",
+          0.134
+        ],
+        [
+          "1-1",
+          0.12
         ],
         [
           "0-0",
           0.117
         ],
         [
-          "0-2",
-          0.096
-        ],
-        [
           "1-2",
-          0.086
+          0.087
         ],
         [
-          "1-0",
-          0.084
+          "0-3",
+          0.07
         ]
       ],
-      "updated_utc": "2026-06-12 17:07 UTC",
+      "updated_utc": "2026-06-12 17:11 UTC",
       "scored": false
+    },
+    {
+      "date": "2026-06-12",
+      "round": "Matchday 2",
+      "group": "Group B",
+      "ground": "Toronto",
+      "team1": "Canada",
+      "team2": "Bosnia & Herzegovina",
+      "kickoff_sgt": "2026-06-13T03:00",
+      "kickoff_label": "Sat 13 Jun \u00b7 03:00 SGT",
+      "resolved": true,
+      "played": false
     },
     {
       "date": "2026-06-13",
       "round": "Matchday 3",
       "group": "Group B",
-      "ground": "San Francisco Bay Area",
+      "ground": "San Francisco Bay Area (Santa Clara)",
       "team1": "Qatar",
       "team2": "Switzerland",
       "kickoff_sgt": "2026-06-14T03:00",
@@ -285,14 +391,132 @@
           0.076
         ]
       ],
-      "updated_utc": "2026-06-12 17:07 UTC",
+      "updated_utc": "2026-06-12 17:11 UTC",
       "scored": false
+    },
+    {
+      "date": "2026-06-18",
+      "round": "Matchday 8",
+      "group": "Group B",
+      "ground": "Los Angeles (Inglewood)",
+      "team1": "Switzerland",
+      "team2": "Bosnia & Herzegovina",
+      "kickoff_sgt": "2026-06-19T03:00",
+      "kickoff_label": "Fri 19 Jun \u00b7 03:00 SGT",
+      "resolved": true,
+      "played": false
+    },
+    {
+      "date": "2026-06-18",
+      "round": "Matchday 8",
+      "group": "Group B",
+      "ground": "Vancouver",
+      "team1": "Canada",
+      "team2": "Qatar",
+      "kickoff_sgt": "2026-06-19T06:00",
+      "kickoff_label": "Fri 19 Jun \u00b7 06:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.712,
+      "p_draw": 0.19,
+      "p_away": 0.098,
+      "model_pick": "2-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.143,
+      "exp_pts": 1.851,
+      "top_scores": [
+        [
+          "2-0",
+          0.143
+        ],
+        [
+          "1-0",
+          0.134
+        ],
+        [
+          "1-1",
+          0.099
+        ],
+        [
+          "3-0",
+          0.096
+        ],
+        [
+          "2-1",
+          0.091
+        ],
+        [
+          "0-0",
+          0.078
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-24",
+      "round": "Matchday 14",
+      "group": "Group B",
+      "ground": "Vancouver",
+      "team1": "Switzerland",
+      "team2": "Canada",
+      "kickoff_sgt": "2026-06-25T03:00",
+      "kickoff_label": "Thu 25 Jun \u00b7 03:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.373,
+      "p_draw": 0.303,
+      "p_away": 0.324,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.111,
+      "exp_pts": 1.08,
+      "top_scores": [
+        [
+          "1-1",
+          0.146
+        ],
+        [
+          "0-0",
+          0.126
+        ],
+        [
+          "0-1",
+          0.114
+        ],
+        [
+          "1-0",
+          0.111
+        ],
+        [
+          "1-2",
+          0.074
+        ],
+        [
+          "2-1",
+          0.072
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-24",
+      "round": "Matchday 14",
+      "group": "Group B",
+      "ground": "Seattle",
+      "team1": "Bosnia & Herzegovina",
+      "team2": "Qatar",
+      "kickoff_sgt": "2026-06-25T03:00",
+      "kickoff_label": "Thu 25 Jun \u00b7 03:00 SGT",
+      "resolved": true,
+      "played": false
     },
     {
       "date": "2026-06-13",
       "round": "Matchday 3",
       "group": "Group C",
-      "ground": "New York/New Jersey",
+      "ground": "New York/New Jersey (East Rutherford)",
       "team1": "Brazil",
       "team2": "Morocco",
       "kickoff_sgt": "2026-06-14T06:00",
@@ -332,7 +556,524 @@
           0.071
         ]
       ],
-      "updated_utc": "2026-06-12 17:07 UTC",
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-13",
+      "round": "Matchday 3",
+      "group": "Group C",
+      "ground": "Boston (Foxborough)",
+      "team1": "Haiti",
+      "team2": "Scotland",
+      "kickoff_sgt": "2026-06-14T09:00",
+      "kickoff_label": "Sun 14 Jun \u00b7 09:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.22,
+      "p_draw": 0.257,
+      "p_away": 0.524,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.098,
+      "exp_pts": 1.343,
+      "top_scores": [
+        [
+          "1-1",
+          0.127
+        ],
+        [
+          "0-1",
+          0.098
+        ],
+        [
+          "1-2",
+          0.095
+        ],
+        [
+          "0-2",
+          0.088
+        ],
+        [
+          "0-0",
+          0.076
+        ],
+        [
+          "2-1",
+          0.063
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-19",
+      "round": "Matchday 9",
+      "group": "Group C",
+      "ground": "Boston (Foxborough)",
+      "team1": "Scotland",
+      "team2": "Morocco",
+      "kickoff_sgt": "2026-06-20T06:00",
+      "kickoff_label": "Sat 20 Jun \u00b7 06:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.161,
+      "p_draw": 0.28,
+      "p_away": 0.558,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.197,
+      "exp_pts": 1.709,
+      "top_scores": [
+        [
+          "0-1",
+          0.197
+        ],
+        [
+          "0-0",
+          0.161
+        ],
+        [
+          "0-2",
+          0.141
+        ],
+        [
+          "1-1",
+          0.117
+        ],
+        [
+          "1-2",
+          0.074
+        ],
+        [
+          "1-0",
+          0.071
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-19",
+      "round": "Matchday 9",
+      "group": "Group C",
+      "ground": "Philadelphia",
+      "team1": "Brazil",
+      "team2": "Haiti",
+      "kickoff_sgt": "2026-06-20T08:30",
+      "kickoff_label": "Sat 20 Jun \u00b7 08:30 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.856,
+      "p_draw": 0.1,
+      "p_away": 0.044,
+      "model_pick": "3-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.124,
+      "exp_pts": 2.083,
+      "top_scores": [
+        [
+          "3-0",
+          0.124
+        ],
+        [
+          "2-0",
+          0.108
+        ],
+        [
+          "4-0",
+          0.107
+        ],
+        [
+          "5-0",
+          0.074
+        ],
+        [
+          "3-1",
+          0.07
+        ],
+        [
+          "2-1",
+          0.061
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-24",
+      "round": "Matchday 14",
+      "group": "Group C",
+      "ground": "Miami (Miami Gardens)",
+      "team1": "Scotland",
+      "team2": "Brazil",
+      "kickoff_sgt": "2026-06-25T06:00",
+      "kickoff_label": "Thu 25 Jun \u00b7 06:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.101,
+      "p_draw": 0.179,
+      "p_away": 0.721,
+      "model_pick": "0-2",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.134,
+      "exp_pts": 1.845,
+      "top_scores": [
+        [
+          "0-2",
+          0.134
+        ],
+        [
+          "0-3",
+          0.115
+        ],
+        [
+          "0-1",
+          0.099
+        ],
+        [
+          "1-2",
+          0.085
+        ],
+        [
+          "0-4",
+          0.074
+        ],
+        [
+          "1-3",
+          0.073
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-24",
+      "round": "Matchday 14",
+      "group": "Group C",
+      "ground": "Atlanta",
+      "team1": "Morocco",
+      "team2": "Haiti",
+      "kickoff_sgt": "2026-06-25T06:00",
+      "kickoff_label": "Thu 25 Jun \u00b7 06:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.717,
+      "p_draw": 0.198,
+      "p_away": 0.086,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.177,
+      "exp_pts": 1.964,
+      "top_scores": [
+        [
+          "1-0",
+          0.177
+        ],
+        [
+          "2-0",
+          0.168
+        ],
+        [
+          "0-0",
+          0.108
+        ],
+        [
+          "3-0",
+          0.102
+        ],
+        [
+          "1-1",
+          0.093
+        ],
+        [
+          "2-1",
+          0.079
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-12",
+      "round": "Matchday 2",
+      "group": "Group D",
+      "ground": "Los Angeles (Inglewood)",
+      "team1": "United States",
+      "team2": "Paraguay",
+      "kickoff_sgt": "2026-06-13T09:00",
+      "kickoff_label": "Sat 13 Jun \u00b7 09:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.258,
+      "p_draw": 0.293,
+      "p_away": 0.449,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.132,
+      "exp_pts": 1.295,
+      "top_scores": [
+        [
+          "1-1",
+          0.139
+        ],
+        [
+          "0-1",
+          0.132
+        ],
+        [
+          "0-0",
+          0.117
+        ],
+        [
+          "0-2",
+          0.096
+        ],
+        [
+          "1-2",
+          0.086
+        ],
+        [
+          "1-0",
+          0.084
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-13",
+      "round": "Matchday 3",
+      "group": "Group D",
+      "ground": "Vancouver",
+      "team1": "Australia",
+      "team2": "Turkey",
+      "kickoff_sgt": "2026-06-14T12:00",
+      "kickoff_label": "Sun 14 Jun \u00b7 12:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.407,
+      "p_draw": 0.287,
+      "p_away": 0.306,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.134,
+      "exp_pts": 1.217,
+      "top_scores": [
+        [
+          "1-1",
+          0.135
+        ],
+        [
+          "1-0",
+          0.134
+        ],
+        [
+          "0-0",
+          0.112
+        ],
+        [
+          "2-0",
+          0.103
+        ],
+        [
+          "2-1",
+          0.089
+        ],
+        [
+          "0-1",
+          0.077
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-19",
+      "round": "Matchday 9",
+      "group": "Group D",
+      "ground": "Seattle",
+      "team1": "United States",
+      "team2": "Australia",
+      "kickoff_sgt": "2026-06-20T03:00",
+      "kickoff_label": "Sat 20 Jun \u00b7 03:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.272,
+      "p_draw": 0.296,
+      "p_away": 0.432,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.129,
+      "exp_pts": 1.251,
+      "top_scores": [
+        [
+          "1-1",
+          0.141
+        ],
+        [
+          "0-1",
+          0.129
+        ],
+        [
+          "0-0",
+          0.118
+        ],
+        [
+          "0-2",
+          0.091
+        ],
+        [
+          "1-0",
+          0.089
+        ],
+        [
+          "1-2",
+          0.085
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-19",
+      "round": "Matchday 9",
+      "group": "Group D",
+      "ground": "San Francisco Bay Area (Santa Clara)",
+      "team1": "Turkey",
+      "team2": "Paraguay",
+      "kickoff_sgt": "2026-06-20T11:00",
+      "kickoff_label": "Sat 20 Jun \u00b7 11:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.292,
+      "p_draw": 0.284,
+      "p_away": 0.424,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.137,
+      "exp_pts": 1.258,
+      "top_scores": [
+        [
+          "0-1",
+          0.137
+        ],
+        [
+          "1-1",
+          0.132
+        ],
+        [
+          "0-0",
+          0.11
+        ],
+        [
+          "0-2",
+          0.109
+        ],
+        [
+          "1-2",
+          0.09
+        ],
+        [
+          "1-0",
+          0.072
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-25",
+      "round": "Matchday 15",
+      "group": "Group D",
+      "ground": "Los Angeles (Inglewood)",
+      "team1": "Turkey",
+      "team2": "United States",
+      "kickoff_sgt": "2026-06-26T10:00",
+      "kickoff_label": "Fri 26 Jun \u00b7 10:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.392,
+      "p_draw": 0.263,
+      "p_away": 0.345,
+      "model_pick": "2-1",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.076,
+      "exp_pts": 1.012,
+      "top_scores": [
+        [
+          "1-1",
+          0.122
+        ],
+        [
+          "1-2",
+          0.09
+        ],
+        [
+          "2-1",
+          0.076
+        ],
+        [
+          "0-1",
+          0.074
+        ],
+        [
+          "0-2",
+          0.067
+        ],
+        [
+          "0-0",
+          0.061
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-25",
+      "round": "Matchday 15",
+      "group": "Group D",
+      "ground": "San Francisco Bay Area (Santa Clara)",
+      "team1": "Paraguay",
+      "team2": "Australia",
+      "kickoff_sgt": "2026-06-26T10:00",
+      "kickoff_label": "Fri 26 Jun \u00b7 10:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.346,
+      "p_draw": 0.336,
+      "p_away": 0.318,
+      "model_pick": "0-0",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.202,
+      "exp_pts": 1.277,
+      "top_scores": [
+        [
+          "0-0",
+          0.202
+        ],
+        [
+          "1-0",
+          0.153
+        ],
+        [
+          "1-1",
+          0.142
+        ],
+        [
+          "0-1",
+          0.142
+        ],
+        [
+          "2-0",
+          0.07
+        ],
+        [
+          "0-2",
+          0.061
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
       "scored": false
     },
     {
@@ -379,8 +1120,2601 @@
           0.07
         ]
       ],
-      "updated_utc": "2026-06-12 17:07 UTC",
+      "updated_utc": "2026-06-12 17:11 UTC",
       "scored": false
+    },
+    {
+      "date": "2026-06-14",
+      "round": "Matchday 4",
+      "group": "Group E",
+      "ground": "Philadelphia",
+      "team1": "Ivory Coast",
+      "team2": "Ecuador",
+      "kickoff_sgt": "2026-06-15T07:00",
+      "kickoff_label": "Mon 15 Jun \u00b7 07:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.153,
+      "p_draw": 0.306,
+      "p_away": 0.541,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.224,
+      "exp_pts": 1.754,
+      "top_scores": [
+        [
+          "0-0",
+          0.233
+        ],
+        [
+          "0-1",
+          0.224
+        ],
+        [
+          "0-2",
+          0.121
+        ],
+        [
+          "1-1",
+          0.115
+        ],
+        [
+          "1-0",
+          0.093
+        ],
+        [
+          "1-2",
+          0.055
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-20",
+      "round": "Matchday 10",
+      "group": "Group E",
+      "ground": "Toronto",
+      "team1": "Germany",
+      "team2": "Ivory Coast",
+      "kickoff_sgt": "2026-06-21T04:00",
+      "kickoff_label": "Sun 21 Jun \u00b7 04:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.532,
+      "p_draw": 0.261,
+      "p_away": 0.207,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.118,
+      "exp_pts": 1.419,
+      "top_scores": [
+        [
+          "1-1",
+          0.135
+        ],
+        [
+          "1-0",
+          0.118
+        ],
+        [
+          "0-0",
+          0.098
+        ],
+        [
+          "2-0",
+          0.094
+        ],
+        [
+          "2-1",
+          0.091
+        ],
+        [
+          "0-1",
+          0.075
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-20",
+      "round": "Matchday 10",
+      "group": "Group E",
+      "ground": "Kansas City",
+      "team1": "Ecuador",
+      "team2": "Cura\u00e7ao",
+      "kickoff_sgt": "2026-06-21T08:00",
+      "kickoff_label": "Sun 21 Jun \u00b7 08:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.815,
+      "p_draw": 0.14,
+      "p_away": 0.045,
+      "model_pick": "2-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.196,
+      "exp_pts": 2.219,
+      "top_scores": [
+        [
+          "2-0",
+          0.196
+        ],
+        [
+          "1-0",
+          0.176
+        ],
+        [
+          "3-0",
+          0.141
+        ],
+        [
+          "0-0",
+          0.089
+        ],
+        [
+          "4-0",
+          0.077
+        ],
+        [
+          "1-1",
+          0.062
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-25",
+      "round": "Matchday 15",
+      "group": "Group E",
+      "ground": "Philadelphia",
+      "team1": "Cura\u00e7ao",
+      "team2": "Ivory Coast",
+      "kickoff_sgt": "2026-06-26T04:00",
+      "kickoff_label": "Fri 26 Jun \u00b7 04:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.126,
+      "p_draw": 0.231,
+      "p_away": 0.643,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.16,
+      "exp_pts": 1.768,
+      "top_scores": [
+        [
+          "0-1",
+          0.16
+        ],
+        [
+          "0-2",
+          0.148
+        ],
+        [
+          "1-1",
+          0.107
+        ],
+        [
+          "0-0",
+          0.104
+        ],
+        [
+          "0-3",
+          0.087
+        ],
+        [
+          "1-2",
+          0.087
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-25",
+      "round": "Matchday 15",
+      "group": "Group E",
+      "ground": "New York/New Jersey (East Rutherford)",
+      "team1": "Ecuador",
+      "team2": "Germany",
+      "kickoff_sgt": "2026-06-26T04:00",
+      "kickoff_label": "Fri 26 Jun \u00b7 04:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.41,
+      "p_draw": 0.31,
+      "p_away": 0.281,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.153,
+      "exp_pts": 1.279,
+      "top_scores": [
+        [
+          "1-0",
+          0.153
+        ],
+        [
+          "0-0",
+          0.149
+        ],
+        [
+          "1-1",
+          0.141
+        ],
+        [
+          "0-1",
+          0.098
+        ],
+        [
+          "2-0",
+          0.098
+        ],
+        [
+          "2-1",
+          0.077
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-14",
+      "round": "Matchday 4",
+      "group": "Group F",
+      "ground": "Dallas (Arlington)",
+      "team1": "Netherlands",
+      "team2": "Japan",
+      "kickoff_sgt": "2026-06-15T04:00",
+      "kickoff_label": "Mon 15 Jun \u00b7 04:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.297,
+      "p_draw": 0.292,
+      "p_away": 0.411,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.126,
+      "exp_pts": 1.199,
+      "top_scores": [
+        [
+          "1-1",
+          0.138
+        ],
+        [
+          "0-1",
+          0.126
+        ],
+        [
+          "0-0",
+          0.109
+        ],
+        [
+          "0-2",
+          0.094
+        ],
+        [
+          "1-2",
+          0.088
+        ],
+        [
+          "1-0",
+          0.081
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-14",
+      "round": "Matchday 4",
+      "group": "Group F",
+      "ground": "Monterrey (Guadalupe)",
+      "team1": "Sweden",
+      "team2": "Tunisia",
+      "kickoff_sgt": "2026-06-15T10:00",
+      "kickoff_label": "Mon 15 Jun \u00b7 10:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.366,
+      "p_draw": 0.3,
+      "p_away": 0.334,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.105,
+      "exp_pts": 1.046,
+      "top_scores": [
+        [
+          "1-1",
+          0.144
+        ],
+        [
+          "0-0",
+          0.117
+        ],
+        [
+          "0-1",
+          0.11
+        ],
+        [
+          "1-0",
+          0.105
+        ],
+        [
+          "1-2",
+          0.077
+        ],
+        [
+          "2-1",
+          0.073
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-20",
+      "round": "Matchday 10",
+      "group": "Group F",
+      "ground": "Houston",
+      "team1": "Netherlands",
+      "team2": "Sweden",
+      "kickoff_sgt": "2026-06-21T01:00",
+      "kickoff_label": "Sun 21 Jun \u00b7 01:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.646,
+      "p_draw": 0.205,
+      "p_away": 0.148,
+      "model_pick": "2-1",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.098,
+      "exp_pts": 1.587,
+      "top_scores": [
+        [
+          "2-1",
+          0.098
+        ],
+        [
+          "1-1",
+          0.095
+        ],
+        [
+          "2-0",
+          0.094
+        ],
+        [
+          "1-0",
+          0.077
+        ],
+        [
+          "3-1",
+          0.073
+        ],
+        [
+          "3-0",
+          0.07
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-20",
+      "round": "Matchday 10",
+      "group": "Group F",
+      "ground": "Monterrey (Guadalupe)",
+      "team1": "Tunisia",
+      "team2": "Japan",
+      "kickoff_sgt": "2026-06-21T12:00",
+      "kickoff_label": "Sun 21 Jun \u00b7 12:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.114,
+      "p_draw": 0.243,
+      "p_away": 0.643,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.201,
+      "exp_pts": 1.891,
+      "top_scores": [
+        [
+          "0-1",
+          0.201
+        ],
+        [
+          "0-2",
+          0.153
+        ],
+        [
+          "0-0",
+          0.153
+        ],
+        [
+          "1-1",
+          0.109
+        ],
+        [
+          "0-3",
+          0.074
+        ],
+        [
+          "1-2",
+          0.073
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-25",
+      "round": "Matchday 15",
+      "group": "Group F",
+      "ground": "Dallas (Arlington)",
+      "team1": "Japan",
+      "team2": "Sweden",
+      "kickoff_sgt": "2026-06-26T07:00",
+      "kickoff_label": "Fri 26 Jun \u00b7 07:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.682,
+      "p_draw": 0.202,
+      "p_away": 0.116,
+      "model_pick": "2-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.135,
+      "exp_pts": 1.77,
+      "top_scores": [
+        [
+          "2-0",
+          0.135
+        ],
+        [
+          "1-0",
+          0.117
+        ],
+        [
+          "3-0",
+          0.098
+        ],
+        [
+          "2-1",
+          0.093
+        ],
+        [
+          "1-1",
+          0.092
+        ],
+        [
+          "3-1",
+          0.067
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-25",
+      "round": "Matchday 15",
+      "group": "Group F",
+      "ground": "Kansas City",
+      "team1": "Tunisia",
+      "team2": "Netherlands",
+      "kickoff_sgt": "2026-06-26T07:00",
+      "kickoff_label": "Fri 26 Jun \u00b7 07:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.147,
+      "p_draw": 0.24,
+      "p_away": 0.614,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.152,
+      "exp_pts": 1.683,
+      "top_scores": [
+        [
+          "0-1",
+          0.152
+        ],
+        [
+          "1-1",
+          0.128
+        ],
+        [
+          "0-2",
+          0.121
+        ],
+        [
+          "0-0",
+          0.118
+        ],
+        [
+          "1-2",
+          0.088
+        ],
+        [
+          "1-0",
+          0.069
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-15",
+      "round": "Matchday 5",
+      "group": "Group G",
+      "ground": "Seattle",
+      "team1": "Belgium",
+      "team2": "Egypt",
+      "kickoff_sgt": "2026-06-16T03:00",
+      "kickoff_label": "Tue 16 Jun \u00b7 03:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.49,
+      "p_draw": 0.294,
+      "p_away": 0.216,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.156,
+      "exp_pts": 1.448,
+      "top_scores": [
+        [
+          "1-0",
+          0.156
+        ],
+        [
+          "0-0",
+          0.147
+        ],
+        [
+          "1-1",
+          0.139
+        ],
+        [
+          "2-0",
+          0.101
+        ],
+        [
+          "0-1",
+          0.095
+        ],
+        [
+          "2-1",
+          0.078
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-15",
+      "round": "Matchday 5",
+      "group": "Group G",
+      "ground": "Los Angeles (Inglewood)",
+      "team1": "Iran",
+      "team2": "New Zealand",
+      "kickoff_sgt": "2026-06-16T09:00",
+      "kickoff_label": "Tue 16 Jun \u00b7 09:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.54,
+      "p_draw": 0.268,
+      "p_away": 0.193,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.139,
+      "exp_pts": 1.495,
+      "top_scores": [
+        [
+          "1-0",
+          0.139
+        ],
+        [
+          "1-1",
+          0.133
+        ],
+        [
+          "0-0",
+          0.113
+        ],
+        [
+          "2-0",
+          0.108
+        ],
+        [
+          "2-1",
+          0.089
+        ],
+        [
+          "0-1",
+          0.074
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-21",
+      "round": "Matchday 11",
+      "group": "Group G",
+      "ground": "Los Angeles (Inglewood)",
+      "team1": "Belgium",
+      "team2": "Iran",
+      "kickoff_sgt": "2026-06-22T03:00",
+      "kickoff_label": "Mon 22 Jun \u00b7 03:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.386,
+      "p_draw": 0.293,
+      "p_away": 0.322,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.1,
+      "exp_pts": 1.071,
+      "top_scores": [
+        [
+          "1-1",
+          0.142
+        ],
+        [
+          "0-0",
+          0.102
+        ],
+        [
+          "1-0",
+          0.1
+        ],
+        [
+          "0-1",
+          0.097
+        ],
+        [
+          "2-1",
+          0.079
+        ],
+        [
+          "1-2",
+          0.077
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-21",
+      "round": "Matchday 11",
+      "group": "Group G",
+      "ground": "Vancouver",
+      "team1": "New Zealand",
+      "team2": "Egypt",
+      "kickoff_sgt": "2026-06-22T09:00",
+      "kickoff_label": "Mon 22 Jun \u00b7 09:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.276,
+      "p_draw": 0.321,
+      "p_away": 0.402,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.15,
+      "exp_pts": 1.253,
+      "top_scores": [
+        [
+          "0-0",
+          0.18
+        ],
+        [
+          "0-1",
+          0.15
+        ],
+        [
+          "1-1",
+          0.144
+        ],
+        [
+          "1-0",
+          0.128
+        ],
+        [
+          "0-2",
+          0.077
+        ],
+        [
+          "1-2",
+          0.063
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-26",
+      "round": "Matchday 16",
+      "group": "Group G",
+      "ground": "Seattle",
+      "team1": "Egypt",
+      "team2": "Iran",
+      "kickoff_sgt": "2026-06-27T11:00",
+      "kickoff_label": "Sat 27 Jun \u00b7 11:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.239,
+      "p_draw": 0.31,
+      "p_away": 0.45,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.163,
+      "exp_pts": 1.391,
+      "top_scores": [
+        [
+          "0-0",
+          0.164
+        ],
+        [
+          "0-1",
+          0.163
+        ],
+        [
+          "1-1",
+          0.14
+        ],
+        [
+          "1-0",
+          0.103
+        ],
+        [
+          "0-2",
+          0.099
+        ],
+        [
+          "1-2",
+          0.073
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-26",
+      "round": "Matchday 16",
+      "group": "Group G",
+      "ground": "Vancouver",
+      "team1": "New Zealand",
+      "team2": "Belgium",
+      "kickoff_sgt": "2026-06-27T11:00",
+      "kickoff_label": "Sat 27 Jun \u00b7 11:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.173,
+      "p_draw": 0.248,
+      "p_away": 0.579,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.129,
+      "exp_pts": 1.544,
+      "top_scores": [
+        [
+          "1-1",
+          0.129
+        ],
+        [
+          "0-1",
+          0.129
+        ],
+        [
+          "0-2",
+          0.108
+        ],
+        [
+          "0-0",
+          0.099
+        ],
+        [
+          "1-2",
+          0.093
+        ],
+        [
+          "1-0",
+          0.066
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-15",
+      "round": "Matchday 5",
+      "group": "Group H",
+      "ground": "Atlanta",
+      "team1": "Spain",
+      "team2": "Cape Verde",
+      "kickoff_sgt": "2026-06-16T00:00",
+      "kickoff_label": "Tue 16 Jun \u00b7 00:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.862,
+      "p_draw": 0.102,
+      "p_away": 0.035,
+      "model_pick": "2-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.16,
+      "exp_pts": 2.205,
+      "top_scores": [
+        [
+          "2-0",
+          0.16
+        ],
+        [
+          "3-0",
+          0.137
+        ],
+        [
+          "1-0",
+          0.12
+        ],
+        [
+          "4-0",
+          0.088
+        ],
+        [
+          "2-1",
+          0.073
+        ],
+        [
+          "3-1",
+          0.063
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-15",
+      "round": "Matchday 5",
+      "group": "Group H",
+      "ground": "Miami (Miami Gardens)",
+      "team1": "Saudi Arabia",
+      "team2": "Uruguay",
+      "kickoff_sgt": "2026-06-16T06:00",
+      "kickoff_label": "Tue 16 Jun \u00b7 06:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.102,
+      "p_draw": 0.248,
+      "p_away": 0.65,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.231,
+      "exp_pts": 1.992,
+      "top_scores": [
+        [
+          "0-1",
+          0.231
+        ],
+        [
+          "0-0",
+          0.179
+        ],
+        [
+          "0-2",
+          0.165
+        ],
+        [
+          "1-1",
+          0.097
+        ],
+        [
+          "0-3",
+          0.076
+        ],
+        [
+          "1-2",
+          0.062
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-21",
+      "round": "Matchday 11",
+      "group": "Group H",
+      "ground": "Atlanta",
+      "team1": "Spain",
+      "team2": "Saudi Arabia",
+      "kickoff_sgt": "2026-06-22T00:00",
+      "kickoff_label": "Mon 22 Jun \u00b7 00:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.785,
+      "p_draw": 0.154,
+      "p_away": 0.061,
+      "model_pick": "2-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.166,
+      "exp_pts": 2.068,
+      "top_scores": [
+        [
+          "2-0",
+          0.166
+        ],
+        [
+          "1-0",
+          0.165
+        ],
+        [
+          "3-0",
+          0.107
+        ],
+        [
+          "0-0",
+          0.096
+        ],
+        [
+          "1-1",
+          0.091
+        ],
+        [
+          "2-1",
+          0.081
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-21",
+      "round": "Matchday 11",
+      "group": "Group H",
+      "ground": "Miami (Miami Gardens)",
+      "team1": "Uruguay",
+      "team2": "Cape Verde",
+      "kickoff_sgt": "2026-06-22T06:00",
+      "kickoff_label": "Mon 22 Jun \u00b7 06:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.745,
+      "p_draw": 0.186,
+      "p_away": 0.069,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.199,
+      "exp_pts": 2.086,
+      "top_scores": [
+        [
+          "1-0",
+          0.199
+        ],
+        [
+          "2-0",
+          0.189
+        ],
+        [
+          "0-0",
+          0.117
+        ],
+        [
+          "3-0",
+          0.117
+        ],
+        [
+          "1-1",
+          0.078
+        ],
+        [
+          "2-1",
+          0.067
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-26",
+      "round": "Matchday 16",
+      "group": "Group H",
+      "ground": "Houston",
+      "team1": "Cape Verde",
+      "team2": "Saudi Arabia",
+      "kickoff_sgt": "2026-06-27T08:00",
+      "kickoff_label": "Sat 27 Jun \u00b7 08:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.257,
+      "p_draw": 0.329,
+      "p_away": 0.414,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.174,
+      "exp_pts": 1.35,
+      "top_scores": [
+        [
+          "0-0",
+          0.199
+        ],
+        [
+          "0-1",
+          0.174
+        ],
+        [
+          "1-1",
+          0.138
+        ],
+        [
+          "1-0",
+          0.119
+        ],
+        [
+          "0-2",
+          0.09
+        ],
+        [
+          "1-2",
+          0.062
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-26",
+      "round": "Matchday 16",
+      "group": "Group H",
+      "ground": "Guadalajara (Zapopan)",
+      "team1": "Uruguay",
+      "team2": "Spain",
+      "kickoff_sgt": "2026-06-27T08:00",
+      "kickoff_label": "Sat 27 Jun \u00b7 08:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.24,
+      "p_draw": 0.284,
+      "p_away": 0.476,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.135,
+      "exp_pts": 1.358,
+      "top_scores": [
+        [
+          "0-0",
+          0.16
+        ],
+        [
+          "1-1",
+          0.146
+        ],
+        [
+          "0-1",
+          0.135
+        ],
+        [
+          "1-0",
+          0.126
+        ],
+        [
+          "0-2",
+          0.072
+        ],
+        [
+          "1-2",
+          0.066
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-16",
+      "round": "Matchday 6",
+      "group": "Group I",
+      "ground": "New York/New Jersey (East Rutherford)",
+      "team1": "France",
+      "team2": "Senegal",
+      "kickoff_sgt": "2026-06-17T03:00",
+      "kickoff_label": "Wed 17 Jun \u00b7 03:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.519,
+      "p_draw": 0.27,
+      "p_away": 0.211,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.131,
+      "exp_pts": 1.432,
+      "top_scores": [
+        [
+          "1-1",
+          0.141
+        ],
+        [
+          "1-0",
+          0.131
+        ],
+        [
+          "0-0",
+          0.12
+        ],
+        [
+          "2-0",
+          0.092
+        ],
+        [
+          "0-1",
+          0.089
+        ],
+        [
+          "2-1",
+          0.085
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-16",
+      "round": "Matchday 6",
+      "group": "Group I",
+      "ground": "Boston (Foxborough)",
+      "team1": "Iraq",
+      "team2": "Norway",
+      "kickoff_sgt": "2026-06-17T06:00",
+      "kickoff_label": "Wed 17 Jun \u00b7 06:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.159,
+      "p_draw": 0.253,
+      "p_away": 0.588,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.154,
+      "exp_pts": 1.639,
+      "top_scores": [
+        [
+          "0-1",
+          0.154
+        ],
+        [
+          "1-1",
+          0.128
+        ],
+        [
+          "0-0",
+          0.122
+        ],
+        [
+          "0-2",
+          0.121
+        ],
+        [
+          "1-2",
+          0.087
+        ],
+        [
+          "1-0",
+          0.071
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-22",
+      "round": "Matchday 12",
+      "group": "Group I",
+      "ground": "Philadelphia",
+      "team1": "France",
+      "team2": "Iraq",
+      "kickoff_sgt": "2026-06-23T05:00",
+      "kickoff_label": "Tue 23 Jun \u00b7 05:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.7,
+      "p_draw": 0.205,
+      "p_away": 0.094,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.18,
+      "exp_pts": 1.939,
+      "top_scores": [
+        [
+          "1-0",
+          0.18
+        ],
+        [
+          "2-0",
+          0.151
+        ],
+        [
+          "0-0",
+          0.125
+        ],
+        [
+          "1-1",
+          0.109
+        ],
+        [
+          "3-0",
+          0.081
+        ],
+        [
+          "2-1",
+          0.081
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-22",
+      "round": "Matchday 12",
+      "group": "Group I",
+      "ground": "New York/New Jersey (East Rutherford)",
+      "team1": "Norway",
+      "team2": "Senegal",
+      "kickoff_sgt": "2026-06-23T08:00",
+      "kickoff_label": "Tue 23 Jun \u00b7 08:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.382,
+      "p_draw": 0.29,
+      "p_away": 0.328,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.095,
+      "exp_pts": 1.049,
+      "top_scores": [
+        [
+          "1-1",
+          0.141
+        ],
+        [
+          "0-0",
+          0.1
+        ],
+        [
+          "0-1",
+          0.099
+        ],
+        [
+          "1-0",
+          0.095
+        ],
+        [
+          "1-2",
+          0.08
+        ],
+        [
+          "2-1",
+          0.077
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-26",
+      "round": "Matchday 16",
+      "group": "Group I",
+      "ground": "Boston (Foxborough)",
+      "team1": "Norway",
+      "team2": "France",
+      "kickoff_sgt": "2026-06-27T03:00",
+      "kickoff_label": "Sat 27 Jun \u00b7 03:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.23,
+      "p_draw": 0.263,
+      "p_away": 0.507,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.1,
+      "exp_pts": 1.315,
+      "top_scores": [
+        [
+          "1-1",
+          0.129
+        ],
+        [
+          "0-1",
+          0.1
+        ],
+        [
+          "1-2",
+          0.095
+        ],
+        [
+          "0-2",
+          0.088
+        ],
+        [
+          "0-0",
+          0.079
+        ],
+        [
+          "1-0",
+          0.065
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-26",
+      "round": "Matchday 16",
+      "group": "Group I",
+      "ground": "Toronto",
+      "team1": "Senegal",
+      "team2": "Iraq",
+      "kickoff_sgt": "2026-06-27T03:00",
+      "kickoff_label": "Sat 27 Jun \u00b7 03:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.537,
+      "p_draw": 0.289,
+      "p_away": 0.174,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.189,
+      "exp_pts": 1.641,
+      "top_scores": [
+        [
+          "1-0",
+          0.189
+        ],
+        [
+          "0-0",
+          0.169
+        ],
+        [
+          "1-1",
+          0.127
+        ],
+        [
+          "2-0",
+          0.124
+        ],
+        [
+          "0-1",
+          0.084
+        ],
+        [
+          "2-1",
+          0.073
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-16",
+      "round": "Matchday 6",
+      "group": "Group J",
+      "ground": "Kansas City",
+      "team1": "Argentina",
+      "team2": "Algeria",
+      "kickoff_sgt": "2026-06-17T09:00",
+      "kickoff_label": "Wed 17 Jun \u00b7 09:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.703,
+      "p_draw": 0.209,
+      "p_away": 0.089,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.193,
+      "exp_pts": 1.985,
+      "top_scores": [
+        [
+          "1-0",
+          0.193
+        ],
+        [
+          "2-0",
+          0.173
+        ],
+        [
+          "0-0",
+          0.123
+        ],
+        [
+          "3-0",
+          0.099
+        ],
+        [
+          "1-1",
+          0.093
+        ],
+        [
+          "2-1",
+          0.074
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-16",
+      "round": "Matchday 6",
+      "group": "Group J",
+      "ground": "San Francisco Bay Area (Santa Clara)",
+      "team1": "Austria",
+      "team2": "Jordan",
+      "kickoff_sgt": "2026-06-17T12:00",
+      "kickoff_label": "Wed 17 Jun \u00b7 12:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.503,
+      "p_draw": 0.268,
+      "p_away": 0.229,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.108,
+      "exp_pts": 1.329,
+      "top_scores": [
+        [
+          "1-1",
+          0.129
+        ],
+        [
+          "1-0",
+          0.108
+        ],
+        [
+          "2-1",
+          0.095
+        ],
+        [
+          "2-0",
+          0.094
+        ],
+        [
+          "0-0",
+          0.084
+        ],
+        [
+          "0-1",
+          0.065
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-22",
+      "round": "Matchday 12",
+      "group": "Group J",
+      "ground": "Dallas (Arlington)",
+      "team1": "Argentina",
+      "team2": "Austria",
+      "kickoff_sgt": "2026-06-23T01:00",
+      "kickoff_label": "Tue 23 Jun \u00b7 01:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.723,
+      "p_draw": 0.197,
+      "p_away": 0.08,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.192,
+      "exp_pts": 2.022,
+      "top_scores": [
+        [
+          "1-0",
+          0.192
+        ],
+        [
+          "2-0",
+          0.183
+        ],
+        [
+          "0-0",
+          0.114
+        ],
+        [
+          "3-0",
+          0.113
+        ],
+        [
+          "1-1",
+          0.083
+        ],
+        [
+          "2-1",
+          0.07
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-22",
+      "round": "Matchday 12",
+      "group": "Group J",
+      "ground": "San Francisco Bay Area (Santa Clara)",
+      "team1": "Jordan",
+      "team2": "Algeria",
+      "kickoff_sgt": "2026-06-23T11:00",
+      "kickoff_label": "Tue 23 Jun \u00b7 11:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.207,
+      "p_draw": 0.257,
+      "p_away": 0.535,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.108,
+      "exp_pts": 1.394,
+      "top_scores": [
+        [
+          "1-1",
+          0.12
+        ],
+        [
+          "0-1",
+          0.108
+        ],
+        [
+          "0-2",
+          0.104
+        ],
+        [
+          "1-2",
+          0.098
+        ],
+        [
+          "0-0",
+          0.075
+        ],
+        [
+          "0-3",
+          0.061
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-27",
+      "round": "Matchday 17",
+      "group": "Group J",
+      "ground": "Kansas City",
+      "team1": "Algeria",
+      "team2": "Austria",
+      "kickoff_sgt": "2026-06-28T10:00",
+      "kickoff_label": "Sun 28 Jun \u00b7 10:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.374,
+      "p_draw": 0.303,
+      "p_away": 0.323,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.122,
+      "exp_pts": 1.113,
+      "top_scores": [
+        [
+          "1-1",
+          0.144
+        ],
+        [
+          "0-0",
+          0.122
+        ],
+        [
+          "1-0",
+          0.122
+        ],
+        [
+          "0-1",
+          0.1
+        ],
+        [
+          "2-1",
+          0.08
+        ],
+        [
+          "2-0",
+          0.079
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-27",
+      "round": "Matchday 17",
+      "group": "Group J",
+      "ground": "Dallas (Arlington)",
+      "team1": "Jordan",
+      "team2": "Argentina",
+      "kickoff_sgt": "2026-06-28T10:00",
+      "kickoff_label": "Sun 28 Jun \u00b7 10:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.04,
+      "p_draw": 0.111,
+      "p_away": 0.849,
+      "model_pick": "0-2",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.169,
+      "exp_pts": 2.204,
+      "top_scores": [
+        [
+          "0-2",
+          0.169
+        ],
+        [
+          "0-3",
+          0.154
+        ],
+        [
+          "0-1",
+          0.119
+        ],
+        [
+          "0-4",
+          0.106
+        ],
+        [
+          "1-2",
+          0.061
+        ],
+        [
+          "0-5",
+          0.058
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-17",
+      "round": "Matchday 7",
+      "group": "Group K",
+      "ground": "Houston",
+      "team1": "Portugal",
+      "team2": "DR Congo",
+      "kickoff_sgt": "2026-06-18T01:00",
+      "kickoff_label": "Thu 18 Jun \u00b7 01:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.621,
+      "p_draw": 0.253,
+      "p_away": 0.127,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.196,
+      "exp_pts": 1.83,
+      "top_scores": [
+        [
+          "1-0",
+          0.196
+        ],
+        [
+          "0-0",
+          0.162
+        ],
+        [
+          "2-0",
+          0.138
+        ],
+        [
+          "1-1",
+          0.119
+        ],
+        [
+          "2-1",
+          0.074
+        ],
+        [
+          "0-1",
+          0.072
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-17",
+      "round": "Matchday 7",
+      "group": "Group K",
+      "ground": "Mexico City",
+      "team1": "Uzbekistan",
+      "team2": "Colombia",
+      "kickoff_sgt": "2026-06-18T10:00",
+      "kickoff_label": "Thu 18 Jun \u00b7 10:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.123,
+      "p_draw": 0.237,
+      "p_away": 0.64,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.179,
+      "exp_pts": 1.816,
+      "top_scores": [
+        [
+          "0-1",
+          0.179
+        ],
+        [
+          "0-2",
+          0.152
+        ],
+        [
+          "0-0",
+          0.123
+        ],
+        [
+          "1-1",
+          0.109
+        ],
+        [
+          "0-3",
+          0.082
+        ],
+        [
+          "1-2",
+          0.082
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-23",
+      "round": "Matchday 13",
+      "group": "Group K",
+      "ground": "Houston",
+      "team1": "Portugal",
+      "team2": "Uzbekistan",
+      "kickoff_sgt": "2026-06-24T01:00",
+      "kickoff_label": "Wed 24 Jun \u00b7 01:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.56,
+      "p_draw": 0.268,
+      "p_away": 0.172,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.161,
+      "exp_pts": 1.602,
+      "top_scores": [
+        [
+          "1-0",
+          0.161
+        ],
+        [
+          "0-0",
+          0.137
+        ],
+        [
+          "1-1",
+          0.133
+        ],
+        [
+          "2-0",
+          0.116
+        ],
+        [
+          "2-1",
+          0.083
+        ],
+        [
+          "0-1",
+          0.08
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-23",
+      "round": "Matchday 13",
+      "group": "Group K",
+      "ground": "Guadalajara (Zapopan)",
+      "team1": "Colombia",
+      "team2": "DR Congo",
+      "kickoff_sgt": "2026-06-24T10:00",
+      "kickoff_label": "Wed 24 Jun \u00b7 10:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.693,
+      "p_draw": 0.217,
+      "p_away": 0.089,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.208,
+      "exp_pts": 2.009,
+      "top_scores": [
+        [
+          "1-0",
+          0.208
+        ],
+        [
+          "2-0",
+          0.174
+        ],
+        [
+          "0-0",
+          0.14
+        ],
+        [
+          "3-0",
+          0.094
+        ],
+        [
+          "1-1",
+          0.093
+        ],
+        [
+          "2-1",
+          0.07
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-27",
+      "round": "Matchday 17",
+      "group": "Group K",
+      "ground": "Miami (Miami Gardens)",
+      "team1": "Colombia",
+      "team2": "Portugal",
+      "kickoff_sgt": "2026-06-28T07:30",
+      "kickoff_label": "Sun 28 Jun \u00b7 07:30 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.444,
+      "p_draw": 0.285,
+      "p_away": 0.271,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.122,
+      "exp_pts": 1.254,
+      "top_scores": [
+        [
+          "1-1",
+          0.133
+        ],
+        [
+          "1-0",
+          0.122
+        ],
+        [
+          "0-0",
+          0.099
+        ],
+        [
+          "2-0",
+          0.099
+        ],
+        [
+          "2-1",
+          0.092
+        ],
+        [
+          "0-1",
+          0.072
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-27",
+      "round": "Matchday 17",
+      "group": "Group K",
+      "ground": "Atlanta",
+      "team1": "DR Congo",
+      "team2": "Uzbekistan",
+      "kickoff_sgt": "2026-06-28T07:30",
+      "kickoff_label": "Sun 28 Jun \u00b7 07:30 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.255,
+      "p_draw": 0.356,
+      "p_away": 0.389,
+      "model_pick": "0-0",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.266,
+      "exp_pts": 1.511,
+      "top_scores": [
+        [
+          "0-0",
+          0.266
+        ],
+        [
+          "0-1",
+          0.19
+        ],
+        [
+          "1-0",
+          0.14
+        ],
+        [
+          "1-1",
+          0.126
+        ],
+        [
+          "0-2",
+          0.077
+        ],
+        [
+          "1-2",
+          0.045
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-17",
+      "round": "Matchday 7",
+      "group": "Group L",
+      "ground": "Dallas (Arlington)",
+      "team1": "England",
+      "team2": "Croatia",
+      "kickoff_sgt": "2026-06-18T04:00",
+      "kickoff_label": "Thu 18 Jun \u00b7 04:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.509,
+      "p_draw": 0.288,
+      "p_away": 0.202,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.163,
+      "exp_pts": 1.508,
+      "top_scores": [
+        [
+          "1-0",
+          0.163
+        ],
+        [
+          "0-0",
+          0.14
+        ],
+        [
+          "1-1",
+          0.133
+        ],
+        [
+          "2-0",
+          0.115
+        ],
+        [
+          "0-1",
+          0.082
+        ],
+        [
+          "2-1",
+          0.082
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-17",
+      "round": "Matchday 7",
+      "group": "Group L",
+      "ground": "Toronto",
+      "team1": "Ghana",
+      "team2": "Panama",
+      "kickoff_sgt": "2026-06-18T07:00",
+      "kickoff_label": "Thu 18 Jun \u00b7 07:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.23,
+      "p_draw": 0.265,
+      "p_away": 0.506,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.116,
+      "exp_pts": 1.359,
+      "top_scores": [
+        [
+          "1-1",
+          0.142
+        ],
+        [
+          "0-1",
+          0.116
+        ],
+        [
+          "0-0",
+          0.11
+        ],
+        [
+          "1-0",
+          0.092
+        ],
+        [
+          "1-2",
+          0.083
+        ],
+        [
+          "0-2",
+          0.081
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-23",
+      "round": "Matchday 13",
+      "group": "Group L",
+      "ground": "Boston (Foxborough)",
+      "team1": "England",
+      "team2": "Ghana",
+      "kickoff_sgt": "2026-06-24T04:00",
+      "kickoff_label": "Wed 24 Jun \u00b7 04:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.782,
+      "p_draw": 0.159,
+      "p_away": 0.059,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.177,
+      "exp_pts": 2.096,
+      "top_scores": [
+        [
+          "1-0",
+          0.177
+        ],
+        [
+          "2-0",
+          0.174
+        ],
+        [
+          "3-0",
+          0.11
+        ],
+        [
+          "0-0",
+          0.104
+        ],
+        [
+          "1-1",
+          0.087
+        ],
+        [
+          "2-1",
+          0.076
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-23",
+      "round": "Matchday 13",
+      "group": "Group L",
+      "ground": "Toronto",
+      "team1": "Panama",
+      "team2": "Croatia",
+      "kickoff_sgt": "2026-06-24T07:00",
+      "kickoff_label": "Wed 24 Jun \u00b7 07:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.203,
+      "p_draw": 0.262,
+      "p_away": 0.536,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.119,
+      "exp_pts": 1.427,
+      "top_scores": [
+        [
+          "1-1",
+          0.125
+        ],
+        [
+          "0-1",
+          0.119
+        ],
+        [
+          "0-2",
+          0.107
+        ],
+        [
+          "1-2",
+          0.096
+        ],
+        [
+          "0-0",
+          0.086
+        ],
+        [
+          "0-3",
+          0.06
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-27",
+      "round": "Matchday 17",
+      "group": "Group L",
+      "ground": "New York/New Jersey (East Rutherford)",
+      "team1": "Panama",
+      "team2": "England",
+      "kickoff_sgt": "2026-06-28T05:00",
+      "kickoff_label": "Sun 28 Jun \u00b7 05:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.104,
+      "p_draw": 0.202,
+      "p_away": 0.694,
+      "model_pick": "0-2",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.152,
+      "exp_pts": 1.845,
+      "top_scores": [
+        [
+          "0-2",
+          0.152
+        ],
+        [
+          "0-1",
+          0.143
+        ],
+        [
+          "0-3",
+          0.102
+        ],
+        [
+          "1-1",
+          0.094
+        ],
+        [
+          "1-2",
+          0.088
+        ],
+        [
+          "0-0",
+          0.082
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-27",
+      "round": "Matchday 17",
+      "group": "Group L",
+      "ground": "Philadelphia",
+      "team1": "Croatia",
+      "team2": "Ghana",
+      "kickoff_sgt": "2026-06-28T05:00",
+      "kickoff_label": "Sun 28 Jun \u00b7 05:00 SGT",
+      "resolved": true,
+      "played": false,
+      "p_home": 0.66,
+      "p_draw": 0.218,
+      "p_away": 0.122,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.156,
+      "exp_pts": 1.79,
+      "top_scores": [
+        [
+          "1-0",
+          0.156
+        ],
+        [
+          "2-0",
+          0.13
+        ],
+        [
+          "1-1",
+          0.122
+        ],
+        [
+          "0-0",
+          0.116
+        ],
+        [
+          "2-1",
+          0.088
+        ],
+        [
+          "3-0",
+          0.067
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:11 UTC",
+      "scored": false
+    },
+    {
+      "date": "2026-06-28",
+      "round": "Round of 32",
+      "group": NaN,
+      "ground": "Los Angeles (Inglewood)",
+      "team1": "2A",
+      "team2": "2B",
+      "kickoff_sgt": "2026-06-29T03:00",
+      "kickoff_label": "Mon 29 Jun \u00b7 03:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-06-29",
+      "round": "Round of 32",
+      "group": NaN,
+      "ground": "Boston (Foxborough)",
+      "team1": "1E",
+      "team2": "3A/B/C/D/F",
+      "kickoff_sgt": "2026-06-30T04:30",
+      "kickoff_label": "Tue 30 Jun \u00b7 04:30 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-06-29",
+      "round": "Round of 32",
+      "group": NaN,
+      "ground": "Monterrey (Guadalupe)",
+      "team1": "1F",
+      "team2": "2C",
+      "kickoff_sgt": "2026-06-30T09:00",
+      "kickoff_label": "Tue 30 Jun \u00b7 09:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-06-29",
+      "round": "Round of 32",
+      "group": NaN,
+      "ground": "Houston",
+      "team1": "1C",
+      "team2": "2F",
+      "kickoff_sgt": "2026-06-30T01:00",
+      "kickoff_label": "Tue 30 Jun \u00b7 01:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-06-30",
+      "round": "Round of 32",
+      "group": NaN,
+      "ground": "New York/New Jersey (East Rutherford)",
+      "team1": "1I",
+      "team2": "3C/D/F/G/H",
+      "kickoff_sgt": "2026-07-01T05:00",
+      "kickoff_label": "Wed 01 Jul \u00b7 05:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-06-30",
+      "round": "Round of 32",
+      "group": NaN,
+      "ground": "Dallas (Arlington)",
+      "team1": "2E",
+      "team2": "2I",
+      "kickoff_sgt": "2026-07-01T01:00",
+      "kickoff_label": "Wed 01 Jul \u00b7 01:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-06-30",
+      "round": "Round of 32",
+      "group": NaN,
+      "ground": "Mexico City",
+      "team1": "1A",
+      "team2": "3C/E/F/H/I",
+      "kickoff_sgt": "2026-07-01T09:00",
+      "kickoff_label": "Wed 01 Jul \u00b7 09:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-01",
+      "round": "Round of 32",
+      "group": NaN,
+      "ground": "Atlanta",
+      "team1": "1L",
+      "team2": "3E/H/I/J/K",
+      "kickoff_sgt": "2026-07-02T00:00",
+      "kickoff_label": "Thu 02 Jul \u00b7 00:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-01",
+      "round": "Round of 32",
+      "group": NaN,
+      "ground": "San Francisco Bay Area (Santa Clara)",
+      "team1": "1D",
+      "team2": "3B/E/F/I/J",
+      "kickoff_sgt": "2026-07-02T08:00",
+      "kickoff_label": "Thu 02 Jul \u00b7 08:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-01",
+      "round": "Round of 32",
+      "group": NaN,
+      "ground": "Seattle",
+      "team1": "1G",
+      "team2": "3A/E/H/I/J",
+      "kickoff_sgt": "2026-07-02T04:00",
+      "kickoff_label": "Thu 02 Jul \u00b7 04:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-02",
+      "round": "Round of 32",
+      "group": NaN,
+      "ground": "Toronto",
+      "team1": "2K",
+      "team2": "2L",
+      "kickoff_sgt": "2026-07-03T07:00",
+      "kickoff_label": "Fri 03 Jul \u00b7 07:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-02",
+      "round": "Round of 32",
+      "group": NaN,
+      "ground": "Los Angeles (Inglewood)",
+      "team1": "1H",
+      "team2": "2J",
+      "kickoff_sgt": "2026-07-03T03:00",
+      "kickoff_label": "Fri 03 Jul \u00b7 03:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-02",
+      "round": "Round of 32",
+      "group": NaN,
+      "ground": "Vancouver",
+      "team1": "1B",
+      "team2": "3E/F/G/I/J",
+      "kickoff_sgt": "2026-07-03T11:00",
+      "kickoff_label": "Fri 03 Jul \u00b7 11:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-03",
+      "round": "Round of 32",
+      "group": NaN,
+      "ground": "Miami (Miami Gardens)",
+      "team1": "1J",
+      "team2": "2H",
+      "kickoff_sgt": "2026-07-04T06:00",
+      "kickoff_label": "Sat 04 Jul \u00b7 06:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-03",
+      "round": "Round of 32",
+      "group": NaN,
+      "ground": "Kansas City",
+      "team1": "1K",
+      "team2": "3D/E/I/J/L",
+      "kickoff_sgt": "2026-07-04T09:30",
+      "kickoff_label": "Sat 04 Jul \u00b7 09:30 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-03",
+      "round": "Round of 32",
+      "group": NaN,
+      "ground": "Dallas (Arlington)",
+      "team1": "2D",
+      "team2": "2G",
+      "kickoff_sgt": "2026-07-04T02:00",
+      "kickoff_label": "Sat 04 Jul \u00b7 02:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-04",
+      "round": "Round of 16",
+      "group": NaN,
+      "ground": "Philadelphia",
+      "team1": "W74",
+      "team2": "W77",
+      "kickoff_sgt": "2026-07-05T05:00",
+      "kickoff_label": "Sun 05 Jul \u00b7 05:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-04",
+      "round": "Round of 16",
+      "group": NaN,
+      "ground": "Houston",
+      "team1": "W73",
+      "team2": "W75",
+      "kickoff_sgt": "2026-07-05T01:00",
+      "kickoff_label": "Sun 05 Jul \u00b7 01:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-05",
+      "round": "Round of 16",
+      "group": NaN,
+      "ground": "New York/New Jersey (East Rutherford)",
+      "team1": "W76",
+      "team2": "W78",
+      "kickoff_sgt": "2026-07-06T04:00",
+      "kickoff_label": "Mon 06 Jul \u00b7 04:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-05",
+      "round": "Round of 16",
+      "group": NaN,
+      "ground": "Mexico City",
+      "team1": "W79",
+      "team2": "W80",
+      "kickoff_sgt": "2026-07-06T08:00",
+      "kickoff_label": "Mon 06 Jul \u00b7 08:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-06",
+      "round": "Round of 16",
+      "group": NaN,
+      "ground": "Dallas (Arlington)",
+      "team1": "W83",
+      "team2": "W84",
+      "kickoff_sgt": "2026-07-07T03:00",
+      "kickoff_label": "Tue 07 Jul \u00b7 03:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-06",
+      "round": "Round of 16",
+      "group": NaN,
+      "ground": "Seattle",
+      "team1": "W81",
+      "team2": "W82",
+      "kickoff_sgt": "2026-07-07T08:00",
+      "kickoff_label": "Tue 07 Jul \u00b7 08:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-07",
+      "round": "Round of 16",
+      "group": NaN,
+      "ground": "Atlanta",
+      "team1": "W86",
+      "team2": "W88",
+      "kickoff_sgt": "2026-07-08T00:00",
+      "kickoff_label": "Wed 08 Jul \u00b7 00:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-07",
+      "round": "Round of 16",
+      "group": NaN,
+      "ground": "Vancouver",
+      "team1": "W85",
+      "team2": "W87",
+      "kickoff_sgt": "2026-07-08T04:00",
+      "kickoff_label": "Wed 08 Jul \u00b7 04:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-09",
+      "round": "Quarter-final",
+      "group": NaN,
+      "ground": "Boston (Foxborough)",
+      "team1": "W89",
+      "team2": "W90",
+      "kickoff_sgt": "2026-07-10T04:00",
+      "kickoff_label": "Fri 10 Jul \u00b7 04:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-10",
+      "round": "Quarter-final",
+      "group": NaN,
+      "ground": "Los Angeles (Inglewood)",
+      "team1": "W93",
+      "team2": "W94",
+      "kickoff_sgt": "2026-07-11T03:00",
+      "kickoff_label": "Sat 11 Jul \u00b7 03:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-11",
+      "round": "Quarter-final",
+      "group": NaN,
+      "ground": "Miami (Miami Gardens)",
+      "team1": "W91",
+      "team2": "W92",
+      "kickoff_sgt": "2026-07-12T05:00",
+      "kickoff_label": "Sun 12 Jul \u00b7 05:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-11",
+      "round": "Quarter-final",
+      "group": NaN,
+      "ground": "Kansas City",
+      "team1": "W95",
+      "team2": "W96",
+      "kickoff_sgt": "2026-07-12T09:00",
+      "kickoff_label": "Sun 12 Jul \u00b7 09:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-14",
+      "round": "Semi-final",
+      "group": NaN,
+      "ground": "Dallas (Arlington)",
+      "team1": "W97",
+      "team2": "W98",
+      "kickoff_sgt": "2026-07-15T03:00",
+      "kickoff_label": "Wed 15 Jul \u00b7 03:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-15",
+      "round": "Semi-final",
+      "group": NaN,
+      "ground": "Atlanta",
+      "team1": "W99",
+      "team2": "W100",
+      "kickoff_sgt": "2026-07-16T03:00",
+      "kickoff_label": "Thu 16 Jul \u00b7 03:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-18",
+      "round": "Match for third place",
+      "group": NaN,
+      "ground": "Miami (Miami Gardens)",
+      "team1": "L101",
+      "team2": "L102",
+      "kickoff_sgt": "2026-07-19T05:00",
+      "kickoff_label": "Sun 19 Jul \u00b7 05:00 SGT",
+      "resolved": false,
+      "played": false
+    },
+    {
+      "date": "2026-07-19",
+      "round": "Final",
+      "group": NaN,
+      "ground": "New York/New Jersey (East Rutherford)",
+      "team1": "W101",
+      "team2": "W102",
+      "kickoff_sgt": "2026-07-20T03:00",
+      "kickoff_label": "Mon 20 Jul \u00b7 03:00 SGT",
+      "resolved": false,
+      "played": false
     }
   ],
   "ratings": [
