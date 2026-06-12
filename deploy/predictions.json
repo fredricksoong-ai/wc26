@@ -1,12 +1,12 @@
 {
-  "generated_utc": "2026-06-12 17:29 UTC",
+  "generated_utc": "2026-06-12 17:48 UTC",
   "model": "Dixon-Coles (xi=0.001) + Elo ensemble (w_DC=0.6), neutral venues",
   "scoring": {
     "result_pts": 2,
     "exact_pts": 3
   },
   "backtest": {
-    "ensemble_rps": 0.1675,
+    "ensemble_rps": 0.1676,
     "baseline_rps": 0.2282
   },
   "summary": {
@@ -163,8 +163,8 @@
       "p_away": 0.246,
       "model_pick": "1-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.132,
-      "exp_pts": 1.321,
+      "model_pick_prob": 0.131,
+      "exp_pts": 1.32,
       "top_scores": [
         [
           "1-1",
@@ -172,7 +172,7 @@
         ],
         [
           "1-0",
-          0.132
+          0.131
         ],
         [
           "0-0",
@@ -180,7 +180,7 @@
         ],
         [
           "0-1",
-          0.094
+          0.093
         ],
         [
           "2-0",
@@ -191,7 +191,7 @@
           0.082
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -206,12 +206,12 @@
       "resolved": true,
       "played": false,
       "p_home": 0.415,
-      "p_draw": 0.308,
+      "p_draw": 0.309,
       "p_away": 0.277,
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.138,
-      "exp_pts": 1.243,
+      "exp_pts": 1.242,
       "top_scores": [
         [
           "0-0",
@@ -238,7 +238,7 @@
           0.074
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -257,19 +257,19 @@
       "p_away": 0.585,
       "model_pick": "0-1",
       "model_pick_result": "away",
-      "model_pick_prob": 0.151,
-      "exp_pts": 1.622,
+      "model_pick_prob": 0.15,
+      "exp_pts": 1.621,
       "top_scores": [
         [
           "0-1",
-          0.151
-        ],
-        [
-          "0-2",
-          0.125
+          0.15
         ],
         [
           "1-1",
+          0.125
+        ],
+        [
+          "0-2",
           0.124
         ],
         [
@@ -285,7 +285,7 @@
           0.065
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -305,7 +305,7 @@
       "model_pick": "0-1",
       "model_pick_result": "away",
       "model_pick_prob": 0.161,
-      "exp_pts": 1.724,
+      "exp_pts": 1.723,
       "top_scores": [
         [
           "0-1",
@@ -332,7 +332,7 @@
           0.07
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -341,11 +341,46 @@
       "group": "Group B",
       "ground": "Toronto",
       "team1": "Canada",
-      "team2": "Bosnia & Herzegovina",
+      "team2": "Bosnia and Herzegovina",
       "kickoff_sgt": "2026-06-13T03:00",
       "kickoff_label": "Sat 13 Jun \u00b7 03:00 SGT",
       "resolved": true,
-      "played": false
+      "played": false,
+      "p_home": 0.665,
+      "p_draw": 0.224,
+      "p_away": 0.111,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.177,
+      "exp_pts": 1.86,
+      "top_scores": [
+        [
+          "1-0",
+          0.177
+        ],
+        [
+          "2-0",
+          0.16
+        ],
+        [
+          "0-0",
+          0.114
+        ],
+        [
+          "1-1",
+          0.101
+        ],
+        [
+          "3-0",
+          0.092
+        ],
+        [
+          "2-1",
+          0.081
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:48 UTC",
+      "scored": false
     },
     {
       "date": "2026-06-13",
@@ -380,7 +415,7 @@
         ],
         [
           "0-1",
-          0.088
+          0.087
         ],
         [
           "1-1",
@@ -391,7 +426,7 @@
           0.076
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -400,11 +435,46 @@
       "group": "Group B",
       "ground": "Los Angeles (Inglewood)",
       "team1": "Switzerland",
-      "team2": "Bosnia & Herzegovina",
+      "team2": "Bosnia and Herzegovina",
       "kickoff_sgt": "2026-06-19T03:00",
       "kickoff_label": "Fri 19 Jun \u00b7 03:00 SGT",
       "resolved": true,
-      "played": false
+      "played": false,
+      "p_home": 0.719,
+      "p_draw": 0.186,
+      "p_away": 0.096,
+      "model_pick": "2-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.143,
+      "exp_pts": 1.865,
+      "top_scores": [
+        [
+          "2-0",
+          0.143
+        ],
+        [
+          "1-0",
+          0.127
+        ],
+        [
+          "3-0",
+          0.101
+        ],
+        [
+          "1-1",
+          0.093
+        ],
+        [
+          "2-1",
+          0.091
+        ],
+        [
+          "0-0",
+          0.07
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:48 UTC",
+      "scored": false
     },
     {
       "date": "2026-06-18",
@@ -431,15 +501,15 @@
         ],
         [
           "1-0",
-          0.135
+          0.134
         ],
         [
           "1-1",
-          0.098
+          0.099
         ],
         [
           "3-0",
-          0.095
+          0.096
         ],
         [
           "2-1",
@@ -450,7 +520,7 @@
           0.078
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -474,15 +544,15 @@
       "top_scores": [
         [
           "1-1",
-          0.145
+          0.146
         ],
         [
           "0-0",
-          0.125
+          0.126
         ],
         [
           "0-1",
-          0.115
+          0.114
         ],
         [
           "1-0",
@@ -497,7 +567,7 @@
           0.072
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -505,12 +575,47 @@
       "round": "Matchday 14",
       "group": "Group B",
       "ground": "Seattle",
-      "team1": "Bosnia & Herzegovina",
+      "team1": "Bosnia and Herzegovina",
       "team2": "Qatar",
       "kickoff_sgt": "2026-06-25T03:00",
       "kickoff_label": "Thu 25 Jun \u00b7 03:00 SGT",
       "resolved": true,
-      "played": false
+      "played": false,
+      "p_home": 0.377,
+      "p_draw": 0.289,
+      "p_away": 0.334,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.091,
+      "exp_pts": 1.027,
+      "top_scores": [
+        [
+          "1-1",
+          0.14
+        ],
+        [
+          "0-1",
+          0.1
+        ],
+        [
+          "0-0",
+          0.098
+        ],
+        [
+          "1-0",
+          0.091
+        ],
+        [
+          "1-2",
+          0.082
+        ],
+        [
+          "2-1",
+          0.076
+        ]
+      ],
+      "updated_utc": "2026-06-12 17:48 UTC",
+      "scored": false
     },
     {
       "date": "2026-06-13",
@@ -523,13 +628,13 @@
       "kickoff_label": "Sun 14 Jun \u00b7 06:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.437,
+      "p_home": 0.436,
       "p_draw": 0.316,
-      "p_away": 0.247,
+      "p_away": 0.248,
       "model_pick": "1-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.17,
-      "exp_pts": 1.383,
+      "model_pick_prob": 0.169,
+      "exp_pts": 1.381,
       "top_scores": [
         [
           "0-0",
@@ -537,7 +642,7 @@
         ],
         [
           "1-0",
-          0.17
+          0.169
         ],
         [
           "1-1",
@@ -556,7 +661,7 @@
           0.071
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -571,11 +676,11 @@
       "resolved": true,
       "played": false,
       "p_home": 0.22,
-      "p_draw": 0.256,
+      "p_draw": 0.257,
       "p_away": 0.524,
       "model_pick": "0-1",
       "model_pick_result": "away",
-      "model_pick_prob": 0.099,
+      "model_pick_prob": 0.098,
       "exp_pts": 1.343,
       "top_scores": [
         [
@@ -584,7 +689,7 @@
         ],
         [
           "0-1",
-          0.099
+          0.098
         ],
         [
           "1-2",
@@ -603,7 +708,7 @@
           0.063
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -622,12 +727,12 @@
       "p_away": 0.558,
       "model_pick": "0-1",
       "model_pick_result": "away",
-      "model_pick_prob": 0.198,
+      "model_pick_prob": 0.197,
       "exp_pts": 1.709,
       "top_scores": [
         [
           "0-1",
-          0.198
+          0.197
         ],
         [
           "0-0",
@@ -635,7 +740,7 @@
         ],
         [
           "0-2",
-          0.14
+          0.141
         ],
         [
           "1-1",
@@ -650,7 +755,7 @@
           0.071
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -666,7 +771,7 @@
       "played": false,
       "p_home": 0.856,
       "p_draw": 0.1,
-      "p_away": 0.045,
+      "p_away": 0.044,
       "model_pick": "3-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.124,
@@ -697,7 +802,7 @@
           0.061
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -712,7 +817,7 @@
       "resolved": true,
       "played": false,
       "p_home": 0.101,
-      "p_draw": 0.178,
+      "p_draw": 0.179,
       "p_away": 0.721,
       "model_pick": "0-2",
       "model_pick_result": "away",
@@ -744,7 +849,7 @@
           0.073
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -758,8 +863,8 @@
       "kickoff_label": "Thu 25 Jun \u00b7 06:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.716,
-      "p_draw": 0.197,
+      "p_home": 0.717,
+      "p_draw": 0.198,
       "p_away": 0.086,
       "model_pick": "1-0",
       "model_pick_result": "home",
@@ -791,7 +896,7 @@
           0.079
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -807,15 +912,15 @@
       "played": false,
       "p_home": 0.258,
       "p_draw": 0.293,
-      "p_away": 0.45,
+      "p_away": 0.449,
       "model_pick": "0-1",
       "model_pick_result": "away",
       "model_pick_prob": 0.132,
-      "exp_pts": 1.297,
+      "exp_pts": 1.295,
       "top_scores": [
         [
           "1-1",
-          0.138
+          0.139
         ],
         [
           "0-1",
@@ -823,7 +928,7 @@
         ],
         [
           "0-0",
-          0.116
+          0.117
         ],
         [
           "0-2",
@@ -838,7 +943,7 @@
           0.084
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -853,12 +958,12 @@
       "resolved": true,
       "played": false,
       "p_home": 0.407,
-      "p_draw": 0.286,
+      "p_draw": 0.287,
       "p_away": 0.306,
       "model_pick": "1-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.135,
-      "exp_pts": 1.219,
+      "model_pick_prob": 0.134,
+      "exp_pts": 1.217,
       "top_scores": [
         [
           "1-1",
@@ -866,15 +971,15 @@
         ],
         [
           "1-0",
-          0.135
+          0.134
         ],
         [
           "0-0",
-          0.111
+          0.112
         ],
         [
           "2-0",
-          0.104
+          0.103
         ],
         [
           "2-1",
@@ -885,7 +990,7 @@
           0.077
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -905,11 +1010,11 @@
       "model_pick": "0-1",
       "model_pick_result": "away",
       "model_pick_prob": 0.129,
-      "exp_pts": 1.252,
+      "exp_pts": 1.251,
       "top_scores": [
         [
           "1-1",
-          0.14
+          0.141
         ],
         [
           "0-1",
@@ -932,7 +1037,7 @@
           0.085
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -952,7 +1057,7 @@
       "model_pick": "0-1",
       "model_pick_result": "away",
       "model_pick_prob": 0.137,
-      "exp_pts": 1.26,
+      "exp_pts": 1.258,
       "top_scores": [
         [
           "0-1",
@@ -964,7 +1069,7 @@
         ],
         [
           "0-0",
-          0.109
+          0.11
         ],
         [
           "0-2",
@@ -979,7 +1084,7 @@
           0.072
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -993,9 +1098,9 @@
       "kickoff_label": "Fri 26 Jun \u00b7 10:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.391,
+      "p_home": 0.392,
       "p_draw": 0.263,
-      "p_away": 0.346,
+      "p_away": 0.345,
       "model_pick": "2-1",
       "model_pick_result": "home",
       "model_pick_prob": 0.076,
@@ -1026,7 +1131,7 @@
           0.061
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -1045,24 +1150,24 @@
       "p_away": 0.318,
       "model_pick": "0-0",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.201,
-      "exp_pts": 1.276,
+      "model_pick_prob": 0.202,
+      "exp_pts": 1.277,
       "top_scores": [
         [
           "0-0",
-          0.201
+          0.202
         ],
         [
           "1-0",
           0.153
         ],
         [
-          "0-1",
+          "1-1",
           0.142
         ],
         [
-          "1-1",
-          0.141
+          "0-1",
+          0.142
         ],
         [
           "2-0",
@@ -1073,7 +1178,7 @@
           0.061
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -1120,7 +1225,7 @@
           0.07
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -1135,16 +1240,16 @@
       "resolved": true,
       "played": false,
       "p_home": 0.153,
-      "p_draw": 0.305,
-      "p_away": 0.542,
+      "p_draw": 0.306,
+      "p_away": 0.541,
       "model_pick": "0-1",
       "model_pick_result": "away",
       "model_pick_prob": 0.224,
-      "exp_pts": 1.755,
+      "exp_pts": 1.754,
       "top_scores": [
         [
           "0-0",
-          0.232
+          0.233
         ],
         [
           "0-1",
@@ -1167,7 +1272,7 @@
           0.055
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -1182,12 +1287,12 @@
       "resolved": true,
       "played": false,
       "p_home": 0.532,
-      "p_draw": 0.26,
+      "p_draw": 0.261,
       "p_away": 0.207,
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.118,
-      "exp_pts": 1.42,
+      "exp_pts": 1.419,
       "top_scores": [
         [
           "1-1",
@@ -1214,7 +1319,7 @@
           0.075
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -1228,8 +1333,8 @@
       "kickoff_label": "Sun 21 Jun \u00b7 08:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.816,
-      "p_draw": 0.139,
+      "p_home": 0.815,
+      "p_draw": 0.14,
       "p_away": 0.045,
       "model_pick": "2-0",
       "model_pick_result": "home",
@@ -1246,22 +1351,22 @@
         ],
         [
           "3-0",
-          0.142
+          0.141
         ],
         [
           "0-0",
-          0.088
+          0.089
         ],
         [
           "4-0",
           0.077
         ],
         [
-          "2-1",
+          "1-1",
           0.062
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -1280,12 +1385,12 @@
       "p_away": 0.643,
       "model_pick": "0-1",
       "model_pick_result": "away",
-      "model_pick_prob": 0.161,
+      "model_pick_prob": 0.16,
       "exp_pts": 1.768,
       "top_scores": [
         [
           "0-1",
-          0.161
+          0.16
         ],
         [
           "0-2",
@@ -1308,7 +1413,7 @@
           0.087
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -1323,24 +1428,24 @@
       "resolved": true,
       "played": false,
       "p_home": 0.41,
-      "p_draw": 0.309,
+      "p_draw": 0.31,
       "p_away": 0.281,
       "model_pick": "1-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.154,
-      "exp_pts": 1.281,
+      "model_pick_prob": 0.153,
+      "exp_pts": 1.279,
       "top_scores": [
         [
           "1-0",
-          0.154
+          0.153
         ],
         [
           "0-0",
-          0.148
+          0.149
         ],
         [
           "1-1",
-          0.14
+          0.141
         ],
         [
           "0-1",
@@ -1355,7 +1460,7 @@
           0.077
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -1371,11 +1476,11 @@
       "played": false,
       "p_home": 0.297,
       "p_draw": 0.292,
-      "p_away": 0.412,
+      "p_away": 0.411,
       "model_pick": "0-1",
       "model_pick_result": "away",
       "model_pick_prob": 0.126,
-      "exp_pts": 1.201,
+      "exp_pts": 1.199,
       "top_scores": [
         [
           "1-1",
@@ -1402,7 +1507,7 @@
           0.081
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -1417,12 +1522,12 @@
       "resolved": true,
       "played": false,
       "p_home": 0.366,
-      "p_draw": 0.299,
+      "p_draw": 0.3,
       "p_away": 0.334,
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.105,
-      "exp_pts": 1.048,
+      "exp_pts": 1.046,
       "top_scores": [
         [
           "1-1",
@@ -1430,7 +1535,7 @@
         ],
         [
           "0-0",
-          0.116
+          0.117
         ],
         [
           "0-1",
@@ -1449,7 +1554,7 @@
           0.073
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -1496,7 +1601,7 @@
           0.07
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -1511,16 +1616,16 @@
       "resolved": true,
       "played": false,
       "p_home": 0.114,
-      "p_draw": 0.242,
-      "p_away": 0.644,
+      "p_draw": 0.243,
+      "p_away": 0.643,
       "model_pick": "0-1",
       "model_pick_result": "away",
-      "model_pick_prob": 0.202,
-      "exp_pts": 1.892,
+      "model_pick_prob": 0.201,
+      "exp_pts": 1.891,
       "top_scores": [
         [
           "0-1",
-          0.202
+          0.201
         ],
         [
           "0-2",
@@ -1528,7 +1633,7 @@
         ],
         [
           "0-0",
-          0.152
+          0.153
         ],
         [
           "1-1",
@@ -1540,10 +1645,10 @@
         ],
         [
           "1-2",
-          0.074
+          0.073
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -1557,8 +1662,8 @@
       "kickoff_label": "Fri 26 Jun \u00b7 07:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.683,
-      "p_draw": 0.201,
+      "p_home": 0.682,
+      "p_draw": 0.202,
       "p_away": 0.116,
       "model_pick": "2-0",
       "model_pick_result": "home",
@@ -1587,10 +1692,10 @@
         ],
         [
           "3-1",
-          0.068
+          0.067
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -1605,12 +1710,12 @@
       "resolved": true,
       "played": false,
       "p_home": 0.147,
-      "p_draw": 0.239,
+      "p_draw": 0.24,
       "p_away": 0.614,
       "model_pick": "0-1",
       "model_pick_result": "away",
       "model_pick_prob": 0.152,
-      "exp_pts": 1.684,
+      "exp_pts": 1.683,
       "top_scores": [
         [
           "0-1",
@@ -1637,7 +1742,7 @@
           0.069
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -1651,13 +1756,13 @@
       "kickoff_label": "Tue 16 Jun \u00b7 03:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.491,
-      "p_draw": 0.293,
+      "p_home": 0.49,
+      "p_draw": 0.294,
       "p_away": 0.216,
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.156,
-      "exp_pts": 1.449,
+      "exp_pts": 1.448,
       "top_scores": [
         [
           "1-0",
@@ -1684,7 +1789,7 @@
           0.078
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -1704,7 +1809,7 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.139,
-      "exp_pts": 1.496,
+      "exp_pts": 1.495,
       "top_scores": [
         [
           "1-0",
@@ -1716,7 +1821,7 @@
         ],
         [
           "0-0",
-          0.112
+          0.113
         ],
         [
           "2-0",
@@ -1731,7 +1836,7 @@
           0.074
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -1746,16 +1851,16 @@
       "resolved": true,
       "played": false,
       "p_home": 0.386,
-      "p_draw": 0.292,
+      "p_draw": 0.293,
       "p_away": 0.322,
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.1,
-      "exp_pts": 1.072,
+      "exp_pts": 1.071,
       "top_scores": [
         [
           "1-1",
-          0.141
+          0.142
         ],
         [
           "0-0",
@@ -1778,7 +1883,7 @@
           0.077
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -1792,7 +1897,7 @@
       "kickoff_label": "Mon 22 Jun \u00b7 09:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.277,
+      "p_home": 0.276,
       "p_draw": 0.321,
       "p_away": 0.402,
       "model_pick": "0-1",
@@ -1814,18 +1919,18 @@
         ],
         [
           "1-0",
-          0.129
+          0.128
         ],
         [
           "0-2",
-          0.076
+          0.077
         ],
         [
           "1-2",
           0.063
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -1841,11 +1946,11 @@
       "played": false,
       "p_home": 0.239,
       "p_draw": 0.31,
-      "p_away": 0.451,
+      "p_away": 0.45,
       "model_pick": "0-1",
       "model_pick_result": "away",
-      "model_pick_prob": 0.164,
-      "exp_pts": 1.393,
+      "model_pick_prob": 0.163,
+      "exp_pts": 1.391,
       "top_scores": [
         [
           "0-0",
@@ -1853,11 +1958,11 @@
         ],
         [
           "0-1",
-          0.164
+          0.163
         ],
         [
           "1-1",
-          0.139
+          0.14
         ],
         [
           "1-0",
@@ -1872,7 +1977,7 @@
           0.073
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -1886,8 +1991,8 @@
       "kickoff_label": "Sat 27 Jun \u00b7 11:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.174,
-      "p_draw": 0.247,
+      "p_home": 0.173,
+      "p_draw": 0.248,
       "p_away": 0.579,
       "model_pick": "0-1",
       "model_pick_result": "away",
@@ -1908,7 +2013,7 @@
         ],
         [
           "0-0",
-          0.098
+          0.099
         ],
         [
           "1-2",
@@ -1916,10 +2021,10 @@
         ],
         [
           "1-0",
-          0.067
+          0.066
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -1933,7 +2038,7 @@
       "kickoff_label": "Tue 16 Jun \u00b7 00:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.863,
+      "p_home": 0.862,
       "p_draw": 0.102,
       "p_away": 0.035,
       "model_pick": "2-0",
@@ -1966,7 +2071,7 @@
           0.063
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -2006,14 +2111,14 @@
         ],
         [
           "0-3",
-          0.077
+          0.076
         ],
         [
           "1-2",
           0.062
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -2045,7 +2150,7 @@
         ],
         [
           "3-0",
-          0.106
+          0.107
         ],
         [
           "0-0",
@@ -2060,7 +2165,7 @@
           0.081
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -2075,12 +2180,12 @@
       "resolved": true,
       "played": false,
       "p_home": 0.745,
-      "p_draw": 0.185,
+      "p_draw": 0.186,
       "p_away": 0.069,
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.199,
-      "exp_pts": 2.087,
+      "exp_pts": 2.086,
       "top_scores": [
         [
           "1-0",
@@ -2091,12 +2196,12 @@
           0.189
         ],
         [
-          "3-0",
+          "0-0",
           0.117
         ],
         [
-          "0-0",
-          0.116
+          "3-0",
+          0.117
         ],
         [
           "1-1",
@@ -2107,7 +2212,7 @@
           0.067
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -2127,7 +2232,7 @@
       "model_pick": "0-1",
       "model_pick_result": "away",
       "model_pick_prob": 0.174,
-      "exp_pts": 1.351,
+      "exp_pts": 1.35,
       "top_scores": [
         [
           "0-0",
@@ -2147,14 +2252,14 @@
         ],
         [
           "0-2",
-          0.091
+          0.09
         ],
         [
           "1-2",
           0.062
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -2169,7 +2274,7 @@
       "resolved": true,
       "played": false,
       "p_home": 0.24,
-      "p_draw": 0.283,
+      "p_draw": 0.284,
       "p_away": 0.476,
       "model_pick": "0-1",
       "model_pick_result": "away",
@@ -2201,7 +2306,7 @@
           0.066
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -2215,17 +2320,17 @@
       "kickoff_label": "Wed 17 Jun \u00b7 03:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.52,
-      "p_draw": 0.269,
+      "p_home": 0.519,
+      "p_draw": 0.27,
       "p_away": 0.211,
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.131,
-      "exp_pts": 1.433,
+      "exp_pts": 1.432,
       "top_scores": [
         [
           "1-1",
-          0.14
+          0.141
         ],
         [
           "1-0",
@@ -2233,7 +2338,7 @@
         ],
         [
           "0-0",
-          0.119
+          0.12
         ],
         [
           "2-0",
@@ -2248,7 +2353,7 @@
           0.085
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -2295,7 +2400,7 @@
           0.071
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -2311,11 +2416,11 @@
       "played": false,
       "p_home": 0.7,
       "p_draw": 0.205,
-      "p_away": 0.095,
+      "p_away": 0.094,
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.18,
-      "exp_pts": 1.94,
+      "exp_pts": 1.939,
       "top_scores": [
         [
           "1-0",
@@ -2334,15 +2439,15 @@
           0.109
         ],
         [
-          "2-1",
+          "3-0",
           0.081
         ],
         [
-          "3-0",
+          "2-1",
           0.081
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -2362,7 +2467,7 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.095,
-      "exp_pts": 1.05,
+      "exp_pts": 1.049,
       "top_scores": [
         [
           "1-1",
@@ -2389,7 +2494,7 @@
           0.077
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -2408,7 +2513,7 @@
       "p_away": 0.507,
       "model_pick": "0-1",
       "model_pick_result": "away",
-      "model_pick_prob": 0.101,
+      "model_pick_prob": 0.1,
       "exp_pts": 1.315,
       "top_scores": [
         [
@@ -2417,7 +2522,7 @@
         ],
         [
           "0-1",
-          0.101
+          0.1
         ],
         [
           "1-2",
@@ -2436,7 +2541,7 @@
           0.065
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -2456,7 +2561,7 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.189,
-      "exp_pts": 1.64,
+      "exp_pts": 1.641,
       "top_scores": [
         [
           "1-0",
@@ -2472,18 +2577,18 @@
         ],
         [
           "2-0",
-          0.123
+          0.124
         ],
         [
           "0-1",
-          0.085
+          0.084
         ],
         [
           "2-1",
           0.073
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -2498,12 +2603,12 @@
       "resolved": true,
       "played": false,
       "p_home": 0.703,
-      "p_draw": 0.208,
+      "p_draw": 0.209,
       "p_away": 0.089,
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.193,
-      "exp_pts": 1.986,
+      "exp_pts": 1.985,
       "top_scores": [
         [
           "1-0",
@@ -2519,7 +2624,7 @@
         ],
         [
           "3-0",
-          0.1
+          0.099
         ],
         [
           "1-1",
@@ -2530,7 +2635,7 @@
           0.074
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -2577,7 +2682,7 @@
           0.065
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -2592,7 +2697,7 @@
       "resolved": true,
       "played": false,
       "p_home": 0.723,
-      "p_draw": 0.196,
+      "p_draw": 0.197,
       "p_away": 0.08,
       "model_pick": "1-0",
       "model_pick_result": "home",
@@ -2609,7 +2714,7 @@
         ],
         [
           "0-0",
-          0.113
+          0.114
         ],
         [
           "3-0",
@@ -2617,14 +2722,14 @@
         ],
         [
           "1-1",
-          0.082
+          0.083
         ],
         [
           "2-1",
           0.07
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -2638,7 +2743,7 @@
       "kickoff_label": "Tue 23 Jun \u00b7 11:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.208,
+      "p_home": 0.207,
       "p_draw": 0.257,
       "p_away": 0.535,
       "model_pick": "0-1",
@@ -2671,7 +2776,7 @@
           0.061
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -2691,7 +2796,7 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.122,
-      "exp_pts": 1.114,
+      "exp_pts": 1.113,
       "top_scores": [
         [
           "1-1",
@@ -2718,7 +2823,7 @@
           0.079
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -2750,7 +2855,7 @@
         ],
         [
           "0-1",
-          0.12
+          0.119
         ],
         [
           "0-4",
@@ -2765,7 +2870,7 @@
           0.058
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -2780,7 +2885,7 @@
       "resolved": true,
       "played": false,
       "p_home": 0.621,
-      "p_draw": 0.252,
+      "p_draw": 0.253,
       "p_away": 0.127,
       "model_pick": "1-0",
       "model_pick_result": "home",
@@ -2793,7 +2898,7 @@
         ],
         [
           "0-0",
-          0.161
+          0.162
         ],
         [
           "2-0",
@@ -2809,10 +2914,10 @@
         ],
         [
           "0-1",
-          0.073
+          0.072
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -2859,7 +2964,7 @@
           0.082
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -2879,7 +2984,7 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.161,
-      "exp_pts": 1.603,
+      "exp_pts": 1.602,
       "top_scores": [
         [
           "1-0",
@@ -2887,15 +2992,15 @@
         ],
         [
           "0-0",
-          0.136
+          0.137
         ],
         [
           "1-1",
-          0.132
+          0.133
         ],
         [
           "2-0",
-          0.115
+          0.116
         ],
         [
           "2-1",
@@ -2903,10 +3008,10 @@
         ],
         [
           "0-1",
-          0.081
+          0.08
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -2926,7 +3031,7 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.208,
-      "exp_pts": 2.01,
+      "exp_pts": 2.009,
       "top_scores": [
         [
           "1-0",
@@ -2953,7 +3058,7 @@
           0.07
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -2973,7 +3078,7 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.122,
-      "exp_pts": 1.255,
+      "exp_pts": 1.254,
       "top_scores": [
         [
           "1-1",
@@ -2997,10 +3102,10 @@
         ],
         [
           "0-1",
-          0.073
+          0.072
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -3020,7 +3125,7 @@
       "model_pick": "0-0",
       "model_pick_result": "draw",
       "model_pick_prob": 0.266,
-      "exp_pts": 1.51,
+      "exp_pts": 1.511,
       "top_scores": [
         [
           "0-0",
@@ -3040,14 +3145,14 @@
         ],
         [
           "0-2",
-          0.078
+          0.077
         ],
         [
           "1-2",
           0.045
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -3063,11 +3168,11 @@
       "played": false,
       "p_home": 0.509,
       "p_draw": 0.288,
-      "p_away": 0.203,
+      "p_away": 0.202,
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.163,
-      "exp_pts": 1.509,
+      "exp_pts": 1.508,
       "top_scores": [
         [
           "1-0",
@@ -3083,7 +3188,7 @@
         ],
         [
           "2-0",
-          0.116
+          0.115
         ],
         [
           "0-1",
@@ -3094,7 +3199,7 @@
           0.082
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -3114,7 +3219,7 @@
       "model_pick": "0-1",
       "model_pick_result": "away",
       "model_pick_prob": 0.116,
-      "exp_pts": 1.361,
+      "exp_pts": 1.359,
       "top_scores": [
         [
           "1-1",
@@ -3141,7 +3246,7 @@
           0.081
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -3161,7 +3266,7 @@
       "model_pick": "1-0",
       "model_pick_result": "home",
       "model_pick_prob": 0.177,
-      "exp_pts": 2.097,
+      "exp_pts": 2.096,
       "top_scores": [
         [
           "1-0",
@@ -3188,7 +3293,7 @@
           0.076
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -3204,7 +3309,7 @@
       "played": false,
       "p_home": 0.203,
       "p_draw": 0.262,
-      "p_away": 0.535,
+      "p_away": 0.536,
       "model_pick": "0-1",
       "model_pick_result": "away",
       "model_pick_prob": 0.119,
@@ -3231,11 +3336,11 @@
           0.086
         ],
         [
-          "1-0",
+          "0-3",
           0.06
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -3255,7 +3360,7 @@
       "model_pick": "0-2",
       "model_pick_result": "away",
       "model_pick_prob": 0.152,
-      "exp_pts": 1.844,
+      "exp_pts": 1.845,
       "top_scores": [
         [
           "0-2",
@@ -3282,7 +3387,7 @@
           0.082
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
@@ -3301,16 +3406,16 @@
       "p_away": 0.122,
       "model_pick": "1-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.157,
+      "model_pick_prob": 0.156,
       "exp_pts": 1.79,
       "top_scores": [
         [
           "1-0",
-          0.157
+          0.156
         ],
         [
           "2-0",
-          0.129
+          0.13
         ],
         [
           "1-1",
@@ -3318,7 +3423,7 @@
         ],
         [
           "0-0",
-          0.115
+          0.116
         ],
         [
           "2-1",
@@ -3329,7 +3434,7 @@
           0.067
         ]
       ],
-      "updated_utc": "2026-06-12 17:29 UTC",
+      "updated_utc": "2026-06-12 17:48 UTC",
       "scored": false
     },
     {
