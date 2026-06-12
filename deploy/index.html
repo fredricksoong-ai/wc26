@@ -114,7 +114,7 @@ function tallies(){
     if(!f.played||!f.actual)return;
     const yp=pickArr(f), ys=scorePick(yp,f.actual);
     if(ys){yP+=ys.pts;yMax+=RP+EP;yN++; if(ys.rh)yR++; if(ys.eh)yE++;}
-    if(f.model_pick){const ms=scorePick(f.model_pick.split("-").map(Number),f.actual); if(ms){mP+=ms.pts;mMax+=RP+EP;mN++;}}
+    const mc=modelCall(f); if(mc){const ms=scorePick(mc.split("-").map(Number),f.actual); if(ms){mP+=ms.pts;mMax+=RP+EP;mN++;}}
   });
   return {yP,yMax,yN,yR,yE,mP,mMax,mN};
 }
@@ -135,6 +135,10 @@ function renderAll(){
   $("#results").innerHTML=(done.length?scoreboard(t):"")+(done.length?renderGroup(done,resultCard):`<div class="err">No games scored yet.</div>`);
 }
 
+// the model's call = the most likely scoreline (top of its frozen distribution).
+// deriving it from top_scores self-corrects older games picked under the old logic.
+const modelCall=f=>(f.top_scores&&f.top_scores[0])?f.top_scores[0][0]:f.model_pick;
+const modelProb=f=>(f.top_scores&&f.top_scores[0])?f.top_scores[0][1]:f.model_pick_prob;
 const dayKey=f=>(f.kickoff_sgt||f.date||"").slice(0,10);
 function dayLabel(k){ if(!k)return""; const [y,m,d]=k.split("-").map(Number);
   return new Date(Date.UTC(y,m-1,d)).toLocaleDateString("en-GB",{weekday:"long",day:"2-digit",month:"long",timeZone:"UTC"}); }
@@ -147,8 +151,9 @@ function selOpts(sel){let s="";for(let i=0;i<=7;i++)s+=`<option value="${i}" ${s
 
 function pickCard(f){
   const i=ALLFIX.indexOf(f);
-  const tops=(f.top_scores||[]).map(t=>`<span class="chip ${t[0]===f.model_pick?'best':''}">${t[0]} · ${pc(t[1])}%</span>`).join("");
-  const mprob=f.model_pick_prob!=null?` <span style="color:var(--muted);font-weight:400">${pc(f.model_pick_prob)}%</span>`:"";
+  const mc=modelCall(f), mpr=modelProb(f);
+  const tops=(f.top_scores||[]).map(t=>`<span class="chip ${t[0]===mc?'best':''}">${t[0]} · ${pc(t[1])}%</span>`).join("");
+  const mprob=mpr!=null?` <span style="color:var(--muted);font-weight:400">${pc(mpr)}%</span>`:"";
   const xg=f.xg_home!=null?`<div style="font-size:11px;color:var(--muted);margin-top:9px">expected goals <b style="color:var(--ink)">${f.xg_home} – ${f.xg_away}</b></div>`:"";
   const yp=pickArr(f), locked=isLocked(f);
   const ytxt=yp&&yp[0]!=null&&yp[1]!=null?`${yp[0]}-${yp[1]}`:"not set";
@@ -161,7 +166,7 @@ function pickCard(f){
     <div class="frow">
       <div><div class="teams">${f.team1}<span class="v">v</span>${f.team2}</div>
         <div class="meta">${timeOnly(f)} · ${f.group||f.round||""}</div></div>
-      <span class="badge m">most likely <b>${f.model_pick}</b>${mprob}</span>
+      <span class="badge m">most likely <b>${mc}</b>${mprob}</span>
     </div>
     <div class="bar"><i class="h" style="width:${pc(f.p_home)}%"></i><i class="d" style="width:${pc(f.p_draw)}%"></i><i class="a" style="width:${pc(f.p_away)}%"></i></div>
     <div class="legend"><span style="color:var(--home)">${f.team1} <b>${pc(f.p_home)}%</b></span><span>Draw <b>${pc(f.p_draw)}%</b></span><span style="color:var(--away)">${f.team2} <b>${pc(f.p_away)}%</b></span></div>
@@ -181,7 +186,8 @@ function setPick(i,side,val){
 
 function resultCard(f){
   const yp=pickArr(f), ys=scorePick(yp,f.actual);
-  const ms=f.model_pick?scorePick(f.model_pick.split("-").map(Number),f.actual):null;
+  const mc=modelCall(f);
+  const ms=mc?scorePick(mc.split("-").map(Number),f.actual):null;
   const ytxt=yp&&yp[0]!=null?`${yp[0]}-${yp[1]}`:"–";
   const yrow=ys?`<span class="tag ${ys.rh?'ok':'no'}">${ys.rh?'✓':'✗'} result</span><span class="tag ${ys.eh?'ok':'no'}">${ys.eh?'✓':'✗'} exact</span><span class="pts ${ys.pts?'':'zero'}">+${ys.pts}</span>`:`<span style="color:var(--muted)">no pick made</span>`;
   return `<div class="card">
@@ -191,7 +197,7 @@ function resultCard(f){
       <div class="score">${f.actual[0]}–${f.actual[1]}</div>
     </div>
     <div class="res"><span>you <b style="color:var(--you)">${ytxt}</b></span>${yrow}</div>
-    <div class="vs">model predicted <b style="color:var(--pick)">${f.model_pick||"–"}</b> → +${ms?ms.pts:0}</div>
+    <div class="vs">model predicted <b style="color:var(--pick)">${mc||"–"}</b> → +${ms?ms.pts:0}</div>
   </div>`;
 }
 
@@ -204,8 +210,8 @@ function scoreboard(t){
 }
 
 function toSGT(utc){ if(!utc)return"–"; const m=utc.match(/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/); if(!m)return utc;
-  const d=new Date(Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5])); const s=new Date(d.getTime()+8*3600*1000);
-  return s.toLocaleString("en-GB",{weekday:"short",day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})+" SGT"; }
+  const d=new Date(Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5]));
+  return d.toLocaleString("en-GB",{timeZone:"Asia/Singapore",weekday:"short",day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})+" SGT"; }
 
 function explainerHTML(){return `
   <h3>What this is</h3>
