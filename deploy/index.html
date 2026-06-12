@@ -149,6 +149,7 @@ function pickCard(f){
   const i=ALLFIX.indexOf(f);
   const tops=(f.top_scores||[]).map(t=>`<span class="chip ${t[0]===f.model_pick?'best':''}">${t[0]} · ${pc(t[1])}%</span>`).join("");
   const mprob=f.model_pick_prob!=null?` <span style="color:var(--muted);font-weight:400">${pc(f.model_pick_prob)}%</span>`:"";
+  const xg=f.xg_home!=null?`<div style="font-size:11px;color:var(--muted);margin-top:9px">expected goals <b style="color:var(--ink)">${f.xg_home} – ${f.xg_away}</b></div>`:"";
   const yp=pickArr(f), locked=isLocked(f);
   const ytxt=yp&&yp[0]!=null&&yp[1]!=null?`${yp[0]}-${yp[1]}`:"not set";
   const pickUI=locked
@@ -160,10 +161,11 @@ function pickCard(f){
     <div class="frow">
       <div><div class="teams">${f.team1}<span class="v">v</span>${f.team2}</div>
         <div class="meta">${timeOnly(f)} · ${f.group||f.round||""}</div></div>
-      <span class="badge m">model <b>${f.model_pick}</b>${mprob}</span>
+      <span class="badge m">most likely <b>${f.model_pick}</b>${mprob}</span>
     </div>
     <div class="bar"><i class="h" style="width:${pc(f.p_home)}%"></i><i class="d" style="width:${pc(f.p_draw)}%"></i><i class="a" style="width:${pc(f.p_away)}%"></i></div>
     <div class="legend"><span style="color:var(--home)">${f.team1} <b>${pc(f.p_home)}%</b></span><span>Draw <b>${pc(f.p_draw)}%</b></span><span style="color:var(--away)">${f.team2} <b>${pc(f.p_away)}%</b></span></div>
+    ${xg}
     <div style="font-size:11px;color:var(--muted);margin:10px 0 5px">likeliest scorelines</div>
     <div class="tops">${tops}</div>
     <div class="pickbox">${pickUI}</div>
@@ -189,7 +191,7 @@ function resultCard(f){
       <div class="score">${f.actual[0]}–${f.actual[1]}</div>
     </div>
     <div class="res"><span>you <b style="color:var(--you)">${ytxt}</b></span>${yrow}</div>
-    <div class="vs">model <b style="color:var(--pick)">${f.model_pick||"–"}</b> → +${ms?ms.pts:0}</div>
+    <div class="vs">model predicted <b style="color:var(--pick)">${f.model_pick||"–"}</b> → +${ms?ms.pts:0}</div>
   </div>`;
 }
 
@@ -207,17 +209,19 @@ function toSGT(utc){ if(!utc)return"–"; const m=utc.match(/(\d{4})-(\d{2})-(\d
 
 function explainerHTML(){return `
   <h3>What this is</h3>
-  <p>A statistical model predicts every World Cup match, then suggests a pick for your pool (<span class="k">${RP} pts</span> for the correct result, <span class="k">${EP} pts</span> for the exact score). You can override any pick.</p>
+  <p>A statistical model that forecasts every World Cup match — its honest best guess at the score, not a pick engineered to win your pool. You enter your own picks separately.</p>
   <h3>The win bar</h3>
   <p><span class="dot" style="background:var(--home)"></span>team 1 win &nbsp; <span class="dot" style="background:var(--draw)"></span>draw &nbsp; <span class="dot" style="background:var(--away)"></span>team 2 win — the model's probability for each outcome. Wider = more likely.</p>
-  <h3>Model pick + %</h3>
-  <p>The single scoreline the model recommends to <span class="k">maximise your expected pool points</span>. The % is how likely that exact score is. It often plays safe (e.g. 1-0) to bank the result points.</p>
+  <h3>Most likely score + %</h3>
+  <p>The single exact scoreline the model thinks is <span class="k">most probable</span>, with its chance. Because international football is low-scoring, this is often 1-0, 0-0 or 1-1 — that genuinely is the most likely exact result, even when one team is favoured to win.</p>
+  <h3>Expected goals</h3>
+  <p>Each team's <span class="k">average</span> predicted goals (e.g. 1.6 – 0.8). A different lens from the most likely score: it shows the favourite more clearly and hints at how open the game should be. The two can disagree — the average might be 1.6 goals while the single most likely tally is 1.</p>
   <h3>Likeliest scorelines</h3>
-  <p>The most probable exact scores with their chances. If you'd rather gamble for the ${EP}-point exact bonus, pick one of these instead of the safe model pick.</p>
+  <p>The full top-six most probable exact scores with their chances, so you can see the whole distribution, not just the headline.</p>
   <h3>Your pick</h3>
-  <p>Set a scoreline on each card; it saves on this device and <span class="k">locks at kickoff</span> (SGT). Once a game finishes, it's scored automatically and shows in Results.</p>
+  <p>Set a scoreline on each card; it saves on this device and <span class="k">locks at kickoff</span> (SGT). Once a game finishes it's scored automatically (<span class="k">${RP} pts</span> result, <span class="k">${EP} pts</span> exact) and shows in Results.</p>
   <h3>You vs Model</h3>
-  <p>Your pool points vs what the model's own picks would have scored over the same games — see if you can beat the algorithm.</p>
+  <p>Your pool points vs how the model's predicted scoreline would have scored over the same games — see if your judgement beats the forecast.</p>
   <h3>Accuracy (RPS)</h3>
   <p>Ranked Probability Score grades how good the probabilities are — <span class="k">lower is better</span>. Roughly: 0.10 excellent, 0.20 average, 0.33 = random guessing.</p>
   <h3>Dixon–Coles + Elo ensemble</h3>

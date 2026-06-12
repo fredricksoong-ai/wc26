@@ -141,13 +141,16 @@ def main() -> int:
             if not r.played:
                 probs = E.ensemble_probs(dm.outcome_probs(r.team1, r.team2, neutral=True),
                                          em.outcome_probs(r.team1, r.team2, neutral=True), W_DC)
-                pick = scoring.recommend_pick(matrix, probs, RESULT_PTS, EXACT_PTS)
-                pi, pj = pick["score"]
+                # honest forecast: the most likely scoreline (mode of the DC grid)
+                # plus expected goals (the average). No pool-points optimisation.
                 tops = [[f"{i}-{j}", round(p, 3)] for (i, j), p in scoring.top_scorelines(matrix, 6)]
+                (mi, mj), mprob = scoring.top_scorelines(matrix, 1)[0]
+                xgh, xga = dm.expected_goals(r.team1, r.team2, neutral=True)
                 entry = {"p_home": round(probs["home"], 3), "p_draw": round(probs["draw"], 3),
                          "p_away": round(probs["away"], 3),
-                         "model_pick": f"{pi}-{pj}", "model_pick_result": pick["result"],
-                         "model_pick_prob": round(float(matrix[pi, pj]), 3), "exp_pts": pick["exp_pts"],
+                         "model_pick": f"{mi}-{mj}", "model_pick_result": scoring._result(mi, mj),
+                         "model_pick_prob": round(float(mprob), 3),
+                         "xg_home": round(float(xgh), 2), "xg_away": round(float(xga), 2),
                          "top_scores": tops, "updated_utc": _now(), "played": False, "scored": False}
                 ledger[k] = entry
             elif entry is not None and not entry.get("scored"):
