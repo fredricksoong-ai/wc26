@@ -13,6 +13,10 @@ on:
 permissions:
   contents: write            # allow committing the refreshed JSON
 
+concurrency:
+  group: predict             # never let two runs push at once
+  cancel-in-progress: false
+
 jobs:
   predict:
     runs-on: ubuntu-latest
