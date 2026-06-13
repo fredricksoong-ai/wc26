@@ -199,23 +199,23 @@ def main() -> int:
                          "top_scores": tops, "lb": model_eval(r.team1, r.team2),
                          "updated_utc": _now(), "played": False, "scored": False}
                 ledger[k] = entry
-            elif entry is not None and not entry.get("scored"):
+            else:  # played — robust: scores the forecast if present, ALWAYS fills the league
                 actual = [int(r.home_score), int(r.away_score)]
                 ao = evaluate.result_to_outcome(*actual)
-                mp = _parse(entry["model_pick"])
-                msc = scoring.score_pick(mp, actual, RESULT_PTS, EXACT_PTS)
-                lb = entry.get("lb") or model_eval(r.team1, r.team2)   # frozen, else post-hoc (backfill)
-                entry.update(played=True, scored=True, actual=actual, actual_outcome=ao,
-                             model_earned=msc["points"], model_result_hit=msc["result_hit"],
-                             model_exact_hit=msc["exact_hit"], max_points=msc["max_points"],
-                             rps=round(evaluate.rps([entry["p_home"], entry["p_draw"], entry["p_away"]], ao), 4),
-                             lb=lb, lb_scored=score_models(lb, actual))
-                ledger[k] = entry
-            elif entry is None:
-                actual = [int(r.home_score), int(r.away_score)]
-                lb = model_eval(r.team1, r.team2)   # post-hoc backfill for games never frozen
-                entry = {"played": True, "scored": False, "no_prematch_pick": True, "actual": actual,
-                         "lb": lb, "lb_scored": score_models(lb, actual)}
+                if entry is None:
+                    entry = {}
+                if "model_pick" in entry and not entry.get("scored"):
+                    msc = scoring.score_pick(_parse(entry["model_pick"]), actual, RESULT_PTS, EXACT_PTS)
+                    entry.update(scored=True, model_earned=msc["points"], model_result_hit=msc["result_hit"],
+                                 model_exact_hit=msc["exact_hit"], max_points=msc["max_points"],
+                                 rps=round(evaluate.rps([entry["p_home"], entry["p_draw"], entry["p_away"]], ao), 4))
+                if "lb_scored" not in entry:   # backfill league scoring (incl. games scored pre-league)
+                    lb = entry.get("lb") or model_eval(r.team1, r.team2)
+                    entry["lb"] = lb
+                    entry["lb_scored"] = score_models(lb, actual)
+                if "model_pick" not in entry:
+                    entry["no_prematch_pick"] = True
+                entry.update(played=True, actual=actual, actual_outcome=ao)
                 ledger[k] = entry
 
             out = {**meta, **entry}
@@ -239,11 +239,12 @@ def main() -> int:
     dump_json(ledger, PICKS)
 
     scored = [f for f in fixtures_out if f.get("scored")]
+    rps_games = [f for f in scored if "rps" in f]
     your = [f for f in fixtures_out if "your_earned" in f]
     summary = {
         "model_scored": len(scored),
-        "model_points": sum(f["model_earned"] for f in scored),
-        "live_rps": round(sum(f["rps"] for f in scored) / len(scored), 4) if scored else None,
+        "model_points": sum(f.get("model_earned", 0) for f in scored),
+        "live_rps": round(sum(f["rps"] for f in rps_games) / len(rps_games), 4) if rps_games else None,
         "your_scored": len(your),
         "your_points": sum(f["your_earned"] for f in your),
         "your_max": (RESULT_PTS + EXACT_PTS) * len(your),
