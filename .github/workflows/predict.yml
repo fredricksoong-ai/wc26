@@ -1,24 +1,23 @@
-name: Update predictions
+name: Update & deploy
 
-# Refreshes data + predictions and commits deploy/predictions.json.
-# Cloudflare Pages (watching this repo) then auto-deploys the dashboard.
-# No secrets required — all data sources are public.
+# Builds predictions and publishes the dashboard straight to Cloudflare Pages.
+# The bot NEVER commits to git, so it can't race your pushes. Your repo only
+# changes when you push; every push (and the schedule) triggers a fresh deploy.
 
 on:
+  push:
+    branches: [main]          # your code changes -> rebuild + deploy
   schedule:
-    - cron: "0 9 * * *"     # 09:00 UTC daily
-    - cron: "0 21 * * *"    # 21:00 UTC daily (catch evening results during the tournament)
-  workflow_dispatch: {}      # manual "Run workflow" button
-
-permissions:
-  contents: write            # allow committing the refreshed JSON
+    - cron: "0 9 * * *"       # 09:00 UTC daily (17:00 SGT)
+    - cron: "0 21 * * *"      # 21:00 UTC daily (05:00 SGT)
+  workflow_dispatch: {}
 
 concurrency:
-  group: predict             # never let two runs push at once
+  group: deploy               # never two deploys at once
   cancel-in-progress: false
 
 jobs:
-  predict:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,29 +26,29 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install runtime deps
+      - name: Install deps
         run: pip install pandas numpy scipy statsmodels requests
 
-      - name: Pull latest data (martj42 results + openfootball fixtures)
+      # state lives on the live site, not in git: pull the frozen-pick ledger
+      # forward so model picks stay frozen across runs.
+      - name: Carry over the pick ledger from the live site
+        run: |
+          curl -fsS https://wc26-3kx.pages.dev/picks.json -o /tmp/picks.json \
+            && cp /tmp/picks.json deploy/picks.json \
+            && echo "carried over ledger" || echo "no live ledger yet, using committed one"
+
+      - name: Pull data (martj42 results + openfootball fixtures)
         run: python scripts/update_data.py
 
-      - name: Validate the fixture list (104 games, 12 groups, dates)
+      - name: Validate the fixture list
         run: python scripts/check_fixtures.py
 
       - name: Generate predictions
         run: python scripts/run_predictions.py
 
-      - name: Commit predictions if changed (race-safe)
-        run: |
-          git config user.name  "wc-predictor-bot"
-          git config user.email "bot@local"
-          git add deploy/predictions.json deploy/picks.json
-          if git diff --cached --quiet; then echo "no changes"; exit 0; fi
-          git commit -m "Predictions $(date -u '+%Y-%m-%d %H:%M UTC')"
-          for i in 1 2 3 4 5; do
-            if git pull --rebase --autostash origin main && git push; then
-              echo "pushed on attempt $i"; exit 0
-            fi
-            echo "push raced, retrying ($i)..."; sleep $((RANDOM % 5 + 3))
-          done
-          echo "push still failing after retries"; exit 1
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy deploy --project-name=wc26-3kx --branch=main
