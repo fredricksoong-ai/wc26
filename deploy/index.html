@@ -152,10 +152,11 @@ function tallies(){
 
 function renderAll(){
   const t=tallies(), d=DATA;
+  const erps=(d.leaderboard&&d.leaderboard.standings&&d.leaderboard.standings.ensemble&&d.leaderboard.standings.ensemble.rps);
   $("#metrics").innerHTML=[
     `<span class="pill">you <b class="y">${t.yP}</b>/${t.yMax}</span>`,
     `<span class="pill">model <b class="p">${t.mP}</b>/${t.mMax}</span>`,
-    `<span class="pill">accuracy (RPS) <b>${(d.summary||{}).live_rps??"–"}</b></span>`,
+    `<span class="pill">accuracy (RPS) <b>${erps??(d.summary||{}).live_rps??"–"}</b></span>`,
   ].join("");
   $("#foot").textContent="Lower RPS = more accurate · picks lock at kickoff (SGT) · saved on this device";
 

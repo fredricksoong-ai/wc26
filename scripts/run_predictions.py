@@ -137,6 +137,8 @@ def main() -> int:
             return max(("home", "draw", "away"), key=lambda kk: p[kk])
         def vec(p):
             return [round(p["home"], 4), round(p["draw"], 4), round(p["away"], 4)]
+        def res_of(sc):                    # result implied by a submitted scoreline
+            i, j = sc.split("-"); return scoring._result(int(i), int(j))
         naive = {"home": "1-0", "draw": "1-1", "away": "0-1"}
 
         dcm = dm.score_matrix(t1, t2, neutral=True)
@@ -145,14 +147,18 @@ def main() -> int:
         enp = E.ensemble_probs(dcp, elp, W_DC)
         out = {}
         if pm is not None and t1 in pm.teams and t2 in pm.teams:
-            pmp = pm.outcome_probs(t1, t2)
-            out["poisson"] = {"score": mode(pm.score_matrix(t1, t2)), "result": amax(pmp), "probs": vec(pmp)}
-        out["dixon_coles"] = {"score": mode(dcm), "result": amax(dcp), "probs": vec(dcp)}
-        out["elo"] = {"score": naive[amax(elp)], "result": amax(elp), "probs": vec(elp)}
-        out["ensemble"] = {"score": mode(dcm), "result": amax(enp), "probs": vec(enp)}
+            ps = mode(pm.score_matrix(t1, t2))
+            out["poisson"] = {"score": ps, "result": res_of(ps), "probs": vec(pm.outcome_probs(t1, t2))}
+        ds = mode(dcm)
+        es = naive[amax(elp)]
+        out["dixon_coles"] = {"score": ds, "result": res_of(ds), "probs": vec(dcp)}
+        out["elo"] = {"score": es, "result": res_of(es), "probs": vec(elp)}
+        out["ensemble"] = {"score": ds, "result": res_of(ds), "probs": vec(enp)}
         return out
 
     def score_models(lb, actual):
+        # everyone is scored like a pool entry: ONE scoreline, result derived from it
+        # (so the League matches the Results tab). RPS judges the probabilities.
         ah, aa = actual
         akey, ao = f"{ah}-{aa}", evaluate.result_to_outcome(ah, aa)
         return {m: {"result_hit": v["result"] == ao, "exact_hit": v["score"] == akey,
