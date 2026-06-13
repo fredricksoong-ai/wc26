@@ -25,6 +25,8 @@ import re
 import sys
 from datetime import datetime, timedelta, timezone
 
+import pandas as pd
+
 PROJ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(PROJ)
 
@@ -201,6 +203,32 @@ def main() -> int:
         "your_exact_hits": sum(1 for f in your if f["your_exact_hit"]),
     }
 
+    # rating movement vs ~1 year ago (drives the up/down chevrons)
+    cutoff = full["date"].max() - pd.Timedelta(days=365)
+    past, _ = E.compute_ratings(full[full["date"] < cutoff])
+    ratings = []
+    for t in sorted(known, key=lambda x: -em.rating(x)):
+        now = em.rating(t); p = past.get(t)
+        ratings.append({"team": t, "elo": round(now),
+                        "delta": (round(now - p) if p is not None else None)})
+
+    # recent form (last 5) for the teams actually in the tournament
+    wc_teams = {x for f in fixtures_out if f.get("resolved")
+                for x in (f.get("team1"), f.get("team2")) if x in known}
+    fsort = full.sort_values("date")
+    form = {}
+    for t in wc_teams:
+        sub = fsort[(fsort["home_team"] == t) | (fsort["away_team"] == t)].tail(5)
+        seq = []
+        for mrow in sub.itertuples():
+            if mrow.home_team == t:
+                gf, ga, opp = int(mrow.home_score), int(mrow.away_score), mrow.away_team
+            else:
+                gf, ga, opp = int(mrow.away_score), int(mrow.home_score), mrow.home_team
+            seq.append({"r": "W" if gf > ga else "L" if gf < ga else "D",
+                        "s": f"{gf}-{ga}", "opp": opp})
+        form[t] = seq
+
     payload = {
         "generated_utc": _now(),
         "model": f"Dixon-Coles (xi={XI}) + Elo ensemble (w_DC={W_DC}), neutral venues",
@@ -209,8 +237,8 @@ def main() -> int:
         "summary": summary,
         "n_fixtures": len(fixtures_out),
         "fixtures": fixtures_out,
-        "ratings": [{"team": t, "elo": round(em.rating(t))}
-                    for t in sorted(known, key=lambda x: -em.rating(x))],
+        "ratings": ratings,
+        "form": form,
     }
     dump_json(payload, OUT)
     print(f"wrote {OUT}")

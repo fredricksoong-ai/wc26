@@ -52,9 +52,16 @@
   .rank{width:22px;text-align:right;color:var(--muted);font-size:12px} .rname{flex:1;font-weight:600} .relo{color:var(--muted);font-variant-numeric:tabular-nums}
   .exp h3{font-size:14px;margin:16px 2px 6px} .exp p{font-size:13px;color:var(--muted);margin:0 2px 8px;line-height:1.55}
   .exp .k{color:var(--ink);font-weight:600} .exp .dot{display:inline-block;width:10px;height:10px;border-radius:2px;vertical-align:-1px;margin-right:4px}
-  .rconf{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:12px;background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:5px 9px}
-  .rconf b{color:var(--ink)} .rconf .lv{font-weight:700;font-size:11px}
-  .rconf.strong .lv{color:var(--good)} .rconf.lean .lv{color:var(--away)} .rconf.toss .lv{color:var(--muted)}
+  .rc-strong{color:var(--good)} .rc-lean{color:var(--away)} .rc-toss{color:var(--muted)}
+  .section{margin-top:11px;padding-top:10px;border-top:1px solid var(--line)}
+  .shdr{display:flex;justify-content:space-between;align-items:center;font-size:10.5px;color:#6b7a90;text-transform:uppercase;letter-spacing:.4px;margin-bottom:7px}
+  .toggle{cursor:pointer;color:var(--home);font-weight:700}
+  .collapsible{display:none} .collapsible.open{display:block}
+  .fdot{display:inline-block;min-width:17px;height:17px;border-radius:3px;font-size:10px;font-weight:700;text-align:center;line-height:17px;margin-right:2px;color:#08111f;padding:0 2px}
+  .fdot.W{background:var(--good)} .fdot.D{background:#94a3b8;color:#0b1220} .fdot.L{background:var(--bad);color:#fff}
+  .cform{display:flex;align-items:center;gap:7px;margin-top:6px;font-size:11px;color:var(--muted)} .cform .ft{min-width:104px;color:var(--ink)}
+  .formends{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+  .chev{font-weight:700;font-size:12px;font-variant-numeric:tabular-nums} .chev.up{color:var(--good)} .chev.dn{color:var(--bad)} .chev.fl{color:var(--muted)}
   .dayhdr{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin:16px 4px 2px;padding-bottom:5px;border-bottom:1px solid var(--line)}
   .hidden{display:none} .err{padding:20px 16px;color:var(--away)}
   footer{color:var(--muted);font-size:11px;text-align:center;padding:18px 16px 0}
@@ -106,8 +113,14 @@ function init(d){
   $("#model").textContent=`${d.model||""} · pool: ${RP} result + ${EP} exact`;
   $("#updated").innerHTML=`Last updated <b>${toSGT(d.generated_utc)}</b> · refreshes ~twice daily`;
   $("#explainer").innerHTML=explainerHTML();
-  $("#ratings").innerHTML=(d.ratings||[]).slice(0,40)
-    .map((r,i)=>`<div class="rrow"><div class="rank">${i+1}</div><div class="rname">${r.team}</div><div class="relo">${r.elo}</div></div>`).join("");
+  const wcr=(d.ratings||[]).filter(r=>(d.form||{})[r.team]);
+  const show=wcr.length?wcr:(d.ratings||[]).slice(0,40);
+  $("#ratings").innerHTML=`<div class="subline">How the model rates the ${show.length} teams — Elo strength, movement vs a year ago (▲▼), and recent form (oldest → newest).</div>`+
+    show.map((r,i)=>`<div class="rrow">
+      <div class="rank">${i+1}</div>
+      <div style="flex:1;min-width:0"><div class="rname">${r.team}</div><div style="margin-top:4px">${formStrip(r.team)}</div></div>
+      <div style="text-align:right"><div class="relo">${r.elo}</div><div style="margin-top:3px">${chev(r.delta)}</div></div>
+    </div>`).join("");
   renderAll();
 }
 
@@ -149,6 +162,12 @@ function confidence(f){
 }
 const modelCall=f=>(f.top_scores&&f.top_scores[0])?f.top_scores[0][0]:f.model_pick;
 const modelProb=f=>(f.top_scores&&f.top_scores[0])?f.top_scores[0][1]:f.model_pick_prob;
+function formStrip(team){ const f=(DATA&&DATA.form||{})[team]; if(!f||!f.length)return `<span style="color:var(--muted)">—</span>`;
+  return f.map(g=>`<span class="fdot ${g.r}" title="${g.s} v ${g.opp}">${g.r}</span>`).join(""); }
+function chev(delta){ if(delta==null)return `<span class="chev fl">–</span>`;
+  if(delta>=8)return `<span class="chev up">▲ ${delta}</span>`;
+  if(delta<=-8)return `<span class="chev dn">▼ ${Math.abs(delta)}</span>`;
+  return `<span class="chev fl">${delta>=0?'+':''}${delta}</span>`; }
 const dayKey=f=>(f.kickoff_sgt||f.date||"").slice(0,10);
 function dayLabel(k){ if(!k)return""; const [y,m,d]=k.split("-").map(Number);
   return new Date(Date.UTC(y,m-1,d)).toLocaleDateString("en-GB",{weekday:"long",day:"2-digit",month:"long",timeZone:"UTC"}); }
@@ -161,29 +180,24 @@ function selOpts(sel){let s="";for(let i=0;i<=7;i++)s+=`<option value="${i}" ${s
 
 function pickCard(f){
   const i=ALLFIX.indexOf(f);
-  const mc=modelCall(f), mpr=modelProb(f), cf=confidence(f);
+  const mc=modelCall(f), cf=confidence(f);
   const tops=(f.top_scores||[]).map(t=>`<span class="chip ${t[0]===mc?'best':''}">${t[0]} · ${pc(t[1])}%</span>`).join("");
-  const mprob=mpr!=null?` <span style="color:var(--muted);font-weight:400">${pc(mpr)}%</span>`:"";
-  const xg=f.xg_home!=null?`<div style="font-size:11px;color:var(--muted);margin-top:9px">expected goals <b style="color:var(--ink)">${f.xg_home} – ${f.xg_away}</b></div>`:"";
+  const xg=f.xg_home!=null?`xG ${f.xg_home} – ${f.xg_away} · `:"";
   const yp=pickArr(f), locked=isLocked(f);
   const ytxt=yp&&yp[0]!=null&&yp[1]!=null?`${yp[0]}-${yp[1]}`:"not set";
   const pickUI=locked
-    ? `<span class="locked">🔒 your pick: <b class="lk" style="color:var(--you)">${ytxt}</b> (locked)</span>`
-    : `<span>your pick</span><select onchange="setPick(${i},0,this.value)">${selOpts(yp?yp[0]:null)}</select>
-       <span>–</span><select onchange="setPick(${i},1,this.value)">${selOpts(yp?yp[1]:null)}</select>
-       <span style="color:var(--you)">${yp&&yp[0]!=null&&yp[1]!=null?'saved ✓':''}</span>`;
+    ? `<span class="locked">🔒 Your Pick <b class="lk" style="color:var(--you)">${ytxt}</b> (locked)</span>`
+    : `<span style="color:var(--you);font-weight:600">Your Pick</span><select onchange="setPick(${i},0,this.value)">${selOpts(yp?yp[0]:null)}</select><span>–</span><select onchange="setPick(${i},1,this.value)">${selOpts(yp?yp[1]:null)}</select><span style="color:var(--you)">${yp&&yp[0]!=null&&yp[1]!=null?'saved ✓':''}</span>`;
   return `<div class="card">
     <div class="frow">
       <div><div class="teams">${f.team1}<span class="v">v</span>${f.team2}</div>
-        <div class="meta">${timeOnly(f)} · ${f.group||f.round||""}</div></div>
-      <span class="badge m">most likely <b>${mc}</b>${mprob}</span>
+        <div class="meta">${xg}${timeOnly(f)} · ${f.group||f.round||""}</div></div>
+      <div style="text-align:right;flex-shrink:0"><div class="rc-${cf.lvl}" style="font-weight:700;font-size:13px">${cf.kind==="draw"?"Draw":cf.who+" win"}</div><div style="color:var(--muted);font-size:11px">${cf.lvl==="toss"?"toss-up":cf.lvl} · ${pc(cf.p)}%</div></div>
     </div>
     <div class="bar"><i class="h" style="width:${pc(f.p_home)}%"></i><i class="d" style="width:${pc(f.p_draw)}%"></i><i class="a" style="width:${pc(f.p_away)}%"></i></div>
     <div class="legend"><span style="color:var(--home)">${f.team1} <b>${pc(f.p_home)}%</b></span><span>Draw <b>${pc(f.p_draw)}%</b></span><span style="color:var(--away)">${f.team2} <b>${pc(f.p_away)}%</b></span></div>
-    <div class="rconf ${cf.lvl}">result call: <b>${cf.kind==="draw"?"Draw":cf.who+" win"}</b> <span class="lv">${cf.lvl==="toss"?"toss-up":cf.lvl} ${pc(cf.p)}%</span></div>
-    ${xg}
-    <div style="font-size:11px;color:var(--muted);margin:10px 0 5px">likeliest scorelines</div>
-    <div class="tops">${tops}</div>
+    <div class="formends"><span>${formStrip(f.team1)}</span><span>${formStrip(f.team2)}</span></div>
+    <div class="tops" style="margin-top:13px">${tops}</div>
     <div class="pickbox">${pickUI}</div>
   </div>`;
 }
@@ -235,7 +249,7 @@ function explainerHTML(){return `
   <p>Each team's <span class="k">average</span> predicted goals (e.g. 1.6 – 0.8). A different lens from the most likely score: it shows the favourite more clearly and hints at how open the game should be. The two can disagree — the average might be 1.6 goals while the single most likely tally is 1.</p>
   <h3>Likeliest scorelines</h3>
   <p>The full top-six most probable exact scores with their chances, so you can see the whole distribution, not just the headline.</p>
-  <h3>Your pick</h3>
+  <h3>Your Pick</h3>
   <p>Set a scoreline on each card; it saves on this device and <span class="k">locks at kickoff</span> (SGT). Once a game finishes it's scored automatically (<span class="k">${RP} pts</span> result, <span class="k">${EP} pts</span> exact) and shows in Results.</p>
   <h3>You vs Model</h3>
   <p>Your pool points vs how the model's predicted scoreline would have scored over the same games — see if your judgement beats the forecast.</p>
@@ -245,8 +259,12 @@ function explainerHTML(){return `
   <p>Two methods blended: <span class="k">Dixon–Coles</span> models goals from recent scoring form; <span class="k">Elo</span> is a running team-strength rating built from every international ever played. Combining them is more accurate than either alone, especially for teams with little recent data.</p>
   <h3>Neutral venues</h3>
   <p>Almost all World Cup games are at neutral sites, so the model removes home advantage from its predictions.</p>
-  <h3>Power ratings</h3>
-  <p>The Ratings tab is the Elo table — the model's view of who's strongest right now.</p>`;}
+  <h3>Result call</h3>
+  <p>The model's most likely <span class="k">outcome</span> (win/draw) and how sure it is — <span class="k">strong</span> (≥60%), <span class="k">lean</span> (≥45%) or <span class="k">toss-up</span>. This is the model's most reliable signal, so it's the one to trust for the result points.</p>
+  <h3>Recent form</h3>
+  <p>Each team's last five results as <span class="fdot W">W</span> <span class="fdot D">D</span> <span class="fdot L">L</span> (oldest left, newest right; tap a square for the score). The model already weights recent games more heavily, so this is a peek at what it's reacting to.</p>
+  <h3>Power ratings + movement</h3>
+  <p>The Ratings tab ranks the tournament teams by Elo strength. The <span class="k">▲ / ▼</span> shows how much each rating has moved over the past year — who's trending up into the World Cup and who's sliding.</p>`;}
 
 document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
   document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active")); t.classList.add("active");
