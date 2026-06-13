@@ -157,11 +157,14 @@ def main() -> int:
         return out
 
     def score_models(lb, actual):
-        # everyone is scored like a pool entry: ONE scoreline, result derived from it
-        # (so the League matches the Results tab). RPS judges the probabilities.
+        # everyone is scored like a pool entry: ONE scoreline, result derived FROM
+        # that scoreline (so the League matches the Results tab). Deriving from the
+        # frozen score — not a stored 'result' — means re-running corrects old rows.
         ah, aa = actual
         akey, ao = f"{ah}-{aa}", evaluate.result_to_outcome(ah, aa)
-        return {m: {"result_hit": v["result"] == ao, "exact_hit": v["score"] == akey,
+        def res_of(sc):
+            i, j = sc.split("-"); return scoring._result(int(i), int(j))
+        return {m: {"result_hit": res_of(v["score"]) == ao, "exact_hit": v["score"] == akey,
                     "rps": round(evaluate.rps(v["probs"], ao), 4)} for m, v in lb.items()}
 
     ledger = json.load(open(PICKS)) if os.path.exists(PICKS) else {}
@@ -215,10 +218,9 @@ def main() -> int:
                     entry.update(scored=True, model_earned=msc["points"], model_result_hit=msc["result_hit"],
                                  model_exact_hit=msc["exact_hit"], max_points=msc["max_points"],
                                  rps=round(evaluate.rps([entry["p_home"], entry["p_draw"], entry["p_away"]], ao), 4))
-                if "lb_scored" not in entry:   # backfill league scoring (incl. games scored pre-league)
-                    lb = entry.get("lb") or model_eval(r.team1, r.team2)
-                    entry["lb"] = lb
-                    entry["lb_scored"] = score_models(lb, actual)
+                lb = entry.get("lb") or model_eval(r.team1, r.team2)   # frozen probs, else post-hoc
+                entry["lb"] = lb
+                entry["lb_scored"] = score_models(lb, actual)          # always recompute (corrects old rows)
                 if "model_pick" not in entry:
                     entry["no_prematch_pick"] = True
                 entry.update(played=True, actual=actual, actual_outcome=ao)
