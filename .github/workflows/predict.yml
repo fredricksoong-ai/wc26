@@ -8,8 +8,8 @@ on:
   push:
     branches: [main]          # your code changes -> rebuild + deploy
   schedule:
-    - cron: "0 9 * * *"       # 09:00 UTC daily (17:00 SGT)
-    - cron: "0 21 * * *"      # 21:00 UTC daily (05:00 SGT)
+    - cron: "0 */3 * * *"     # every 3h UTC -> SGT 02,05,08,11,14,17,20,23
+                              # covers the WC result window (games finish ~02:00-14:00 SGT)
   workflow_dispatch: {}
 
 concurrency:
