@@ -76,9 +76,8 @@
 </head>
 <body>
 <header>
-  <h1>⚽ World Cup 2026 — Predictor</h1>
-  <div class="sub" id="model">loading…</div>
-  <div class="updated" id="updated"></div>
+  <h1>⚽ World Cup 2026 Predictor ⚽</h1>
+  <div class="updated" id="updated">loading…</div>
 </header>
 <div class="metrics" id="metrics"></div>
 <div class="tabs">
@@ -122,8 +121,7 @@ fetch("predictions.json",{cache:"no-store"}).then(r=>r.json()).then(d=>{DATA=d;i
 function init(d){
   RP=(d.scoring||{}).result_pts??2; EP=(d.scoring||{}).exact_pts??3;
   ALLFIX=(d.fixtures||[]).filter(f=>f.resolved);
-  $("#model").textContent=`${d.model||""} · pool: ${RP} result + ${EP} scoreline`;
-  $("#updated").innerHTML=`Last updated <b>${toSGT(d.generated_utc)}</b> · refreshes ~twice daily`;
+  $("#updated").innerHTML=`Last Updated: <b>${toSGT(d.generated_utc)}</b>`;
   $("#explainer").innerHTML=explainerHTML();
   renderOdds();
   renderLeague(d);
