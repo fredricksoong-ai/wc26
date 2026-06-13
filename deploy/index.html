@@ -83,9 +83,9 @@
 <div class="tabs">
   <div class="tab active" data-view="fixtures">Picks</div>
   <div class="tab" data-view="results">Results</div>
-  <div class="tab" data-view="ratings">Ratings</div>
-  <div class="tab" data-view="odds">Win it</div>
   <div class="tab" data-view="league">League</div>
+  <div class="tab" data-view="odds">Winner</div>
+  <div class="tab" data-view="ratings">Ratings</div>
   <div class="tab" data-view="explainer">Explainer</div>
 </div>
 <main>
@@ -109,6 +109,9 @@ const savePicks=o=>localStorage.setItem(LSKEY,JSON.stringify(o));
 const keyOf=f=>`${f.date}|${f.team1}|${f.team2}`;
 function seedArr(f){ if(f.your_pick){const[a,b]=f.your_pick.split("-");return[+a,+b]} return null; }
 function pickArr(f){ const P=loadPicks(); if(P[keyOf(f)])return P[keyOf(f)]; return seedArr(f); }
+function userPickFor(key){ const P=loadPicks(); if(P[key]&&P[key][0]!=null)return P[key];
+  const f=(DATA&&DATA.fixtures||[]).find(x=>`${x.date}|${x.team1}|${x.team2}`===key);
+  if(f&&f.your_pick){const[a,b]=f.your_pick.split("-");return[+a,+b];} return null; }
 function isLocked(f){ if(f.played)return true; if(!f.kickoff_sgt)return false; return Date.now()>=Date.parse(f.kickoff_sgt+":00+08:00"); }
 const resultOf=(h,a)=>h>a?"home":h<a?"away":"draw";
 function scorePick(p,act){ if(!p||p[0]==null||p[1]==null||!act)return null;
@@ -267,8 +270,8 @@ function renderLeague(d){
   if(!lb||!lb.games||!lb.games.length){ $("#league").innerHTML=`<div class="err">The model league fills in as games are played.</div>`; return; }
   const M=lb.models, L=lb.labels, ng=(lb.standings[M[0]]||{}).games||lb.games.length;
   // your result/exact over the same games (from your saved picks)
-  const P=loadPicks(); let yr=0,ye=0,yn=0;
-  lb.games.forEach(g=>{ const yp=P[g.key]; if(yp&&yp[0]!=null){ yn++; const a=g.actual.split("-").map(Number);
+  let yr=0,ye=0,yn=0;
+  lb.games.forEach(g=>{ const yp=userPickFor(g.key); if(yp&&yp[0]!=null){ yn++; const a=g.actual.split("-").map(Number);
     if(resultOf(yp[0],yp[1])===resultOf(a[0],a[1]))yr++; if(yp[0]===a[0]&&yp[1]===a[1])ye++; }});
   // points (RP per correct result + EP per exact score) and RPS; rank by points then RPS
   const rows=M.map((m,i)=>{const s=lb.standings[m]; return {m,label:L[i],
