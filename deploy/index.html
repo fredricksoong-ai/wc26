@@ -274,7 +274,7 @@ function renderLeague(d){
   const rows=M.map((m,i)=>{const s=lb.standings[m]; return {m,label:L[i],
     pts:s.result_hits*RP+s.exact_hits*EP, rps:s.rps};}).sort((a,b)=>(b.pts-a.pts)||(a.rps-b.rps));
   let html=`<div class="subline">Every rung makes its honest call on each game; scored on your pool rules (<b>${RP}</b> result + <b>${EP}</b> exact) plus <b>RPS</b> (probability quality, lower = better). Backfilled and live over ${ng} game${ng==1?'':'s'}.</div>`;
-  html+=`<canvas id="lbchart" height="190" style="margin:4px 0 16px"></canvas>`;
+  html+=`<div style="position:relative;height:210px;margin:4px 0 16px"><canvas id="lbchart"></canvas></div>`;
   html+=`<div class="lbhdr"><span style="flex:1">model</span><span class="lbn">pts</span><span class="lbn">RPS</span></div>`;
   html+=rows.map((r,i)=>`<div class="orow">
       <div class="rank">${i+1}</div>
