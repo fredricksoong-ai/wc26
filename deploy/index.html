@@ -243,11 +243,16 @@ function scoreboard(t){
 }
 
 function renderOdds(tour){
-  const arr=Object.entries(tour).map(([team,p])=>({team,...p})).sort((a,b)=>b.champion-a.champion);
+  const arr=Object.entries(tour).map(([team,p])=>({team,...p}));
   if(!arr.length){ $("#odds").innerHTML=`<div class="err">Tournament odds appear once the full bracket is in the data.</div>`; return; }
-  const mx=arr[0].champion||1;
-  $("#odds").innerHTML=`<div class="subline">Each nation's chance to <b>win the World Cup</b>, from 20,000 simulated tournaments — the model plays every game, group stage through final, over and over.</div>`+
-    arr.map((r,i)=>`<div class="orow">
+  // a team is still in contention if it has a title chance, or any stage outcome
+  // that's still uncertain (strictly between 0 and 1). Eliminated teams are all-0.
+  const alive=r=>r.champion>0 || ["advance","R16","QF","SF","Final"].some(k=>r[k]>0&&r[k]<1);
+  const live=arr.filter(alive).sort((a,b)=>(b.champion-a.champion)||(b.Final-a.Final)||(b.advance-a.advance));
+  const out=arr.filter(r=>!alive(r)).map(r=>r.team).sort();
+  const mx=(live[0]&&live[0].champion)||1;
+  let html=`<div class="subline">Each nation's chance to <b>win the World Cup</b>, from 20,000 simulated tournaments. Banks results so far — eliminated teams drop off.</div>`;
+  html+=live.map((r,i)=>`<div class="orow">
       <div class="rank">${i+1}</div>
       <div style="flex:1;min-width:0">
         <div class="rname">${r.team}</div>
@@ -256,6 +261,8 @@ function renderOdds(tour){
       </div>
       <div style="text-align:right"><div style="font-weight:700;color:var(--good)">${(r.champion*100).toFixed(1)}%</div><div style="font-size:10px;color:var(--muted)">title</div></div>
     </div>`).join("");
+  if(out.length) html+=`<div style="margin-top:14px;font-size:11px;color:var(--muted);line-height:1.6"><b style="color:var(--ink)">Out (${out.length}):</b> ${out.join(" · ")}</div>`;
+  $("#odds").innerHTML=html;
 }
 
 function toSGT(utc){ if(!utc)return"–"; const m=utc.match(/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/); if(!m)return utc;
