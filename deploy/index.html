@@ -40,6 +40,7 @@
   .pickbox select{background:var(--card2);color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:5px 7px;font-size:14px;font-variant-numeric:tabular-nums}
   .pickbox .lk{color:var(--you);font-weight:700} .pickbox .locked{color:var(--muted)}
   .res{display:flex;align-items:center;gap:7px;font-size:12px;margin-top:9px;color:var(--muted);flex-wrap:wrap}
+  .rrow2{display:flex;align-items:center;gap:7px;margin-top:9px;font-size:12px;flex-wrap:wrap} .rrow2 .lbl{min-width:64px;font-weight:600} .rrow2 .pts{margin-left:auto}
   .tag{border-radius:6px;padding:2px 7px;font-size:11px;font-weight:700}
   .tag.ok{background:rgba(52,211,153,.15);color:var(--good)} .tag.no{background:rgba(248,113,113,.13);color:var(--bad)}
   .pts{margin-left:auto;font-weight:700;color:var(--good)} .pts.zero{color:var(--muted)}
@@ -110,7 +111,7 @@ fetch("predictions.json",{cache:"no-store"}).then(r=>r.json()).then(d=>{DATA=d;i
 function init(d){
   RP=(d.scoring||{}).result_pts??2; EP=(d.scoring||{}).exact_pts??3;
   ALLFIX=(d.fixtures||[]).filter(f=>f.resolved);
-  $("#model").textContent=`${d.model||""} · pool: ${RP} result + ${EP} exact`;
+  $("#model").textContent=`${d.model||""} · pool: ${RP} result + ${EP} scoreline`;
   $("#updated").innerHTML=`Last updated <b>${toSGT(d.generated_utc)}</b> · refreshes ~twice daily`;
   $("#explainer").innerHTML=explainerHTML();
   const wcr=(d.ratings||[]).filter(r=>(d.form||{})[r.team]);
@@ -181,7 +182,7 @@ function selOpts(sel){let s="";for(let i=0;i<=7;i++)s+=`<option value="${i}" ${s
 function pickCard(f){
   const i=ALLFIX.indexOf(f);
   const mc=modelCall(f), cf=confidence(f);
-  const tops=(f.top_scores||[]).map(t=>`<span class="chip ${t[0]===mc?'best':''}">${t[0]} · ${pc(t[1])}%</span>`).join("");
+  const tops=(f.top_scores||[]).slice(0,6).map(t=>`<span class="chip ${t[0]===mc?'best':''}">${t[0]} · ${pc(t[1])}%</span>`).join("");
   const xg=f.xg_home!=null?`xG ${f.xg_home} – ${f.xg_away} · `:"";
   const yp=pickArr(f), locked=isLocked(f);
   const ytxt=yp&&yp[0]!=null&&yp[1]!=null?`${yp[0]}-${yp[1]}`:"not set";
@@ -211,18 +212,20 @@ function setPick(i,side,val){
 
 function resultCard(f){
   const yp=pickArr(f), ys=scorePick(yp,f.actual);
-  const mc=modelCall(f);
-  const ms=mc?scorePick(mc.split("-").map(Number),f.actual):null;
-  const ytxt=yp&&yp[0]!=null?`${yp[0]}-${yp[1]}`:"–";
-  const yrow=ys?`<span class="tag ${ys.rh?'ok':'no'}">${ys.rh?'✓':'✗'} result</span><span class="tag ${ys.eh?'ok':'no'}">${ys.eh?'✓':'✗'} exact</span><span class="pts ${ys.pts?'':'zero'}">+${ys.pts}</span>`:`<span style="color:var(--muted)">no pick made</span>`;
+  const mc=modelCall(f), ms=mc?scorePick(mc.split("-").map(Number),f.actual):null;
+  const ytxt=yp&&yp[0]!=null?`${yp[0]}-${yp[1]}`:"—";
+  const winner=f.actual[0]>f.actual[1]?f.team1:f.actual[0]<f.actual[1]?f.team2:null;
+  const akey=`${f.actual[0]}-${f.actual[1]}`, ahit=(f.top_scores||[]).find(t=>t[0]===akey);
+  const apct=ahit?` <span style="font-size:11px;color:var(--muted);font-weight:600">${pc(ahit[1])}%</span>`:"";
+  const ticks=s=>s?`<span class="tag ${s.rh?'ok':'no'}">${s.rh?'✓':'✗'} result</span><span class="tag ${s.eh?'ok':'no'}">${s.eh?'✓':'✗'} scoreline</span><span class="pts ${s.pts?'':'zero'}">+${s.pts}</span>`:`<span style="color:var(--muted)">no pick</span>`;
   return `<div class="card">
     <div class="frow">
       <div><div class="teams">${f.team1}<span class="v">v</span>${f.team2}</div>
-        <div class="meta">${timeOnly(f)} · ${f.group||f.round||""}</div></div>
-      <div class="score">${f.actual[0]}–${f.actual[1]}</div>
+        <div class="meta">${timeOnly(f)} · ${f.group||f.round||""} · ${winner?winner+" won":"draw"}</div></div>
+      <div class="score">${f.actual[0]}–${f.actual[1]}${apct}</div>
     </div>
-    <div class="res"><span>you <b style="color:var(--you)">${ytxt}</b></span>${yrow}</div>
-    <div class="vs">model predicted <b style="color:var(--pick)">${mc||"–"}</b> → +${ms?ms.pts:0}</div>
+    <div class="rrow2"><span class="lbl" style="color:var(--you)">Your Pick</span><b style="color:var(--you)">${ytxt}</b>${ticks(ys)}</div>
+    <div class="rrow2"><span class="lbl" style="color:var(--pick)">Model</span><b style="color:var(--pick)">${mc||"—"}</b>${ticks(ms)}</div>
   </div>`;
 }
 
@@ -231,7 +234,7 @@ function scoreboard(t){
     <div class="stat"><div class="l">Your points</div><div class="n" style="color:var(--you)">${t.yP}/${t.yMax}</div></div>
     <div class="stat"><div class="l">Model points</div><div class="n" style="color:var(--pick)">${t.mP}/${t.mMax}</div></div>
   </div>
-  <div class="subline">You called the <b>correct result in ${t.yR} of ${t.yN}</b> games, and the <b>exact score in ${t.yE}</b>. (Result = ${RP} pts, exact = ${EP} pts.)</div>`;
+  <div class="subline">You called the <b>correct result in ${t.yR} of ${t.yN}</b> games, and the <b>exact scoreline in ${t.yE}</b>. (Result = ${RP} pts, scoreline = ${EP} pts.)</div>`;
 }
 
 function toSGT(utc){ if(!utc)return"–"; const m=utc.match(/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/); if(!m)return utc;
@@ -250,7 +253,7 @@ function explainerHTML(){return `
   <h3>Likeliest scorelines</h3>
   <p>The full top-six most probable exact scores with their chances, so you can see the whole distribution, not just the headline.</p>
   <h3>Your Pick</h3>
-  <p>Set a scoreline on each card; it saves on this device and <span class="k">locks at kickoff</span> (SGT). Once a game finishes it's scored automatically (<span class="k">${RP} pts</span> result, <span class="k">${EP} pts</span> exact) and shows in Results.</p>
+  <p>Set a scoreline on each card; it saves on this device and <span class="k">locks at kickoff</span> (SGT). Once a game finishes it's scored automatically (<span class="k">${RP} pts</span> result, <span class="k">${EP} pts</span> scoreline) and shows in Results.</p>
   <h3>You vs Model</h3>
   <p>Your pool points vs how the model's predicted scoreline would have scored over the same games — see if your judgement beats the forecast.</p>
   <h3>Accuracy (RPS)</h3>

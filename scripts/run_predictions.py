@@ -145,7 +145,7 @@ def main() -> int:
                                          em.outcome_probs(r.team1, r.team2, neutral=True), W_DC)
                 # honest forecast: the most likely scoreline (mode of the DC grid)
                 # plus expected goals (the average). No pool-points optimisation.
-                tops = [[f"{i}-{j}", round(p, 3)] for (i, j), p in scoring.top_scorelines(matrix, 6)]
+                tops = [[f"{i}-{j}", round(p, 3)] for (i, j), p in scoring.top_scorelines(matrix, 10)]
                 (mi, mj), mprob = scoring.top_scorelines(matrix, 1)[0]
                 xgh, xga = dm.expected_goals(r.team1, r.team2, neutral=True)
                 entry = {"p_home": round(probs["home"], 3), "p_draw": round(probs["draw"], 3),
