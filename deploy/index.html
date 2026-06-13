@@ -63,6 +63,8 @@
   .cform{display:flex;align-items:center;gap:7px;margin-top:6px;font-size:11px;color:var(--muted)} .cform .ft{min-width:104px;color:var(--ink)}
   .formends{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
   .chev{font-weight:700;font-size:12px;font-variant-numeric:tabular-nums} .chev.up{color:var(--good)} .chev.dn{color:var(--bad)} .chev.fl{color:var(--muted)}
+  .lbhdr{display:flex;align-items:center;gap:10px;padding:0 2px 6px;font-size:10.5px;color:#6b7a90;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--line)} .lbhdr .lbn{width:48px;text-align:right}
+  .lbn{width:48px;text-align:right;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
   .orow{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line)} .orow:last-child{border:0}
   .obar{height:7px;border-radius:5px;background:var(--card2);overflow:hidden;margin-top:5px} .obar i{display:block;height:100%;background:var(--good)}
   .dayhdr{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin:16px 4px 2px;padding-bottom:5px;border-bottom:1px solid var(--line)}
@@ -82,6 +84,7 @@
   <div class="tab" data-view="results">Results</div>
   <div class="tab" data-view="ratings">Ratings</div>
   <div class="tab" data-view="odds">Win it</div>
+  <div class="tab" data-view="league">League</div>
   <div class="tab" data-view="explainer">Explainer</div>
 </div>
 <main>
@@ -89,8 +92,10 @@
   <div id="results" class="hidden"></div>
   <div id="ratings" class="hidden ratings"></div>
   <div id="odds" class="hidden"></div>
+  <div id="league" class="hidden"></div>
   <div id="explainer" class="hidden exp"></div>
 </main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <footer id="foot"></footer>
 
 <script>
@@ -119,6 +124,7 @@ function init(d){
   $("#updated").innerHTML=`Last updated <b>${toSGT(d.generated_utc)}</b> · refreshes ~twice daily`;
   $("#explainer").innerHTML=explainerHTML();
   renderOdds(d.tournament||{});
+  renderLeague(d);
   const wcr=(d.ratings||[]).filter(r=>(d.form||{})[r.team]);
   const show=wcr.length?wcr:(d.ratings||[]).slice(0,40);
   $("#ratings").innerHTML=`<div class="subline">How the model rates the ${show.length} teams — Elo strength, movement vs a year ago (▲▼), and recent form (oldest → newest).</div>`+
@@ -242,6 +248,43 @@ function scoreboard(t){
   <div class="subline">You called the <b>correct result in ${t.yR} of ${t.yN}</b> games, and the <b>exact scoreline in ${t.yE}</b>. (Result = ${RP} pts, scoreline = ${EP} pts.)</div>`;
 }
 
+let lbChart=null;
+const LB_COLORS={poisson:"#f59e0b",dixon_coles:"#3b82f6",elo:"#34d399",ensemble:"#a78bfa"};
+function renderLeague(d){
+  const lb=d.leaderboard;
+  if(!lb||!lb.games||!lb.games.length){ $("#league").innerHTML=`<div class="err">The model league fills in as games are played.</div>`; return; }
+  const M=lb.models, L=lb.labels, ng=(lb.standings[M[0]]||{}).games||lb.games.length;
+  // your result/exact over the same games (from your saved picks)
+  const P=loadPicks(); let yr=0,ye=0,yn=0;
+  lb.games.forEach(g=>{ const yp=P[g.key]; if(yp&&yp[0]!=null){ yn++; const a=g.actual.split("-").map(Number);
+    if(resultOf(yp[0],yp[1])===resultOf(a[0],a[1]))yr++; if(yp[0]===a[0]&&yp[1]===a[1])ye++; }});
+  // standings ranked by RPS (best models first); You shown separately (no RPS)
+  const rows=M.map((m,i)=>({m,label:L[i],...lb.standings[m]})).sort((a,b)=>a.rps-b.rps);
+  let html=`<div class="subline">Every rung makes its honest call on each game; we judge it three ways — <b>correct result</b>, <b>exact scoreline</b>, and <b>RPS</b> (probability quality, lower = better). Backfilled and live over ${ng} game${ng==1?'':'s'}.</div>`;
+  html+=`<canvas id="lbchart" height="190" style="margin:4px 0 16px"></canvas>`;
+  html+=`<div class="lbhdr"><span style="flex:1">model</span><span class="lbn">result</span><span class="lbn">exact</span><span class="lbn">RPS</span></div>`;
+  html+=rows.map((r,i)=>`<div class="orow">
+      <div class="rank">${i+1}</div>
+      <div style="flex:1;min-width:0"><div class="rname"><span style="color:${LB_COLORS[r.m]}">●</span> ${r.label}</div></div>
+      <span class="lbn">${r.result_hits}/${ng}</span><span class="lbn">${r.exact_hits}/${ng}</span>
+      <span class="lbn" style="color:var(--ink);font-weight:700">${r.rps!=null?r.rps.toFixed(3):'–'}</span>
+    </div>`).join("");
+  html+=`<div class="orow" style="border-top:1px solid var(--line);margin-top:4px">
+      <div class="rank" style="color:var(--you)">★</div>
+      <div style="flex:1"><div class="rname" style="color:var(--you)">You</div></div>
+      <span class="lbn">${yr}/${yn||ng}</span><span class="lbn">${ye}/${yn||ng}</span><span class="lbn" style="color:var(--muted)">—</span></div>`;
+  $("#league").innerHTML=html;
+  if(window.Chart){
+    if(lbChart)lbChart.destroy();
+    lbChart=new Chart(document.getElementById("lbchart"),{type:"line",
+      data:{labels:lb.games.map((g,i)=>i+1),
+        datasets:M.map((m,i)=>({label:L[i],data:lb.cum_rps[m],borderColor:LB_COLORS[m],backgroundColor:LB_COLORS[m],borderWidth:2,tension:.25,pointRadius:2}))},
+      options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
+        plugins:{legend:{labels:{color:"#90a0b8",boxWidth:10,font:{size:11}}},title:{display:true,text:"running RPS — lower is better",color:"#6b7a90",font:{size:11}}},
+        scales:{x:{ticks:{color:"#6b7a90",maxTicksLimit:8},grid:{color:"#1f2c44"}},y:{ticks:{color:"#6b7a90"},grid:{color:"#1f2c44"}}}}});
+  }
+}
+
 function renderOdds(tour){
   const arr=Object.entries(tour).map(([team,p])=>({team,...p}));
   if(!arr.length){ $("#odds").innerHTML=`<div class="err">Tournament odds appear once the full bracket is in the data.</div>`; return; }
@@ -301,7 +344,7 @@ function explainerHTML(){return `
 
 document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
   document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active")); t.classList.add("active");
-  const v=t.dataset.view; ["fixtures","results","ratings","odds","explainer"].forEach(id=>$("#"+id).classList.toggle("hidden", id!==v));
+  const v=t.dataset.view; ["fixtures","results","ratings","odds","league","explainer"].forEach(id=>$("#"+id).classList.toggle("hidden", id!==v));
 }));
 </script>
 </body>

@@ -30,7 +30,7 @@ import pandas as pd
 PROJ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(PROJ)
 
-from src import data, dixon_coles as dc, elo as E, evaluate, fixtures as fx, scoring, simulate as sim
+from src import data, poisson as pois, dixon_coles as dc, elo as E, evaluate, fixtures as fx, scoring, simulate as sim
 
 RAW = os.path.join(PROJ, "data", "raw")
 DEPLOY = os.path.join(PROJ, "deploy")
@@ -114,6 +114,49 @@ def main() -> int:
     dm = dc.fit(rec, xi=XI)
     em = E.fit(full)
     known = set(dm.teams) & set(em.teams)
+    try:
+        pm = pois.fit(rec)            # rung-1 Poisson, for the model leaderboard
+    except Exception as e:
+        pm = None; print(f"  (Poisson rung-1 skipped: {e})")
+
+    LB_MODELS = ["poisson", "dixon_coles", "elo", "ensemble"]
+
+    def model_eval(t1, t2):
+        """Each rung's HONEST prediction — not a pool-gamed pick.
+
+        Per model: its most-likely scoreline, its most-likely result, and its 1X2
+        probabilities. Judged three ways once a game finishes: correct result,
+        correct scoreline, and RPS (probability quality). Elo has no goals model,
+        so its 'scoreline' is the naive one implied by its result (it competes on
+        result + RPS, not exact scores).
+        """
+        def mode(matrix):
+            (i, j), _ = scoring.top_scorelines(matrix, 1)[0]
+            return f"{i}-{j}"
+        def amax(p):
+            return max(("home", "draw", "away"), key=lambda kk: p[kk])
+        def vec(p):
+            return [round(p["home"], 4), round(p["draw"], 4), round(p["away"], 4)]
+        naive = {"home": "1-0", "draw": "1-1", "away": "0-1"}
+
+        dcm = dm.score_matrix(t1, t2, neutral=True)
+        dcp = dm.outcome_probs(t1, t2, neutral=True)
+        elp = em.outcome_probs(t1, t2, neutral=True)
+        enp = E.ensemble_probs(dcp, elp, W_DC)
+        out = {}
+        if pm is not None and t1 in pm.teams and t2 in pm.teams:
+            pmp = pm.outcome_probs(t1, t2)
+            out["poisson"] = {"score": mode(pm.score_matrix(t1, t2)), "result": amax(pmp), "probs": vec(pmp)}
+        out["dixon_coles"] = {"score": mode(dcm), "result": amax(dcp), "probs": vec(dcp)}
+        out["elo"] = {"score": naive[amax(elp)], "result": amax(elp), "probs": vec(elp)}
+        out["ensemble"] = {"score": mode(dcm), "result": amax(enp), "probs": vec(enp)}
+        return out
+
+    def score_models(lb, actual):
+        ah, aa = actual
+        akey, ao = f"{ah}-{aa}", evaluate.result_to_outcome(ah, aa)
+        return {m: {"result_hit": v["result"] == ao, "exact_hit": v["score"] == akey,
+                    "rps": round(evaluate.rps(v["probs"], ao), 4)} for m, v in lb.items()}
 
     ledger = json.load(open(PICKS)) if os.path.exists(PICKS) else {}
     my_picks = json.load(open(MY_PICKS)) if os.path.exists(MY_PICKS) else {}
@@ -153,21 +196,26 @@ def main() -> int:
                          "model_pick": f"{mi}-{mj}", "model_pick_result": scoring._result(mi, mj),
                          "model_pick_prob": round(float(mprob), 3),
                          "xg_home": round(float(xgh), 2), "xg_away": round(float(xga), 2),
-                         "top_scores": tops, "updated_utc": _now(), "played": False, "scored": False}
+                         "top_scores": tops, "lb": model_eval(r.team1, r.team2),
+                         "updated_utc": _now(), "played": False, "scored": False}
                 ledger[k] = entry
             elif entry is not None and not entry.get("scored"):
                 actual = [int(r.home_score), int(r.away_score)]
                 ao = evaluate.result_to_outcome(*actual)
                 mp = _parse(entry["model_pick"])
                 msc = scoring.score_pick(mp, actual, RESULT_PTS, EXACT_PTS)
+                lb = entry.get("lb") or model_eval(r.team1, r.team2)   # frozen, else post-hoc (backfill)
                 entry.update(played=True, scored=True, actual=actual, actual_outcome=ao,
                              model_earned=msc["points"], model_result_hit=msc["result_hit"],
                              model_exact_hit=msc["exact_hit"], max_points=msc["max_points"],
-                             rps=round(evaluate.rps([entry["p_home"], entry["p_draw"], entry["p_away"]], ao), 4))
+                             rps=round(evaluate.rps([entry["p_home"], entry["p_draw"], entry["p_away"]], ao), 4),
+                             lb=lb, lb_scored=score_models(lb, actual))
                 ledger[k] = entry
             elif entry is None:
-                entry = {"played": True, "scored": False, "no_prematch_pick": True,
-                         "actual": [int(r.home_score), int(r.away_score)]}
+                actual = [int(r.home_score), int(r.away_score)]
+                lb = model_eval(r.team1, r.team2)   # post-hoc backfill for games never frozen
+                entry = {"played": True, "scored": False, "no_prematch_pick": True, "actual": actual,
+                         "lb": lb, "lb_scored": score_models(lb, actual)}
                 ledger[k] = entry
 
             out = {**meta, **entry}
@@ -247,6 +295,29 @@ def main() -> int:
         except Exception as e:
             print(f"  tournament sim skipped: {e}")
 
+    # model leaderboard: correct results, correct scorelines, and RPS over played games
+    lb_src = sorted([f for f in fixtures_out if f.get("lb_scored")],
+                    key=lambda f: (f.get("kickoff_sgt") or f.get("date") or ""))
+    res = {m: 0 for m in LB_MODELS}; exa = {m: 0 for m in LB_MODELS}; rsum = {m: 0.0 for m in LB_MODELS}
+    cum_rps = {m: [] for m in LB_MODELS}
+    lb_games = []
+    for n, f in enumerate(lb_src, 1):
+        sc = f["lb_scored"]
+        for m in LB_MODELS:
+            s = sc.get(m, {})
+            res[m] += 1 if s.get("result_hit") else 0
+            exa[m] += 1 if s.get("exact_hit") else 0
+            rsum[m] += s.get("rps", 0.0); cum_rps[m].append(round(rsum[m] / n, 4))
+        lb_games.append({"date": f.get("date"), "label": f"{f['team1']} v {f['team2']}",
+                         "key": _key(f.get("date"), f["team1"], f["team2"]),
+                         "actual": f"{f['actual'][0]}-{f['actual'][1]}",
+                         "lb": f.get("lb", {}), "scored": sc})
+    ng = len(lb_src)
+    standings = {m: {"result_hits": res[m], "exact_hits": exa[m], "games": ng,
+                     "rps": round(rsum[m] / ng, 4) if ng else None} for m in LB_MODELS}
+    leaderboard = {"models": LB_MODELS, "labels": ["Poisson", "Dixon–Coles", "Elo", "Ensemble"],
+                   "games": lb_games, "cum_rps": cum_rps, "standings": standings}
+
     payload = {
         "generated_utc": _now(),
         "model": f"Dixon-Coles (xi={XI}) + Elo ensemble (w_DC={W_DC}), neutral venues",
@@ -258,6 +329,7 @@ def main() -> int:
         "ratings": ratings,
         "form": form,
         "tournament": tournament,
+        "leaderboard": leaderboard,
     }
     dump_json(payload, OUT)
     print(f"wrote {OUT}")
