@@ -279,17 +279,38 @@ def main() -> int:
 
     # Monte-Carlo tournament odds (needs the bracket: groups + knockout slots)
     tournament = {}
+    tournament_by_model = {}
     if os.path.exists(fpath):
         try:
             groups, group_games, ko_games = sim.parse_structure(fpath)
             sim_teams = [t for ts in groups.values() for t in ts if t in known]
             full_groups = sum(1 for ts in groups.values() if len([t for t in ts if t in known]) == 4)
             if full_groups == 12 and ko_games:
-                EG, PADV = sim.build_tables(sim_teams, dm, em, W_DC)
-                odds = sim.simulate(sim_teams, groups, group_games, ko_games, EG, PADV, n_sims=20000, seed=1)
-                tournament = {t: {k: round(v, 4) for k, v in s.items()} for t, s in odds.items()}
-                print(f"  tournament sim: {len(tournament)} teams, "
-                      f"favourite { max(tournament, key=lambda x: tournament[x]['champion']) }")
+                padv = lambda o: o["home"] + 0.5 * o["draw"]
+                def elo_eg(a, b):           # Elo has no goals model: derive a crude scoreline rate
+                    s = (em.rating(a) - em.rating(b)) / 200.0
+                    return max(0.15, (2.6 + s) / 2.0)
+                model_fns = {
+                    "ensemble": (lambda a, b: dm.expected_goals(a, b, neutral=True)[0],
+                                 lambda a, b: padv(E.ensemble_probs(dm.outcome_probs(a, b, neutral=True),
+                                                                    em.outcome_probs(a, b, neutral=True), W_DC))),
+                    "dixon_coles": (lambda a, b: dm.expected_goals(a, b, neutral=True)[0],
+                                    lambda a, b: padv(dm.outcome_probs(a, b, neutral=True))),
+                    "elo": (elo_eg, lambda a, b: padv(em.outcome_probs(a, b, neutral=True))),
+                }
+                # Poisson stays in the League but not the title odds: its statsmodels
+                # backend makes a 48x48 table far too slow to simulate.
+                by_model = {}
+                for mname in [m for m in LB_MODELS if m in model_fns]:
+                    egf, pvf = model_fns[mname]
+                    EG, PADV = sim.build_tables_for(sim_teams, egf, pvf)
+                    nsim = 15000 if mname == "ensemble" else 8000
+                    odds = sim.simulate(sim_teams, groups, group_games, ko_games, EG, PADV, n_sims=nsim, seed=1)
+                    by_model[mname] = {t: {k: round(v, 4) for k, v in s.items()} for t, s in odds.items()}
+                tournament = by_model["ensemble"]
+                tournament_by_model = by_model
+                print(f"  tournament sim: {len(by_model)} models, "
+                      f"ensemble favourite { max(tournament, key=lambda x: tournament[x]['champion']) }")
             else:
                 print(f"  tournament sim skipped (only {full_groups}/12 full groups)")
         except Exception as e:
@@ -329,6 +350,7 @@ def main() -> int:
         "ratings": ratings,
         "form": form,
         "tournament": tournament,
+        "tournament_by_model": tournament_by_model,
         "leaderboard": leaderboard,
     }
     dump_json(payload, OUT)

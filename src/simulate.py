@@ -80,8 +80,22 @@ def parse_structure(path: str):
 
 
 def build_tables(teams, dm, em, w_dc=0.6):
-    """Precompute expected-goals and advance-probability matrices over `teams`."""
+    """Precompute the SHIPPED (ensemble) expected-goals and advance matrices."""
     from . import elo as E
+    eg = lambda a, b: dm.expected_goals(a, b, neutral=True)[0]
+    padv = lambda a, b: (lambda o: o["home"] + 0.5 * o["draw"])(
+        E.ensemble_probs(dm.outcome_probs(a, b, neutral=True),
+                         em.outcome_probs(a, b, neutral=True), w_dc))
+    return build_tables_for(teams, eg, padv)
+
+
+def build_tables_for(teams, eg_fn, padv_fn):
+    """Generic builder: EG[i,j] = expected goals of i vs j; PADV[i,j] = P(i beats j).
+
+    `eg_fn(a,b)` returns a's expected goals vs b; `padv_fn(a,b)` returns a's
+    advance probability (win + half the draw, for the shootout). Lets each model
+    drive its own tournament simulation.
+    """
     n = len(teams)
     EG = np.zeros((n, n))
     PADV = np.zeros((n, n))
@@ -89,10 +103,8 @@ def build_tables(teams, dm, em, w_dc=0.6):
         for j, tj in enumerate(teams):
             if i == j:
                 continue
-            EG[i, j] = dm.expected_goals(ti, tj, neutral=True)[0]
-            o = E.ensemble_probs(dm.outcome_probs(ti, tj, neutral=True),
-                                 em.outcome_probs(ti, tj, neutral=True), w_dc)
-            PADV[i, j] = o["home"] + 0.5 * o["draw"]   # i beats j, draws -> shootout
+            EG[i, j] = eg_fn(ti, tj)
+            PADV[i, j] = padv_fn(ti, tj)
     return EG, PADV
 
 
