@@ -290,7 +290,7 @@ function explainerHTML(){return `
   <h3>Power ratings + movement</h3>
   <p>The Ratings tab ranks the tournament teams by Elo strength. The <span class="k">▲ / ▼</span> shows how much each rating has moved over the past year — who's trending up into the World Cup and who's sliding.</p>
   <h3>Win it (tournament odds)</h3>
-  <p>The model plays the <span class="k">entire tournament 20,000 times</span> — every group game as a random scoreline, then the knockout bracket — and counts how often each nation wins its group, reaches each round, and lifts the trophy. One simulation is luck; 20,000 averages the luck out into a probability. That's why a clear favourite still only sits around 1-in-5: even the best team has to win seven knockout games where anything can happen.</p>`;}
+  <p>The model plays the <span class="k">rest of the tournament 20,000 times</span> — and counts how often each nation wins its group, reaches each round, and lifts the trophy. Crucially it <span class="k">banks games already played</span>: finished results are locked in, and only the games still to come are simulated, so the odds update as the tournament unfolds. One simulation is luck; 20,000 averages it out into a probability. That's why a clear favourite still only sits around 1-in-5 — even the best team must win seven knockout games where anything can happen.</p>`;}
 
 document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
   document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active")); t.classList.add("active");

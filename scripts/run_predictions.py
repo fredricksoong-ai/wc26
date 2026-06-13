@@ -233,12 +233,12 @@ def main() -> int:
     tournament = {}
     if os.path.exists(fpath):
         try:
-            groups, ko_games = sim.parse_structure(fpath)
+            groups, group_games, ko_games = sim.parse_structure(fpath)
             sim_teams = [t for ts in groups.values() for t in ts if t in known]
             full_groups = sum(1 for ts in groups.values() if len([t for t in ts if t in known]) == 4)
             if full_groups == 12 and ko_games:
                 EG, PADV = sim.build_tables(sim_teams, dm, em, W_DC)
-                odds = sim.simulate(sim_teams, groups, ko_games, EG, PADV, n_sims=20000, seed=1)
+                odds = sim.simulate(sim_teams, groups, group_games, ko_games, EG, PADV, n_sims=20000, seed=1)
                 tournament = {t: {k: round(v, 4) for k, v in s.items()} for t, s in odds.items()}
                 print(f"  tournament sim: {len(tournament)} teams, "
                       f"favourite { max(tournament, key=lambda x: tournament[x]['champion']) }")
