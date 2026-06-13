@@ -10,7 +10,7 @@ We climb a deliberate learning ladder, measuring at every rung so "did it get be
 | 1 | **Poisson** | attack/defence strengths → goals as Poisson → full scoreline matrix → 1X2 probs | ← start here |
 | 2 | **Dixon–Coles** | low-score correlation fix + time-decay weighting | next |
 | 3 | **Strength priors** | blend Elo / FIFA ranking; neutral-venue handling | next |
-| 4 | **ML (optional)** | gradient boosting on engineered features — only if it beats the baseline | later |
+| 4 | **ML (optional)** | gradient boosting on engineered features — only if it beats the baseline | tested — loses (0.175 vs 0.170), not shipped |
 
 Scope: **per-match predictions first** (win/draw/loss + most-likely scores). A Monte-Carlo tournament sim comes after the per-match model is trustworthy.
 
