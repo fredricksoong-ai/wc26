@@ -1,13 +1,13 @@
 {
-  "generated_utc": "2026-06-13 06:01 UTC",
+  "generated_utc": "2026-06-13 07:27 UTC",
   "model": "Dixon-Coles (xi=0.001) + Elo ensemble (w_DC=0.6), neutral venues",
   "scoring": {
     "result_pts": 2,
     "exact_pts": 3
   },
   "backtest": {
-    "ensemble_rps": 0.1676,
-    "baseline_rps": 0.2282
+    "ensemble_rps": 0.167,
+    "baseline_rps": 0.2278
   },
   "summary": {
     "model_scored": 4,
@@ -79,7 +79,7 @@
       "rps": 0.0614,
       "your_pick": "3-0",
       "your_pick_result": "home",
-      "your_pick_prob": 0.075,
+      "your_pick_prob": 0.074,
       "your_earned": 2,
       "your_result_hit": true,
       "your_exact_hit": false
@@ -142,7 +142,7 @@
       "rps": 0.1351,
       "your_pick": "1-1",
       "your_pick_result": "draw",
-      "your_pick_prob": 0.126,
+      "your_pick_prob": 0.119,
       "your_earned": 0,
       "your_result_hit": false,
       "your_exact_hit": false
@@ -158,34 +158,34 @@
       "kickoff_label": "Fri 19 Jun \u00b7 00:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.463,
-      "p_draw": 0.291,
-      "p_away": 0.246,
+      "p_home": 0.464,
+      "p_draw": 0.288,
+      "p_away": 0.247,
       "model_pick": "1-1",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.142,
-      "xg_home": 1.26,
-      "xg_away": 0.92,
+      "model_pick_prob": 0.139,
+      "xg_home": 1.25,
+      "xg_away": 0.91,
       "top_scores": [
         [
           "1-1",
-          0.142
+          0.139
         ],
         [
           "1-0",
-          0.131
+          0.136
         ],
         [
           "0-0",
-          0.124
+          0.123
         ],
         [
           "0-1",
-          0.093
+          0.097
         ],
         [
           "2-0",
-          0.089
+          0.09
         ],
         [
           "2-1",
@@ -201,14 +201,14 @@
         ],
         [
           "2-2",
-          0.038
+          0.037
         ],
         [
           "3-0",
           0.037
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -222,57 +222,57 @@
       "kickoff_label": "Fri 19 Jun \u00b7 09:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.415,
-      "p_draw": 0.309,
-      "p_away": 0.277,
-      "model_pick": "0-0",
+      "p_home": 0.405,
+      "p_draw": 0.306,
+      "p_away": 0.289,
+      "model_pick": "1-1",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.147,
-      "xg_home": 1.1,
-      "xg_away": 0.9,
+      "model_pick_prob": 0.143,
+      "xg_home": 1.07,
+      "xg_away": 0.94,
       "top_scores": [
         [
-          "0-0",
-          0.147
+          "1-1",
+          0.143
         ],
         [
-          "1-1",
-          0.145
+          "0-0",
+          0.143
         ],
         [
           "1-0",
-          0.138
+          0.135
         ],
         [
           "0-1",
-          0.111
+          0.118
         ],
         [
           "2-0",
-          0.082
+          0.077
         ],
         [
           "2-1",
-          0.074
+          0.072
         ],
         [
           "1-2",
-          0.06
+          0.063
         ],
         [
           "0-2",
-          0.055
+          0.059
         ],
         [
           "2-2",
-          0.033
+          0.034
         ],
         [
           "3-0",
-          0.03
+          0.027
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -286,46 +286,46 @@
       "kickoff_label": "Thu 25 Jun \u00b7 09:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.161,
-      "p_draw": 0.254,
-      "p_away": 0.585,
+      "p_home": 0.162,
+      "p_draw": 0.251,
+      "p_away": 0.587,
       "model_pick": "0-1",
       "model_pick_result": "away",
-      "model_pick_prob": 0.15,
+      "model_pick_prob": 0.152,
       "xg_home": 0.72,
       "xg_away": 1.56,
       "top_scores": [
         [
           "0-1",
-          0.15
-        ],
-        [
-          "1-1",
-          0.125
+          0.152
         ],
         [
           "0-2",
-          0.124
+          0.125
+        ],
+        [
+          "1-1",
+          0.122
         ],
         [
           "0-0",
-          0.112
+          0.109
         ],
         [
           "1-2",
-          0.089
+          0.09
+        ],
+        [
+          "1-0",
+          0.066
         ],
         [
           "0-3",
           0.065
         ],
         [
-          "1-0",
-          0.064
-        ],
-        [
           "1-3",
-          0.046
+          0.047
         ],
         [
           "2-1",
@@ -336,7 +336,7 @@
           0.032
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -350,30 +350,30 @@
       "kickoff_label": "Thu 25 Jun \u00b7 09:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.138,
-      "p_draw": 0.242,
-      "p_away": 0.62,
+      "p_home": 0.132,
+      "p_draw": 0.234,
+      "p_away": 0.634,
       "model_pick": "0-1",
       "model_pick_result": "away",
-      "model_pick_prob": 0.161,
-      "xg_home": 0.65,
-      "xg_away": 1.57,
+      "model_pick_prob": 0.165,
+      "xg_home": 0.62,
+      "xg_away": 1.63,
       "top_scores": [
         [
           "0-1",
-          0.161
+          0.165
         ],
         [
           "0-2",
-          0.134
+          0.14
         ],
         [
           "1-1",
-          0.12
+          0.113
         ],
         [
           "0-0",
-          0.117
+          0.112
         ],
         [
           "1-2",
@@ -381,26 +381,26 @@
         ],
         [
           "0-3",
-          0.07
+          0.076
         ],
         [
           "1-0",
-          0.061
+          0.059
         ],
         [
           "1-3",
-          0.046
+          0.047
         ],
         [
           "2-1",
-          0.036
+          0.033
         ],
         [
-          "2-2",
-          0.028
+          "0-4",
+          0.031
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -471,57 +471,57 @@
       "kickoff_label": "Sun 14 Jun \u00b7 03:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.086,
-      "p_draw": 0.155,
-      "p_away": 0.759,
+      "p_home": 0.101,
+      "p_draw": 0.171,
+      "p_away": 0.728,
       "model_pick": "0-2",
       "model_pick_result": "away",
-      "model_pick_prob": 0.115,
-      "xg_home": 0.81,
-      "xg_away": 2.46,
+      "model_pick_prob": 0.119,
+      "xg_home": 0.82,
+      "xg_away": 2.18,
       "top_scores": [
         [
           "0-2",
-          0.115
-        ],
-        [
-          "0-3",
-          0.095
-        ],
-        [
-          "1-2",
-          0.093
+          0.119
         ],
         [
           "0-1",
-          0.087
+          0.103
+        ],
+        [
+          "1-2",
+          0.097
         ],
         [
           "1-1",
-          0.082
+          0.094
+        ],
+        [
+          "0-3",
+          0.086
         ],
         [
           "1-3",
-          0.076
-        ],
-        [
-          "0-4",
-          0.058
-        ],
-        [
-          "1-4",
-          0.047
+          0.07
         ],
         [
           "0-0",
-          0.044
+          0.055
+        ],
+        [
+          "0-4",
+          0.047
         ],
         [
           "2-2",
-          0.037
+          0.04
+        ],
+        [
+          "1-4",
+          0.038
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -535,57 +535,57 @@
       "kickoff_label": "Fri 19 Jun \u00b7 03:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.719,
-      "p_draw": 0.186,
-      "p_away": 0.096,
+      "p_home": 0.697,
+      "p_draw": 0.196,
+      "p_away": 0.107,
       "model_pick": "2-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.143,
-      "xg_home": 2.13,
-      "xg_away": 0.64,
+      "model_pick_prob": 0.142,
+      "xg_home": 2.02,
+      "xg_away": 0.65,
       "top_scores": [
         [
           "2-0",
-          0.143
+          0.142
         ],
         [
           "1-0",
-          0.127
-        ],
-        [
-          "3-0",
-          0.101
+          0.135
         ],
         [
           "1-1",
-          0.093
+          0.096
+        ],
+        [
+          "3-0",
+          0.095
         ],
         [
           "2-1",
-          0.091
+          0.092
         ],
         [
           "0-0",
-          0.07
+          0.075
         ],
         [
           "3-1",
-          0.064
+          0.062
         ],
         [
           "4-0",
-          0.054
-        ],
-        [
-          "4-1",
-          0.034
+          0.048
         ],
         [
           "0-1",
-          0.033
+          0.039
+        ],
+        [
+          "4-1",
+          0.031
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -599,57 +599,57 @@
       "kickoff_label": "Fri 19 Jun \u00b7 06:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.712,
-      "p_draw": 0.19,
-      "p_away": 0.098,
-      "model_pick": "2-0",
+      "p_home": 0.68,
+      "p_draw": 0.206,
+      "p_away": 0.114,
+      "model_pick": "1-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.143,
-      "xg_home": 2.01,
-      "xg_away": 0.64,
+      "model_pick_prob": 0.144,
+      "xg_home": 1.85,
+      "xg_away": 0.67,
       "top_scores": [
         [
-          "2-0",
-          0.143
+          "1-0",
+          0.144
         ],
         [
-          "1-0",
-          0.134
+          "2-0",
+          0.138
         ],
         [
           "1-1",
-          0.099
-        ],
-        [
-          "3-0",
-          0.096
+          0.106
         ],
         [
           "2-1",
-          0.091
+          0.092
         ],
         [
           "0-0",
-          0.078
+          0.087
+        ],
+        [
+          "3-0",
+          0.085
         ],
         [
           "3-1",
-          0.061
-        ],
-        [
-          "4-0",
-          0.048
+          0.057
         ],
         [
           "0-1",
-          0.038
+          0.048
         ],
         [
-          "4-1",
-          0.031
+          "4-0",
+          0.039
+        ],
+        [
+          "1-2",
+          0.033
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -663,18 +663,18 @@
       "kickoff_label": "Thu 25 Jun \u00b7 03:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.373,
-      "p_draw": 0.303,
-      "p_away": 0.324,
+      "p_home": 0.383,
+      "p_draw": 0.299,
+      "p_away": 0.319,
       "model_pick": "1-1",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.146,
-      "xg_home": 1.07,
-      "xg_away": 1.1,
+      "model_pick_prob": 0.143,
+      "xg_home": 1.05,
+      "xg_away": 1.09,
       "top_scores": [
         [
           "1-1",
-          0.146
+          0.143
         ],
         [
           "0-0",
@@ -682,11 +682,11 @@
         ],
         [
           "0-1",
-          0.114
+          0.12
         ],
         [
           "1-0",
-          0.111
+          0.115
         ],
         [
           "1-2",
@@ -694,15 +694,15 @@
         ],
         [
           "2-1",
-          0.072
+          0.071
         ],
         [
           "0-2",
-          0.069
+          0.07
         ],
         [
           "2-0",
-          0.066
+          0.065
         ],
         [
           "2-2",
@@ -713,7 +713,7 @@
           0.027
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -728,56 +728,56 @@
       "resolved": true,
       "played": false,
       "p_home": 0.377,
-      "p_draw": 0.289,
-      "p_away": 0.334,
+      "p_draw": 0.285,
+      "p_away": 0.338,
       "model_pick": "1-1",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.14,
-      "xg_home": 1.17,
-      "xg_away": 1.27,
+      "model_pick_prob": 0.139,
+      "xg_home": 1.09,
+      "xg_away": 1.28,
       "top_scores": [
         [
           "1-1",
-          0.14
+          0.139
         ],
         [
           "0-1",
-          0.1
+          0.111
         ],
         [
           "0-0",
-          0.098
+          0.101
         ],
         [
           "1-0",
-          0.091
+          0.094
         ],
         [
           "1-2",
-          0.082
-        ],
-        [
-          "2-1",
-          0.076
+          0.083
         ],
         [
           "0-2",
+          0.076
+        ],
+        [
+          "2-1",
           0.071
         ],
         [
           "2-0",
-          0.059
+          0.056
         ],
         [
           "2-2",
-          0.048
+          0.046
         ],
         [
           "1-3",
-          0.035
+          0.036
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -791,57 +791,57 @@
       "kickoff_label": "Sun 14 Jun \u00b7 06:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.436,
+      "p_home": 0.405,
       "p_draw": 0.316,
-      "p_away": 0.248,
+      "p_away": 0.278,
       "model_pick": "0-0",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.173,
-      "xg_home": 1.11,
-      "xg_away": 0.71,
+      "model_pick_prob": 0.167,
+      "xg_home": 1.02,
+      "xg_away": 0.81,
       "top_scores": [
         [
           "0-0",
-          0.173
+          0.167
         ],
         [
           "1-0",
-          0.169
+          0.155
         ],
         [
           "1-1",
-          0.138
+          0.141
         ],
         [
           "0-1",
-          0.104
+          0.121
         ],
         [
           "2-0",
-          0.1
+          0.083
         ],
         [
           "2-1",
-          0.071
+          0.068
         ],
         [
           "1-2",
-          0.045
+          0.054
         ],
         [
           "0-2",
-          0.041
+          0.053
         ],
         [
           "3-0",
-          0.037
+          0.029
         ],
         [
-          "3-1",
-          0.026
+          "2-2",
+          0.028
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -855,57 +855,57 @@
       "kickoff_label": "Sun 14 Jun \u00b7 09:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.22,
-      "p_draw": 0.257,
-      "p_away": 0.524,
+      "p_home": 0.244,
+      "p_draw": 0.256,
+      "p_away": 0.501,
       "model_pick": "1-1",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.127,
-      "xg_home": 1.08,
-      "xg_away": 1.63,
+      "model_pick_prob": 0.126,
+      "xg_home": 1.19,
+      "xg_away": 1.57,
       "top_scores": [
         [
           "1-1",
-          0.127
-        ],
-        [
-          "0-1",
-          0.098
+          0.126
         ],
         [
           "1-2",
-          0.095
+          0.093
+        ],
+        [
+          "0-1",
+          0.092
         ],
         [
           "0-2",
-          0.088
-        ],
-        [
-          "0-0",
-          0.076
+          0.078
         ],
         [
           "2-1",
-          0.063
+          0.071
+        ],
+        [
+          "0-0",
+          0.07
         ],
         [
           "1-0",
-          0.062
-        ],
-        [
-          "1-3",
-          0.052
+          0.068
         ],
         [
           "2-2",
-          0.052
+          0.055
         ],
         [
-          "0-3",
-          0.048
+          "1-3",
+          0.049
+        ],
+        [
+          "2-0",
+          0.045
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -919,57 +919,57 @@
       "kickoff_label": "Sat 20 Jun \u00b7 06:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.161,
-      "p_draw": 0.28,
-      "p_away": 0.558,
+      "p_home": 0.151,
+      "p_draw": 0.261,
+      "p_away": 0.588,
       "model_pick": "0-1",
       "model_pick_result": "away",
-      "model_pick_prob": 0.197,
-      "xg_home": 0.52,
-      "xg_away": 1.36,
+      "model_pick_prob": 0.193,
+      "xg_home": 0.51,
+      "xg_away": 1.52,
       "top_scores": [
         [
           "0-1",
-          0.197
-        ],
-        [
-          "0-0",
-          0.161
+          0.193
         ],
         [
           "0-2",
-          0.141
+          0.152
+        ],
+        [
+          "0-0",
+          0.137
         ],
         [
           "1-1",
-          0.117
+          0.108
         ],
         [
           "1-2",
-          0.074
-        ],
-        [
-          "1-0",
-          0.071
+          0.077
         ],
         [
           "0-3",
-          0.064
+          0.077
+        ],
+        [
+          "1-0",
+          0.061
         ],
         [
           "1-3",
-          0.033
-        ],
-        [
-          "2-1",
-          0.028
+          0.039
         ],
         [
           "0-4",
-          0.022
+          0.029
+        ],
+        [
+          "2-1",
+          0.026
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -983,57 +983,57 @@
       "kickoff_label": "Sat 20 Jun \u00b7 08:30 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.856,
-      "p_draw": 0.1,
-      "p_away": 0.044,
+      "p_home": 0.833,
+      "p_draw": 0.113,
+      "p_away": 0.054,
       "model_pick": "3-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.124,
-      "xg_home": 3.45,
-      "xg_away": 0.56,
+      "model_pick_prob": 0.118,
+      "xg_home": 3.15,
+      "xg_away": 0.64,
       "top_scores": [
         [
           "3-0",
-          0.124
+          0.118
         ],
         [
           "2-0",
-          0.108
+          0.112
         ],
         [
           "4-0",
-          0.107
-        ],
-        [
-          "5-0",
-          0.074
+          0.093
         ],
         [
           "3-1",
-          0.07
+          0.075
         ],
         [
           "2-1",
-          0.061
-        ],
-        [
-          "4-1",
-          0.06
+          0.072
         ],
         [
           "1-0",
-          0.06
+          0.069
         ],
         [
-          "6-0",
-          0.042
+          "4-1",
+          0.059
+        ],
+        [
+          "5-0",
+          0.059
+        ],
+        [
+          "1-1",
+          0.048
         ],
         [
           "5-1",
-          0.041
+          0.037
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -1047,33 +1047,33 @@
       "kickoff_label": "Thu 25 Jun \u00b7 06:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.101,
-      "p_draw": 0.179,
-      "p_away": 0.721,
+      "p_home": 0.106,
+      "p_draw": 0.182,
+      "p_away": 0.711,
       "model_pick": "0-2",
       "model_pick_result": "away",
-      "model_pick_prob": 0.134,
-      "xg_home": 0.63,
-      "xg_away": 2.57,
+      "model_pick_prob": 0.131,
+      "xg_home": 0.67,
+      "xg_away": 2.51,
       "top_scores": [
         [
           "0-2",
-          0.134
+          0.131
         ],
         [
           "0-3",
-          0.115
+          0.11
         ],
         [
           "0-1",
-          0.099
+          0.1
         ],
         [
           "1-2",
-          0.085
+          0.088
         ],
         [
-          "0-4",
+          "1-1",
           0.074
         ],
         [
@@ -1081,23 +1081,23 @@
           0.073
         ],
         [
-          "1-1",
-          0.072
-        ],
-        [
-          "1-4",
-          0.047
+          "0-4",
+          0.069
         ],
         [
           "0-0",
           0.046
         ],
         [
+          "1-4",
+          0.046
+        ],
+        [
           "0-5",
-          0.038
+          0.034
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -1111,57 +1111,57 @@
       "kickoff_label": "Thu 25 Jun \u00b7 06:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.717,
-      "p_draw": 0.198,
+      "p_home": 0.725,
+      "p_draw": 0.189,
       "p_away": 0.086,
       "model_pick": "1-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.177,
-      "xg_home": 1.83,
-      "xg_away": 0.47,
+      "model_pick_prob": 0.168,
+      "xg_home": 1.91,
+      "xg_away": 0.49,
       "top_scores": [
         [
           "1-0",
-          0.177
-        ],
-        [
-          "2-0",
           0.168
         ],
         [
-          "0-0",
-          0.108
+          "2-0",
+          0.166
         ],
         [
           "3-0",
-          0.102
+          0.106
+        ],
+        [
+          "0-0",
+          0.096
         ],
         [
           "1-1",
-          0.093
+          0.09
         ],
         [
           "2-1",
-          0.079
+          0.081
         ],
         [
           "3-1",
-          0.048
+          0.052
         ],
         [
           "4-0",
-          0.047
+          0.051
         ],
         [
           "0-1",
-          0.04
+          0.039
         ],
         [
           "4-1",
-          0.022
+          0.025
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -1232,57 +1232,57 @@
       "kickoff_label": "Sun 14 Jun \u00b7 12:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.407,
-      "p_draw": 0.287,
-      "p_away": 0.306,
-      "model_pick": "1-1",
-      "model_pick_result": "draw",
-      "model_pick_prob": 0.135,
-      "xg_home": 1.43,
-      "xg_away": 0.86,
+      "p_home": 0.429,
+      "p_draw": 0.279,
+      "p_away": 0.292,
+      "model_pick": "1-0",
+      "model_pick_result": "home",
+      "model_pick_prob": 0.144,
+      "xg_home": 1.49,
+      "xg_away": 0.8,
       "top_scores": [
         [
-          "1-1",
-          0.135
-        ],
-        [
           "1-0",
-          0.134
+          0.144
         ],
         [
-          "0-0",
-          0.112
+          "1-1",
+          0.128
         ],
         [
           "2-0",
-          0.103
+          0.113
+        ],
+        [
+          "0-0",
+          0.109
         ],
         [
           "2-1",
-          0.089
+          0.09
         ],
         [
           "0-1",
-          0.077
-        ],
-        [
-          "1-2",
-          0.054
+          0.073
         ],
         [
           "3-0",
-          0.049
+          0.056
+        ],
+        [
+          "1-2",
+          0.048
         ],
         [
           "3-1",
-          0.042
+          0.045
         ],
         [
           "2-2",
-          0.038
+          0.036
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -1296,34 +1296,34 @@
       "kickoff_label": "Sat 20 Jun \u00b7 03:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.272,
-      "p_draw": 0.296,
-      "p_away": 0.432,
+      "p_home": 0.305,
+      "p_draw": 0.294,
+      "p_away": 0.401,
       "model_pick": "1-1",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.141,
-      "xg_home": 0.93,
+      "model_pick_prob": 0.138,
+      "xg_home": 0.97,
       "xg_away": 1.3,
       "top_scores": [
         [
           "1-1",
-          0.141
+          0.138
         ],
         [
           "0-1",
-          0.129
+          0.126
         ],
         [
           "0-0",
-          0.118
-        ],
-        [
-          "0-2",
-          0.091
+          0.112
         ],
         [
           "1-0",
-          0.089
+          0.092
+        ],
+        [
+          "0-2",
+          0.087
         ],
         [
           "1-2",
@@ -1331,22 +1331,22 @@
         ],
         [
           "2-1",
-          0.06
+          0.063
         ],
         [
           "2-0",
-          0.046
-        ],
-        [
-          "0-3",
-          0.04
+          0.049
         ],
         [
           "2-2",
-          0.039
+          0.041
+        ],
+        [
+          "0-3",
+          0.038
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -1360,57 +1360,57 @@
       "kickoff_label": "Sat 20 Jun \u00b7 11:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.292,
-      "p_draw": 0.284,
-      "p_away": 0.424,
-      "model_pick": "0-1",
-      "model_pick_result": "away",
-      "model_pick_prob": 0.137,
-      "xg_home": 0.83,
-      "xg_away": 1.48,
+      "p_home": 0.327,
+      "p_draw": 0.271,
+      "p_away": 0.402,
+      "model_pick": "1-1",
+      "model_pick_result": "draw",
+      "model_pick_prob": 0.129,
+      "xg_home": 0.89,
+      "xg_away": 1.53,
       "top_scores": [
         [
-          "0-1",
-          0.137
-        ],
-        [
           "1-1",
-          0.132
+          0.129
         ],
         [
-          "0-0",
-          0.11
+          "0-1",
+          0.128
         ],
         [
           "0-2",
-          0.109
+          0.104
+        ],
+        [
+          "0-0",
+          0.096
         ],
         [
           "1-2",
-          0.09
+          0.093
         ],
         [
           "1-0",
           0.072
         ],
         [
-          "0-3",
+          "2-1",
           0.054
         ],
         [
-          "2-1",
-          0.051
+          "0-3",
+          0.053
         ],
         [
           "1-3",
-          0.044
+          0.047
         ],
         [
           "2-2",
-          0.037
+          0.041
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -1424,57 +1424,57 @@
       "kickoff_label": "Fri 26 Jun \u00b7 10:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.392,
-      "p_draw": 0.263,
-      "p_away": 0.345,
+      "p_home": 0.336,
+      "p_draw": 0.26,
+      "p_away": 0.404,
       "model_pick": "1-1",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.122,
-      "xg_home": 1.35,
-      "xg_away": 1.6,
+      "model_pick_prob": 0.113,
+      "xg_home": 1.28,
+      "xg_away": 1.79,
       "top_scores": [
         [
           "1-1",
-          0.122
+          0.113
         ],
         [
           "1-2",
-          0.09
-        ],
-        [
-          "2-1",
-          0.076
+          0.095
         ],
         [
           "0-1",
-          0.074
+          0.077
         ],
         [
           "0-2",
-          0.067
+          0.075
         ],
         [
-          "0-0",
-          0.061
+          "2-1",
+          0.068
         ],
         [
           "2-2",
           0.061
         ],
         [
-          "1-0",
-          0.061
-        ],
-        [
           "1-3",
-          0.048
+          0.057
         ],
         [
-          "2-0",
-          0.048
+          "0-0",
+          0.053
+        ],
+        [
+          "1-0",
+          0.053
+        ],
+        [
+          "0-3",
+          0.044
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -1488,57 +1488,57 @@
       "kickoff_label": "Fri 26 Jun \u00b7 10:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.346,
-      "p_draw": 0.336,
-      "p_away": 0.318,
+      "p_home": 0.304,
+      "p_draw": 0.326,
+      "p_away": 0.371,
       "model_pick": "0-0",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.202,
-      "xg_home": 0.86,
-      "xg_away": 0.8,
+      "model_pick_prob": 0.184,
+      "xg_home": 0.83,
+      "xg_away": 0.91,
       "top_scores": [
         [
           "0-0",
-          0.202
-        ],
-        [
-          "1-0",
-          0.153
-        ],
-        [
-          "1-1",
-          0.142
+          0.184
         ],
         [
           "0-1",
-          0.142
+          0.151
         ],
         [
-          "2-0",
-          0.07
+          "1-1",
+          0.141
+        ],
+        [
+          "1-0",
+          0.138
         ],
         [
           "0-2",
+          0.072
+        ],
+        [
+          "2-0",
           0.061
         ],
         [
-          "2-1",
-          0.056
+          "1-2",
+          0.06
         ],
         [
-          "1-2",
-          0.052
+          "2-1",
+          0.055
         ],
         [
           "2-2",
-          0.022
+          0.025
         ],
         [
-          "3-0",
-          0.02
+          "0-3",
+          0.022
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -1552,57 +1552,57 @@
       "kickoff_label": "Mon 15 Jun \u00b7 01:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.836,
-      "p_draw": 0.112,
-      "p_away": 0.052,
-      "model_pick": "3-0",
+      "p_home": 0.82,
+      "p_draw": 0.12,
+      "p_away": 0.06,
+      "model_pick": "2-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.115,
-      "xg_home": 3.04,
-      "xg_away": 0.67,
+      "model_pick_prob": 0.113,
+      "xg_home": 2.89,
+      "xg_away": 0.72,
       "top_scores": [
-        [
-          "3-0",
-          0.115
-        ],
         [
           "2-0",
           0.113
         ],
         [
-          "4-0",
-          0.087
-        ],
-        [
-          "3-1",
-          0.077
+          "3-0",
+          0.109
         ],
         [
           "2-1",
-          0.076
+          0.081
+        ],
+        [
+          "4-0",
+          0.078
+        ],
+        [
+          "3-1",
+          0.078
         ],
         [
           "1-0",
-          0.07
-        ],
-        [
-          "4-1",
-          0.058
+          0.075
         ],
         [
           "1-1",
-          0.054
+          0.06
+        ],
+        [
+          "4-1",
+          0.057
         ],
         [
           "5-0",
-          0.053
+          0.045
         ],
         [
           "5-1",
-          0.036
+          0.033
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -1617,29 +1617,29 @@
       "resolved": true,
       "played": false,
       "p_home": 0.153,
-      "p_draw": 0.306,
-      "p_away": 0.541,
-      "model_pick": "0-0",
-      "model_pick_result": "draw",
-      "model_pick_prob": 0.233,
+      "p_draw": 0.299,
+      "p_away": 0.548,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.225,
       "xg_home": 0.46,
-      "xg_away": 1.04,
+      "xg_away": 1.07,
       "top_scores": [
         [
-          "0-0",
-          0.233
+          "0-1",
+          0.225
         ],
         [
-          "0-1",
-          0.224
+          "0-0",
+          0.223
         ],
         [
           "0-2",
-          0.121
+          0.124
         ],
         [
           "1-1",
-          0.115
+          0.113
         ],
         [
           "1-0",
@@ -1647,15 +1647,15 @@
         ],
         [
           "1-2",
-          0.055
+          0.057
         ],
         [
           "0-3",
-          0.042
+          0.044
         ],
         [
           "2-1",
-          0.024
+          0.025
         ],
         [
           "2-0",
@@ -1663,10 +1663,10 @@
         ],
         [
           "1-3",
-          0.019
+          0.02
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -1680,14 +1680,14 @@
       "kickoff_label": "Sun 21 Jun \u00b7 04:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.532,
-      "p_draw": 0.261,
-      "p_away": 0.207,
+      "p_home": 0.523,
+      "p_draw": 0.263,
+      "p_away": 0.214,
       "model_pick": "1-1",
       "model_pick_result": "draw",
       "model_pick_prob": 0.135,
-      "xg_home": 1.46,
-      "xg_away": 0.97,
+      "xg_home": 1.38,
+      "xg_away": 0.95,
       "top_scores": [
         [
           "1-1",
@@ -1695,42 +1695,42 @@
         ],
         [
           "1-0",
-          0.118
+          0.126
         ],
         [
           "0-0",
-          0.098
+          0.104
         ],
         [
           "2-0",
-          0.094
+          0.092
         ],
         [
           "2-1",
-          0.091
+          0.088
         ],
         [
           "0-1",
-          0.075
+          0.084
         ],
         [
           "1-2",
-          0.06
+          0.061
+        ],
+        [
+          "0-2",
+          0.044
         ],
         [
           "3-0",
-          0.046
-        ],
-        [
-          "3-1",
-          0.044
+          0.043
         ],
         [
           "2-2",
-          0.044
+          0.042
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -1744,57 +1744,57 @@
       "kickoff_label": "Sun 21 Jun \u00b7 08:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.815,
-      "p_draw": 0.14,
-      "p_away": 0.045,
+      "p_home": 0.817,
+      "p_draw": 0.136,
+      "p_away": 0.047,
       "model_pick": "2-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.196,
-      "xg_home": 2.16,
-      "xg_away": 0.32,
+      "model_pick_prob": 0.189,
+      "xg_home": 2.23,
+      "xg_away": 0.35,
       "top_scores": [
         [
           "2-0",
-          0.196
+          0.189
         ],
         [
           "1-0",
-          0.176
+          0.166
         ],
         [
           "3-0",
-          0.141
+          0.14
         ],
         [
           "0-0",
-          0.089
+          0.08
         ],
         [
           "4-0",
-          0.077
-        ],
-        [
-          "1-1",
-          0.062
+          0.078
         ],
         [
           "2-1",
-          0.062
+          0.066
+        ],
+        [
+          "1-1",
+          0.063
         ],
         [
           "3-1",
-          0.045
+          0.049
         ],
         [
           "5-0",
-          0.033
+          0.035
         ],
         [
           "4-1",
-          0.024
+          0.027
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -1808,57 +1808,57 @@
       "kickoff_label": "Fri 26 Jun \u00b7 04:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.126,
-      "p_draw": 0.231,
-      "p_away": 0.643,
+      "p_home": 0.135,
+      "p_draw": 0.238,
+      "p_away": 0.627,
       "model_pick": "0-1",
       "model_pick_result": "away",
-      "model_pick_prob": 0.16,
-      "xg_home": 0.58,
-      "xg_away": 1.76,
+      "model_pick_prob": 0.167,
+      "xg_home": 0.6,
+      "xg_away": 1.66,
       "top_scores": [
         [
           "0-1",
-          0.16
+          0.167
         ],
         [
           "0-2",
-          0.148
-        ],
-        [
-          "1-1",
-          0.107
+          0.144
         ],
         [
           "0-0",
-          0.104
+          0.111
         ],
         [
-          "0-3",
-          0.087
+          "1-1",
+          0.111
         ],
         [
           "1-2",
-          0.087
+          0.086
         ],
         [
-          "1-3",
-          0.051
+          "0-3",
+          0.079
         ],
         [
           "1-0",
+          0.056
+        ],
+        [
+          "1-3",
           0.048
         ],
         [
           "0-4",
-          0.038
+          0.033
         ],
         [
           "2-1",
-          0.029
+          0.031
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -1872,57 +1872,57 @@
       "kickoff_label": "Fri 26 Jun \u00b7 04:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.41,
-      "p_draw": 0.31,
-      "p_away": 0.281,
+      "p_home": 0.426,
+      "p_draw": 0.299,
+      "p_away": 0.276,
       "model_pick": "1-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.153,
-      "xg_home": 1.19,
-      "xg_away": 0.79,
+      "model_pick_prob": 0.151,
+      "xg_home": 1.28,
+      "xg_away": 0.8,
       "top_scores": [
         [
           "1-0",
-          0.153
-        ],
-        [
-          "0-0",
-          0.149
+          0.151
         ],
         [
           "1-1",
-          0.141
+          0.136
         ],
         [
-          "0-1",
-          0.098
+          "0-0",
+          0.132
         ],
         [
           "2-0",
-          0.098
+          0.102
+        ],
+        [
+          "0-1",
+          0.092
         ],
         [
           "2-1",
-          0.077
+          0.082
         ],
         [
           "1-2",
           0.051
         ],
         [
-          "0-2",
-          0.043
+          "3-0",
+          0.044
         ],
         [
-          "3-0",
-          0.039
+          "0-2",
+          0.04
         ],
         [
           "3-1",
-          0.031
+          0.035
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -1936,57 +1936,57 @@
       "kickoff_label": "Mon 15 Jun \u00b7 04:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.297,
-      "p_draw": 0.292,
-      "p_away": 0.411,
+      "p_home": 0.275,
+      "p_draw": 0.273,
+      "p_away": 0.453,
       "model_pick": "1-1",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.138,
+      "model_pick_prob": 0.124,
       "xg_home": 0.93,
-      "xg_away": 1.39,
+      "xg_away": 1.63,
       "top_scores": [
         [
           "1-1",
-          0.138
+          0.124
         ],
         [
           "0-1",
-          0.126
-        ],
-        [
-          "0-0",
-          0.109
+          0.119
         ],
         [
           "0-2",
-          0.094
+          0.103
         ],
         [
           "1-2",
-          0.088
+          0.095
+        ],
+        [
+          "0-0",
+          0.085
         ],
         [
           "1-0",
-          0.081
-        ],
-        [
-          "2-1",
-          0.059
+          0.065
         ],
         [
           "0-3",
-          0.044
+          0.056
         ],
         [
-          "2-0",
-          0.043
+          "2-1",
+          0.054
+        ],
+        [
+          "1-3",
+          0.052
         ],
         [
           "2-2",
-          0.041
+          0.044
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -2000,34 +2000,34 @@
       "kickoff_label": "Mon 15 Jun \u00b7 10:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.366,
-      "p_draw": 0.3,
-      "p_away": 0.334,
+      "p_home": 0.372,
+      "p_draw": 0.299,
+      "p_away": 0.329,
       "model_pick": "1-1",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.144,
-      "xg_home": 1.1,
-      "xg_away": 1.15,
+      "model_pick_prob": 0.143,
+      "xg_home": 1.09,
+      "xg_away": 1.1,
       "top_scores": [
         [
           "1-1",
-          0.144
+          0.143
         ],
         [
           "0-0",
-          0.117
+          0.121
         ],
         [
           "0-1",
-          0.11
+          0.115
         ],
         [
           "1-0",
-          0.105
+          0.114
         ],
         [
           "1-2",
-          0.077
+          0.074
         ],
         [
           "2-1",
@@ -2035,22 +2035,22 @@
         ],
         [
           "0-2",
-          0.07
+          0.068
         ],
         [
           "2-0",
-          0.064
+          0.066
         ],
         [
           "2-2",
-          0.042
+          0.04
         ],
         [
           "1-3",
-          0.029
+          0.027
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -2064,57 +2064,57 @@
       "kickoff_label": "Sun 21 Jun \u00b7 01:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.646,
-      "p_draw": 0.205,
-      "p_away": 0.148,
+      "p_home": 0.658,
+      "p_draw": 0.199,
+      "p_away": 0.144,
       "model_pick": "2-1",
       "model_pick_result": "home",
-      "model_pick_prob": 0.098,
-      "xg_home": 2.24,
-      "xg_away": 1.05,
+      "model_pick_prob": 0.097,
+      "xg_home": 2.32,
+      "xg_away": 1.04,
       "top_scores": [
         [
           "2-1",
-          0.098
-        ],
-        [
-          "1-1",
-          0.095
+          0.097
         ],
         [
           "2-0",
           0.094
         ],
         [
+          "1-1",
+          0.089
+        ],
+        [
           "1-0",
-          0.077
+          0.076
         ],
         [
           "3-1",
-          0.073
+          0.075
         ],
         [
           "3-0",
-          0.07
+          0.072
         ],
         [
           "2-2",
-          0.051
+          0.05
         ],
         [
           "1-2",
-          0.046
-        ],
-        [
-          "0-0",
-          0.045
+          0.044
         ],
         [
           "4-1",
-          0.041
+          0.043
+        ],
+        [
+          "4-0",
+          0.042
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -2128,57 +2128,57 @@
       "kickoff_label": "Sun 21 Jun \u00b7 12:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.114,
-      "p_draw": 0.243,
-      "p_away": 0.643,
+      "p_home": 0.097,
+      "p_draw": 0.214,
+      "p_away": 0.689,
       "model_pick": "0-1",
       "model_pick_result": "away",
-      "model_pick_prob": 0.201,
-      "xg_home": 0.48,
-      "xg_away": 1.46,
+      "model_pick_prob": 0.194,
+      "xg_home": 0.44,
+      "xg_away": 1.71,
       "top_scores": [
         [
           "0-1",
-          0.201
+          0.194
         ],
         [
           "0-2",
-          0.153
+          0.17
         ],
         [
           "0-0",
-          0.153
-        ],
-        [
-          "1-1",
-          0.109
+          0.122
         ],
         [
           "0-3",
-          0.074
+          0.097
+        ],
+        [
+          "1-1",
+          0.093
         ],
         [
           "1-2",
-          0.073
+          0.075
         ],
         [
           "1-0",
-          0.061
+          0.046
         ],
         [
           "1-3",
-          0.036
+          0.043
         ],
         [
           "0-4",
-          0.027
+          0.041
         ],
         [
           "2-1",
-          0.024
+          0.019
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -2192,57 +2192,57 @@
       "kickoff_label": "Fri 26 Jun \u00b7 07:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.682,
-      "p_draw": 0.202,
-      "p_away": 0.116,
+      "p_home": 0.726,
+      "p_draw": 0.175,
+      "p_away": 0.099,
       "model_pick": "2-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.135,
-      "xg_home": 2.18,
-      "xg_away": 0.69,
+      "model_pick_prob": 0.132,
+      "xg_home": 2.56,
+      "xg_away": 0.65,
       "top_scores": [
         [
           "2-0",
-          0.135
-        ],
-        [
-          "1-0",
-          0.117
+          0.132
         ],
         [
           "3-0",
-          0.098
+          0.113
+        ],
+        [
+          "1-0",
+          0.099
         ],
         [
           "2-1",
-          0.093
-        ],
-        [
-          "1-1",
-          0.092
+          0.086
         ],
         [
           "3-1",
-          0.067
-        ],
-        [
-          "0-0",
-          0.064
+          0.073
         ],
         [
           "4-0",
-          0.053
+          0.072
+        ],
+        [
+          "1-1",
+          0.071
         ],
         [
           "4-1",
-          0.037
+          0.047
         ],
         [
-          "0-1",
-          0.032
+          "0-0",
+          0.044
+        ],
+        [
+          "5-0",
+          0.037
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -2256,30 +2256,30 @@
       "kickoff_label": "Fri 26 Jun \u00b7 07:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.147,
-      "p_draw": 0.24,
-      "p_away": 0.614,
+      "p_home": 0.139,
+      "p_draw": 0.232,
+      "p_away": 0.628,
       "model_pick": "0-1",
       "model_pick_result": "away",
-      "model_pick_prob": 0.152,
-      "xg_home": 0.73,
-      "xg_away": 1.49,
+      "model_pick_prob": 0.157,
+      "xg_home": 0.7,
+      "xg_away": 1.54,
       "top_scores": [
         [
           "0-1",
-          0.152
-        ],
-        [
-          "1-1",
-          0.128
+          0.157
         ],
         [
           "0-2",
-          0.121
+          0.126
+        ],
+        [
+          "1-1",
+          0.122
         ],
         [
           "0-0",
-          0.118
+          0.113
         ],
         [
           "1-2",
@@ -2287,26 +2287,26 @@
         ],
         [
           "1-0",
-          0.069
+          0.067
         ],
         [
           "0-3",
-          0.06
+          0.065
         ],
         [
           "1-3",
-          0.044
+          0.045
         ],
         [
           "2-1",
-          0.043
+          0.04
         ],
         [
           "2-2",
-          0.032
+          0.031
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -2320,30 +2320,30 @@
       "kickoff_label": "Tue 16 Jun \u00b7 03:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.49,
-      "p_draw": 0.294,
-      "p_away": 0.216,
+      "p_home": 0.501,
+      "p_draw": 0.29,
+      "p_away": 0.209,
       "model_pick": "1-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.156,
-      "xg_home": 1.22,
-      "xg_away": 0.77,
+      "model_pick_prob": 0.165,
+      "xg_home": 1.23,
+      "xg_away": 0.73,
       "top_scores": [
         [
           "1-0",
-          0.156
+          0.165
         ],
         [
           "0-0",
-          0.147
+          0.148
         ],
         [
           "1-1",
-          0.139
+          0.134
         ],
         [
           "2-0",
-          0.101
+          0.106
         ],
         [
           "0-1",
@@ -2355,22 +2355,22 @@
         ],
         [
           "1-2",
-          0.05
+          0.046
         ],
         [
           "3-0",
-          0.041
+          0.044
         ],
         [
           "0-2",
-          0.041
+          0.038
         ],
         [
           "3-1",
           0.032
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -2384,18 +2384,18 @@
       "kickoff_label": "Tue 16 Jun \u00b7 09:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.54,
-      "p_draw": 0.268,
-      "p_away": 0.193,
+      "p_home": 0.531,
+      "p_draw": 0.27,
+      "p_away": 0.198,
       "model_pick": "1-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.139,
-      "xg_home": 1.46,
-      "xg_away": 0.82,
+      "model_pick_prob": 0.146,
+      "xg_home": 1.38,
+      "xg_away": 0.81,
       "top_scores": [
         [
           "1-0",
-          0.139
+          0.146
         ],
         [
           "1-1",
@@ -2403,38 +2403,38 @@
         ],
         [
           "0-0",
-          0.113
+          0.119
         ],
         [
           "2-0",
-          0.108
+          0.107
         ],
         [
           "2-1",
-          0.089
+          0.086
         ],
         [
           "0-1",
-          0.074
-        ],
-        [
-          "3-0",
-          0.053
+          0.083
         ],
         [
           "1-2",
           0.051
         ],
         [
-          "3-1",
-          0.043
+          "3-0",
+          0.049
         ],
         [
-          "2-2",
+          "3-1",
+          0.04
+        ],
+        [
+          "0-2",
           0.037
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -2448,34 +2448,34 @@
       "kickoff_label": "Mon 22 Jun \u00b7 03:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.386,
-      "p_draw": 0.293,
-      "p_away": 0.322,
+      "p_home": 0.384,
+      "p_draw": 0.291,
+      "p_away": 0.325,
       "model_pick": "1-1",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.142,
-      "xg_home": 1.21,
-      "xg_away": 1.18,
+      "model_pick_prob": 0.14,
+      "xg_home": 1.19,
+      "xg_away": 1.17,
       "top_scores": [
         [
           "1-1",
-          0.142
-        ],
-        [
-          "0-0",
-          0.102
+          0.14
         ],
         [
           "1-0",
-          0.1
+          0.104
+        ],
+        [
+          "0-0",
+          0.103
         ],
         [
           "0-1",
-          0.097
+          0.103
         ],
         [
           "2-1",
-          0.079
+          0.078
         ],
         [
           "1-2",
@@ -2487,18 +2487,18 @@
         ],
         [
           "0-2",
-          0.064
+          0.065
         ],
         [
           "2-2",
-          0.047
+          0.046
         ],
         [
           "3-1",
-          0.032
+          0.031
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -2512,57 +2512,57 @@
       "kickoff_label": "Mon 22 Jun \u00b7 09:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.276,
-      "p_draw": 0.321,
-      "p_away": 0.402,
+      "p_home": 0.292,
+      "p_draw": 0.324,
+      "p_away": 0.384,
       "model_pick": "0-0",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.18,
-      "xg_home": 0.83,
-      "xg_away": 0.95,
+      "model_pick_prob": 0.19,
+      "xg_home": 0.84,
+      "xg_away": 0.87,
       "top_scores": [
         [
           "0-0",
-          0.18
+          0.19
         ],
         [
           "0-1",
-          0.15
-        ],
-        [
-          "1-1",
-          0.144
+          0.149
         ],
         [
           "1-0",
-          0.128
+          0.144
+        ],
+        [
+          "1-1",
+          0.14
         ],
         [
           "0-2",
-          0.077
-        ],
-        [
-          "1-2",
-          0.063
+          0.068
         ],
         [
           "2-0",
-          0.058
+          0.064
+        ],
+        [
+          "1-2",
+          0.057
         ],
         [
           "2-1",
-          0.055
+          0.056
         ],
         [
           "2-2",
-          0.026
+          0.024
         ],
         [
           "0-3",
-          0.024
+          0.02
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -2576,57 +2576,57 @@
       "kickoff_label": "Sat 27 Jun \u00b7 11:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.239,
-      "p_draw": 0.31,
-      "p_away": 0.45,
-      "model_pick": "0-0",
-      "model_pick_result": "draw",
-      "model_pick_prob": 0.164,
-      "xg_home": 0.74,
-      "xg_away": 1.13,
+      "p_home": 0.23,
+      "p_draw": 0.312,
+      "p_away": 0.458,
+      "model_pick": "0-1",
+      "model_pick_result": "away",
+      "model_pick_prob": 0.18,
+      "xg_home": 0.67,
+      "xg_away": 1.11,
       "top_scores": [
         [
-          "0-0",
-          0.164
+          "0-1",
+          0.18
         ],
         [
-          "0-1",
-          0.163
+          "0-0",
+          0.178
         ],
         [
           "1-1",
-          0.14
+          0.133
         ],
         [
           "1-0",
-          0.103
+          0.106
         ],
         [
           "0-2",
-          0.099
+          0.104
         ],
         [
           "1-2",
-          0.073
+          0.069
         ],
         [
           "2-1",
-          0.048
-        ],
-        [
-          "2-0",
           0.042
         ],
         [
           "0-3",
-          0.037
+          0.038
+        ],
+        [
+          "2-0",
+          0.038
         ],
         [
           "1-3",
-          0.028
+          0.026
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -2640,30 +2640,30 @@
       "kickoff_label": "Sat 27 Jun \u00b7 11:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.173,
-      "p_draw": 0.248,
-      "p_away": 0.579,
+      "p_home": 0.181,
+      "p_draw": 0.246,
+      "p_away": 0.573,
       "model_pick": "1-1",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.129,
-      "xg_home": 0.86,
-      "xg_away": 1.56,
+      "model_pick_prob": 0.128,
+      "xg_home": 0.89,
+      "xg_away": 1.54,
       "top_scores": [
         [
           "1-1",
-          0.129
+          0.128
         ],
         [
           "0-1",
-          0.129
+          0.128
         ],
         [
           "0-2",
-          0.108
+          0.104
         ],
         [
           "0-0",
-          0.099
+          0.095
         ],
         [
           "1-2",
@@ -2671,26 +2671,26 @@
         ],
         [
           "1-0",
-          0.066
-        ],
-        [
-          "0-3",
-          0.056
+          0.071
         ],
         [
           "2-1",
-          0.051
+          0.054
+        ],
+        [
+          "0-3",
+          0.054
         ],
         [
           "1-3",
-          0.049
+          0.048
         ],
         [
           "2-2",
-          0.04
+          0.041
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -2705,21 +2705,21 @@
       "resolved": true,
       "played": false,
       "p_home": 0.862,
-      "p_draw": 0.102,
-      "p_away": 0.035,
+      "p_draw": 0.101,
+      "p_away": 0.037,
       "model_pick": "2-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.16,
-      "xg_home": 2.57,
-      "xg_away": 0.46,
+      "model_pick_prob": 0.159,
+      "xg_home": 2.56,
+      "xg_away": 0.47,
       "top_scores": [
         [
           "2-0",
-          0.16
+          0.159
         ],
         [
           "3-0",
-          0.137
+          0.135
         ],
         [
           "1-0",
@@ -2727,11 +2727,11 @@
         ],
         [
           "4-0",
-          0.088
+          0.087
         ],
         [
           "2-1",
-          0.073
+          0.074
         ],
         [
           "3-1",
@@ -2743,18 +2743,18 @@
         ],
         [
           "0-0",
-          0.053
+          0.052
         ],
         [
           "5-0",
-          0.045
+          0.044
         ],
         [
           "4-1",
-          0.04
+          0.041
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -2768,26 +2768,26 @@
       "kickoff_label": "Tue 16 Jun \u00b7 06:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.102,
-      "p_draw": 0.248,
-      "p_away": 0.65,
+      "p_home": 0.104,
+      "p_draw": 0.239,
+      "p_away": 0.656,
       "model_pick": "0-1",
       "model_pick_result": "away",
-      "model_pick_prob": 0.231,
-      "xg_home": 0.38,
-      "xg_away": 1.39,
+      "model_pick_prob": 0.222,
+      "xg_home": 0.4,
+      "xg_away": 1.45,
       "top_scores": [
         [
           "0-1",
-          0.231
-        ],
-        [
-          "0-0",
-          0.179
+          0.222
         ],
         [
           "0-2",
           0.165
+        ],
+        [
+          "0-0",
+          0.162
         ],
         [
           "1-1",
@@ -2795,11 +2795,11 @@
         ],
         [
           "0-3",
-          0.076
+          0.08
         ],
         [
           "1-2",
-          0.062
+          0.066
         ],
         [
           "1-0",
@@ -2807,18 +2807,18 @@
         ],
         [
           "1-3",
-          0.029
+          0.032
         ],
         [
           "0-4",
-          0.026
+          0.029
         ],
         [
           "2-1",
-          0.017
+          0.018
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -2833,41 +2833,41 @@
       "resolved": true,
       "played": false,
       "p_home": 0.785,
-      "p_draw": 0.154,
-      "p_away": 0.061,
-      "model_pick": "2-0",
+      "p_draw": 0.153,
+      "p_away": 0.063,
+      "model_pick": "1-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.166,
+      "model_pick_prob": 0.165,
       "xg_home": 1.93,
-      "xg_away": 0.49,
+      "xg_away": 0.5,
       "top_scores": [
-        [
-          "2-0",
-          0.166
-        ],
         [
           "1-0",
           0.165
         ],
         [
+          "2-0",
+          0.164
+        ],
+        [
           "3-0",
-          0.107
+          0.105
         ],
         [
           "0-0",
-          0.096
+          0.093
         ],
         [
           "1-1",
-          0.091
+          0.09
         ],
         [
           "2-1",
-          0.081
+          0.082
         ],
         [
           "3-1",
-          0.052
+          0.053
         ],
         [
           "4-0",
@@ -2875,14 +2875,14 @@
         ],
         [
           "0-1",
-          0.037
+          0.039
         ],
         [
           "4-1",
           0.025
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -2896,46 +2896,46 @@
       "kickoff_label": "Mon 22 Jun \u00b7 06:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.745,
-      "p_draw": 0.186,
-      "p_away": 0.069,
+      "p_home": 0.751,
+      "p_draw": 0.179,
+      "p_away": 0.07,
       "model_pick": "1-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.199,
-      "xg_home": 1.85,
-      "xg_away": 0.35,
+      "model_pick_prob": 0.188,
+      "xg_home": 1.93,
+      "xg_away": 0.38,
       "top_scores": [
         [
           "1-0",
-          0.199
+          0.188
         ],
         [
           "2-0",
-          0.189
-        ],
-        [
-          "0-0",
-          0.117
+          0.186
         ],
         [
           "3-0",
-          0.117
+          0.119
+        ],
+        [
+          "0-0",
+          0.104
         ],
         [
           "1-1",
-          0.078
+          0.077
         ],
         [
           "2-1",
-          0.067
+          0.07
         ],
         [
           "4-0",
-          0.054
+          0.058
         ],
         [
           "3-1",
-          0.041
+          0.045
         ],
         [
           "0-1",
@@ -2943,10 +2943,10 @@
         ],
         [
           "5-0",
-          0.02
+          0.022
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -2960,26 +2960,26 @@
       "kickoff_label": "Sat 27 Jun \u00b7 08:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.257,
-      "p_draw": 0.329,
-      "p_away": 0.414,
+      "p_home": 0.26,
+      "p_draw": 0.322,
+      "p_away": 0.418,
       "model_pick": "0-0",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.199,
-      "xg_home": 0.69,
-      "xg_away": 0.98,
+      "model_pick_prob": 0.188,
+      "xg_home": 0.71,
+      "xg_away": 1.01,
       "top_scores": [
         [
           "0-0",
-          0.199
+          0.188
         ],
         [
           "0-1",
-          0.174
+          0.173
         ],
         [
           "1-1",
-          0.138
+          0.136
         ],
         [
           "1-0",
@@ -2987,30 +2987,30 @@
         ],
         [
           "0-2",
-          0.09
+          0.091
         ],
         [
           "1-2",
-          0.062
+          0.065
+        ],
+        [
+          "2-1",
+          0.045
         ],
         [
           "2-0",
           0.045
         ],
         [
-          "2-1",
-          0.044
-        ],
-        [
           "0-3",
-          0.03
+          0.031
         ],
         [
           "2-2",
-          0.021
+          0.023
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -3024,30 +3024,30 @@
       "kickoff_label": "Sat 27 Jun \u00b7 08:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.24,
-      "p_draw": 0.284,
-      "p_away": 0.476,
+      "p_home": 0.244,
+      "p_draw": 0.276,
+      "p_away": 0.481,
       "model_pick": "0-0",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.16,
-      "xg_home": 0.92,
-      "xg_away": 0.98,
+      "model_pick_prob": 0.146,
+      "xg_home": 0.96,
+      "xg_away": 1.02,
       "top_scores": [
         [
           "0-0",
-          0.16
-        ],
-        [
-          "1-1",
           0.146
         ],
         [
+          "1-1",
+          0.144
+        ],
+        [
           "0-1",
-          0.135
+          0.133
         ],
         [
           "1-0",
-          0.126
+          0.124
         ],
         [
           "0-2",
@@ -3055,26 +3055,26 @@
         ],
         [
           "1-2",
-          0.066
+          0.069
+        ],
+        [
+          "2-1",
+          0.065
         ],
         [
           "2-0",
           0.063
         ],
         [
-          "2-1",
-          0.062
-        ],
-        [
           "2-2",
-          0.031
+          0.033
         ],
         [
           "0-3",
-          0.024
+          0.025
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -3088,26 +3088,26 @@
       "kickoff_label": "Wed 17 Jun \u00b7 03:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.519,
-      "p_draw": 0.27,
-      "p_away": 0.211,
+      "p_home": 0.524,
+      "p_draw": 0.263,
+      "p_away": 0.212,
       "model_pick": "1-1",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.141,
-      "xg_home": 1.3,
-      "xg_away": 0.91,
+      "model_pick_prob": 0.137,
+      "xg_home": 1.34,
+      "xg_away": 0.94,
       "top_scores": [
         [
           "1-1",
-          0.141
+          0.137
         ],
         [
           "1-0",
-          0.131
+          0.129
         ],
         [
           "0-0",
-          0.12
+          0.11
         ],
         [
           "2-0",
@@ -3115,30 +3115,30 @@
         ],
         [
           "0-1",
-          0.089
+          0.088
         ],
         [
           "2-1",
-          0.085
+          0.086
         ],
         [
           "1-2",
-          0.059
+          0.06
         ],
         [
           "0-2",
-          0.046
+          0.045
         ],
         [
           "3-0",
-          0.04
+          0.041
         ],
         [
           "2-2",
-          0.039
+          0.04
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -3152,46 +3152,46 @@
       "kickoff_label": "Wed 17 Jun \u00b7 06:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.159,
-      "p_draw": 0.253,
-      "p_away": 0.588,
+      "p_home": 0.17,
+      "p_draw": 0.252,
+      "p_away": 0.578,
       "model_pick": "0-1",
       "model_pick_result": "away",
-      "model_pick_prob": 0.154,
-      "xg_home": 0.72,
-      "xg_away": 1.47,
+      "model_pick_prob": 0.149,
+      "xg_home": 0.78,
+      "xg_away": 1.45,
       "top_scores": [
         [
           "0-1",
-          0.154
+          0.149
         ],
         [
           "1-1",
-          0.128
+          0.129
         ],
         [
           "0-0",
-          0.122
+          0.115
         ],
         [
           "0-2",
-          0.121
+          0.114
         ],
         [
           "1-2",
-          0.087
+          0.088
         ],
         [
           "1-0",
-          0.071
+          0.076
         ],
         [
           "0-3",
-          0.059
+          0.055
         ],
         [
           "2-1",
-          0.043
+          0.047
         ],
         [
           "1-3",
@@ -3199,10 +3199,10 @@
         ],
         [
           "2-2",
-          0.031
+          0.034
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -3216,57 +3216,57 @@
       "kickoff_label": "Tue 23 Jun \u00b7 05:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.7,
-      "p_draw": 0.205,
-      "p_away": 0.094,
+      "p_home": 0.696,
+      "p_draw": 0.203,
+      "p_away": 0.101,
       "model_pick": "1-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.18,
-      "xg_home": 1.61,
-      "xg_away": 0.54,
+      "model_pick_prob": 0.173,
+      "xg_home": 1.62,
+      "xg_away": 0.58,
       "top_scores": [
         [
           "1-0",
-          0.18
+          0.173
         ],
         [
           "2-0",
-          0.151
+          0.146
         ],
         [
           "0-0",
-          0.125
+          0.118
         ],
         [
           "1-1",
-          0.109
-        ],
-        [
-          "3-0",
-          0.081
+          0.11
         ],
         [
           "2-1",
-          0.081
+          0.084
+        ],
+        [
+          "3-0",
+          0.079
         ],
         [
           "0-1",
-          0.054
+          0.058
         ],
         [
           "3-1",
-          0.044
+          0.045
         ],
         [
           "4-0",
-          0.033
+          0.032
         ],
         [
           "1-2",
-          0.027
+          0.03
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -3280,22 +3280,18 @@
       "kickoff_label": "Tue 23 Jun \u00b7 08:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.382,
-      "p_draw": 0.29,
-      "p_away": 0.328,
+      "p_home": 0.383,
+      "p_draw": 0.285,
+      "p_away": 0.332,
       "model_pick": "1-1",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.141,
-      "xg_home": 1.19,
-      "xg_away": 1.23,
+      "model_pick_prob": 0.137,
+      "xg_home": 1.2,
+      "xg_away": 1.26,
       "top_scores": [
         [
           "1-1",
-          0.141
-        ],
-        [
-          "0-0",
-          0.1
+          0.137
         ],
         [
           "0-1",
@@ -3303,15 +3299,19 @@
         ],
         [
           "1-0",
-          0.095
+          0.094
+        ],
+        [
+          "0-0",
+          0.093
         ],
         [
           "1-2",
-          0.08
+          0.081
         ],
         [
           "2-1",
-          0.077
+          0.078
         ],
         [
           "0-2",
@@ -3319,18 +3319,18 @@
         ],
         [
           "2-0",
-          0.063
+          0.062
         ],
         [
           "2-2",
-          0.048
+          0.049
         ],
         [
           "1-3",
-          0.033
+          0.034
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -3344,18 +3344,18 @@
       "kickoff_label": "Sat 27 Jun \u00b7 03:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.23,
-      "p_draw": 0.263,
-      "p_away": 0.507,
+      "p_home": 0.229,
+      "p_draw": 0.258,
+      "p_away": 0.513,
       "model_pick": "1-1",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.129,
-      "xg_home": 1.08,
-      "xg_away": 1.59,
+      "model_pick_prob": 0.124,
+      "xg_home": 1.09,
+      "xg_away": 1.63,
       "top_scores": [
         [
           "1-1",
-          0.129
+          0.124
         ],
         [
           "0-1",
@@ -3371,11 +3371,11 @@
         ],
         [
           "0-0",
-          0.079
+          0.073
         ],
         [
           "1-0",
-          0.065
+          0.064
         ],
         [
           "2-1",
@@ -3383,18 +3383,18 @@
         ],
         [
           "2-2",
-          0.051
+          0.052
         ],
         [
           "1-3",
-          0.05
+          0.052
         ],
         [
           "0-3",
-          0.047
+          0.048
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -3408,57 +3408,57 @@
       "kickoff_label": "Sat 27 Jun \u00b7 03:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.537,
-      "p_draw": 0.289,
-      "p_away": 0.174,
+      "p_home": 0.531,
+      "p_draw": 0.285,
+      "p_away": 0.183,
       "model_pick": "1-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.189,
+      "model_pick_prob": 0.182,
       "xg_home": 1.25,
-      "xg_away": 0.59,
+      "xg_away": 0.64,
       "top_scores": [
         [
           "1-0",
-          0.189
+          0.182
         ],
         [
           "0-0",
-          0.169
+          0.159
         ],
         [
           "1-1",
-          0.127
+          0.128
         ],
         [
           "2-0",
-          0.124
+          0.118
         ],
         [
           "0-1",
-          0.084
+          0.089
         ],
         [
           "2-1",
-          0.073
+          0.075
         ],
         [
           "3-0",
-          0.051
+          0.049
         ],
         [
           "1-2",
-          0.035
+          0.038
         ],
         [
           "3-1",
-          0.03
+          0.031
         ],
         [
           "0-2",
-          0.028
+          0.031
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -3472,57 +3472,57 @@
       "kickoff_label": "Wed 17 Jun \u00b7 09:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.703,
-      "p_draw": 0.209,
-      "p_away": 0.089,
+      "p_home": 0.702,
+      "p_draw": 0.204,
+      "p_away": 0.093,
       "model_pick": "1-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.193,
-      "xg_home": 1.73,
-      "xg_away": 0.43,
+      "model_pick_prob": 0.182,
+      "xg_home": 1.77,
+      "xg_away": 0.47,
       "top_scores": [
         [
           "1-0",
-          0.193
+          0.182
         ],
         [
           "2-0",
-          0.173
+          0.166
         ],
         [
           "0-0",
-          0.123
+          0.111
         ],
         [
           "3-0",
-          0.099
+          0.098
         ],
         [
           "1-1",
-          0.093
+          0.094
         ],
         [
           "2-1",
-          0.074
-        ],
-        [
-          "4-0",
-          0.043
-        ],
-        [
-          "0-1",
-          0.043
+          0.079
         ],
         [
           "3-1",
-          0.043
+          0.047
         ],
         [
-          "4-1",
-          0.018
+          "0-1",
+          0.045
+        ],
+        [
+          "4-0",
+          0.044
+        ],
+        [
+          "1-2",
+          0.021
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -3536,57 +3536,57 @@
       "kickoff_label": "Wed 17 Jun \u00b7 12:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.503,
-      "p_draw": 0.268,
-      "p_away": 0.229,
+      "p_home": 0.48,
+      "p_draw": 0.274,
+      "p_away": 0.246,
       "model_pick": "1-1",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.129,
-      "xg_home": 1.59,
-      "xg_away": 1.01,
+      "model_pick_prob": 0.133,
+      "xg_home": 1.45,
+      "xg_away": 1.02,
       "top_scores": [
         [
           "1-1",
-          0.129
+          0.133
         ],
         [
           "1-0",
-          0.108
-        ],
-        [
-          "2-1",
-          0.095
-        ],
-        [
-          "2-0",
-          0.094
+          0.115
         ],
         [
           "0-0",
-          0.084
+          0.093
+        ],
+        [
+          "2-1",
+          0.091
+        ],
+        [
+          "2-0",
+          0.089
         ],
         [
           "0-1",
-          0.065
+          0.079
         ],
         [
           "1-2",
-          0.06
-        ],
-        [
-          "3-1",
-          0.05
-        ],
-        [
-          "3-0",
-          0.05
+          0.064
         ],
         [
           "2-2",
-          0.048
+          0.046
+        ],
+        [
+          "0-2",
+          0.044
+        ],
+        [
+          "3-1",
+          0.044
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -3600,57 +3600,57 @@
       "kickoff_label": "Tue 23 Jun \u00b7 01:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.723,
-      "p_draw": 0.197,
-      "p_away": 0.08,
+      "p_home": 0.726,
+      "p_draw": 0.192,
+      "p_away": 0.082,
       "model_pick": "1-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.192,
-      "xg_home": 1.85,
-      "xg_away": 0.38,
+      "model_pick_prob": 0.186,
+      "xg_home": 1.89,
+      "xg_away": 0.4,
       "top_scores": [
         [
           "1-0",
-          0.192
+          0.186
         ],
         [
           "2-0",
-          0.183
-        ],
-        [
-          "0-0",
-          0.114
+          0.181
         ],
         [
           "3-0",
-          0.113
+          0.114
+        ],
+        [
+          "0-0",
+          0.105
         ],
         [
           "1-1",
-          0.083
+          0.081
         ],
         [
           "2-1",
-          0.07
+          0.073
         ],
         [
           "4-0",
-          0.052
+          0.054
         ],
         [
           "3-1",
-          0.043
+          0.046
         ],
         [
           "0-1",
-          0.035
+          0.036
         ],
         [
           "4-1",
-          0.02
+          0.022
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -3664,57 +3664,57 @@
       "kickoff_label": "Tue 23 Jun \u00b7 11:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.207,
-      "p_draw": 0.257,
-      "p_away": 0.535,
+      "p_home": 0.216,
+      "p_draw": 0.259,
+      "p_away": 0.525,
       "model_pick": "1-1",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.12,
-      "xg_home": 0.94,
-      "xg_away": 1.77,
+      "model_pick_prob": 0.121,
+      "xg_home": 0.96,
+      "xg_away": 1.71,
       "top_scores": [
         [
           "1-1",
-          0.12
+          0.121
         ],
         [
           "0-1",
-          0.108
+          0.112
         ],
         [
           "0-2",
-          0.104
+          0.102
         ],
         [
           "1-2",
-          0.098
+          0.097
         ],
         [
           "0-0",
-          0.075
-        ],
-        [
-          "0-3",
-          0.061
-        ],
-        [
-          "1-3",
-          0.058
+          0.077
         ],
         [
           "1-0",
-          0.053
+          0.06
+        ],
+        [
+          "0-3",
+          0.058
+        ],
+        [
+          "1-3",
+          0.055
         ],
         [
           "2-1",
-          0.052
+          0.054
         ],
         [
           "2-2",
           0.046
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -3728,57 +3728,57 @@
       "kickoff_label": "Sun 28 Jun \u00b7 10:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.374,
-      "p_draw": 0.303,
-      "p_away": 0.323,
+      "p_home": 0.387,
+      "p_draw": 0.296,
+      "p_away": 0.317,
       "model_pick": "1-1",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.144,
-      "xg_home": 1.2,
+      "model_pick_prob": 0.14,
+      "xg_home": 1.26,
       "xg_away": 1.0,
       "top_scores": [
         [
           "1-1",
-          0.144
-        ],
-        [
-          "0-0",
-          0.122
+          0.14
         ],
         [
           "1-0",
-          0.122
+          0.124
+        ],
+        [
+          "0-0",
+          0.113
         ],
         [
           "0-1",
-          0.1
-        ],
-        [
-          "2-1",
-          0.08
+          0.096
         ],
         [
           "2-0",
-          0.079
+          0.083
+        ],
+        [
+          "2-1",
+          0.083
         ],
         [
           "1-2",
-          0.067
+          0.066
         ],
         [
           "0-2",
-          0.056
+          0.052
         ],
         [
           "2-2",
-          0.04
+          0.041
         ],
         [
-          "3-1",
-          0.032
+          "3-0",
+          0.035
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -3792,57 +3792,57 @@
       "kickoff_label": "Sun 28 Jun \u00b7 10:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.04,
-      "p_draw": 0.111,
-      "p_away": 0.849,
+      "p_home": 0.045,
+      "p_draw": 0.12,
+      "p_away": 0.835,
       "model_pick": "0-2",
       "model_pick_result": "away",
-      "model_pick_prob": 0.169,
-      "xg_home": 0.36,
-      "xg_away": 2.74,
+      "model_pick_prob": 0.172,
+      "xg_home": 0.38,
+      "xg_away": 2.57,
       "top_scores": [
         [
           "0-2",
-          0.169
+          0.172
         ],
         [
           "0-3",
-          0.154
+          0.147
         ],
         [
           "0-1",
-          0.119
+          0.131
         ],
         [
           "0-4",
-          0.106
+          0.095
         ],
         [
           "1-2",
-          0.061
-        ],
-        [
-          "0-5",
-          0.058
+          0.066
         ],
         [
           "1-3",
-          0.056
+          0.057
         ],
         [
           "0-0",
-          0.049
+          0.055
         ],
         [
           "1-1",
-          0.048
+          0.055
+        ],
+        [
+          "0-5",
+          0.049
         ],
         [
           "1-4",
-          0.038
+          0.036
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -3857,25 +3857,25 @@
       "resolved": true,
       "played": false,
       "p_home": 0.621,
-      "p_draw": 0.253,
-      "p_away": 0.127,
+      "p_draw": 0.248,
+      "p_away": 0.131,
       "model_pick": "1-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.196,
-      "xg_home": 1.35,
-      "xg_away": 0.53,
+      "model_pick_prob": 0.192,
+      "xg_home": 1.37,
+      "xg_away": 0.56,
       "top_scores": [
         [
           "1-0",
-          0.196
+          0.192
         ],
         [
           "0-0",
-          0.162
+          0.152
         ],
         [
           "2-0",
-          0.138
+          0.136
         ],
         [
           "1-1",
@@ -3883,11 +3883,11 @@
         ],
         [
           "2-1",
-          0.074
+          0.076
         ],
         [
           "0-1",
-          0.072
+          0.075
         ],
         [
           "3-0",
@@ -3895,18 +3895,18 @@
         ],
         [
           "3-1",
-          0.033
+          0.035
         ],
         [
           "1-2",
-          0.029
+          0.031
         ],
         [
           "0-2",
-          0.022
+          0.023
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -3920,57 +3920,57 @@
       "kickoff_label": "Thu 18 Jun \u00b7 10:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.123,
-      "p_draw": 0.237,
-      "p_away": 0.64,
+      "p_home": 0.134,
+      "p_draw": 0.242,
+      "p_away": 0.624,
       "model_pick": "0-1",
       "model_pick_result": "away",
-      "model_pick_prob": 0.179,
-      "xg_home": 0.54,
-      "xg_away": 1.63,
+      "model_pick_prob": 0.176,
+      "xg_home": 0.58,
+      "xg_away": 1.56,
       "top_scores": [
         [
           "0-1",
-          0.179
+          0.176
         ],
         [
           "0-2",
-          0.152
+          0.143
         ],
         [
           "0-0",
-          0.123
+          0.124
         ],
         [
           "1-1",
-          0.109
-        ],
-        [
-          "0-3",
-          0.082
+          0.113
         ],
         [
           "1-2",
-          0.082
+          0.083
+        ],
+        [
+          "0-3",
+          0.075
         ],
         [
           "1-0",
-          0.053
+          0.062
         ],
         [
           "1-3",
-          0.044
-        ],
-        [
-          "0-4",
-          0.033
+          0.043
         ],
         [
           "2-1",
-          0.027
+          0.031
+        ],
+        [
+          "0-4",
+          0.029
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -3984,57 +3984,57 @@
       "kickoff_label": "Wed 24 Jun \u00b7 01:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.56,
-      "p_draw": 0.268,
-      "p_away": 0.172,
+      "p_home": 0.559,
+      "p_draw": 0.264,
+      "p_away": 0.178,
       "model_pick": "1-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.161,
-      "xg_home": 1.35,
-      "xg_away": 0.72,
+      "model_pick_prob": 0.158,
+      "xg_home": 1.36,
+      "xg_away": 0.75,
       "top_scores": [
         [
           "1-0",
-          0.161
-        ],
-        [
-          "0-0",
-          0.137
+          0.158
         ],
         [
           "1-1",
-          0.133
+          0.131
+        ],
+        [
+          "0-0",
+          0.129
         ],
         [
           "2-0",
-          0.116
+          0.113
         ],
         [
           "2-1",
-          0.083
+          0.084
         ],
         [
           "0-1",
-          0.08
+          0.083
         ],
         [
           "3-0",
-          0.052
+          0.051
         ],
         [
           "1-2",
-          0.044
+          0.046
         ],
         [
           "3-1",
-          0.037
+          0.038
         ],
         [
           "0-2",
-          0.032
+          0.034
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -4048,57 +4048,57 @@
       "kickoff_label": "Wed 24 Jun \u00b7 10:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.693,
-      "p_draw": 0.217,
-      "p_away": 0.089,
+      "p_home": 0.68,
+      "p_draw": 0.222,
+      "p_away": 0.098,
       "model_pick": "1-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.208,
-      "xg_home": 1.62,
-      "xg_away": 0.4,
+      "model_pick_prob": 0.205,
+      "xg_home": 1.57,
+      "xg_away": 0.44,
       "top_scores": [
         [
           "1-0",
-          0.208
+          0.205
         ],
         [
           "2-0",
-          0.174
+          0.165
         ],
         [
           "0-0",
           0.14
         ],
         [
-          "3-0",
-          0.094
+          "1-1",
+          0.098
         ],
         [
-          "1-1",
-          0.093
+          "3-0",
+          0.086
         ],
         [
           "2-1",
-          0.07
+          0.073
         ],
         [
           "0-1",
-          0.046
-        ],
-        [
-          "4-0",
-          0.038
+          0.053
         ],
         [
           "3-1",
           0.038
         ],
         [
+          "4-0",
+          0.034
+        ],
+        [
           "1-2",
-          0.017
+          0.02
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -4112,57 +4112,57 @@
       "kickoff_label": "Sun 28 Jun \u00b7 07:30 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.444,
-      "p_draw": 0.285,
-      "p_away": 0.271,
+      "p_home": 0.433,
+      "p_draw": 0.281,
+      "p_away": 0.286,
       "model_pick": "1-1",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.133,
+      "model_pick_prob": 0.131,
       "xg_home": 1.49,
-      "xg_away": 0.93,
+      "xg_away": 1.01,
       "top_scores": [
         [
           "1-1",
-          0.133
+          0.131
         ],
         [
           "1-0",
-          0.122
-        ],
-        [
-          "0-0",
-          0.099
-        ],
-        [
-          "2-0",
-          0.099
+          0.114
         ],
         [
           "2-1",
           0.092
         ],
         [
+          "2-0",
+          0.091
+        ],
+        [
+          "0-0",
+          0.09
+        ],
+        [
           "0-1",
-          0.072
+          0.075
         ],
         [
           "1-2",
-          0.057
+          0.063
         ],
         [
-          "3-0",
-          0.049
+          "2-2",
+          0.047
         ],
         [
           "3-1",
           0.046
         ],
         [
-          "2-2",
-          0.043
+          "3-0",
+          0.045
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -4176,38 +4176,38 @@
       "kickoff_label": "Sun 28 Jun \u00b7 07:30 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.255,
-      "p_draw": 0.356,
-      "p_away": 0.389,
+      "p_home": 0.257,
+      "p_draw": 0.352,
+      "p_away": 0.392,
       "model_pick": "0-0",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.266,
-      "xg_home": 0.58,
-      "xg_away": 0.78,
+      "model_pick_prob": 0.26,
+      "xg_home": 0.59,
+      "xg_away": 0.79,
       "top_scores": [
         [
           "0-0",
-          0.266
+          0.26
         ],
         [
           "0-1",
-          0.19
+          0.191
         ],
         [
           "1-0",
-          0.14
+          0.142
         ],
         [
           "1-1",
-          0.126
+          0.124
         ],
         [
           "0-2",
-          0.077
+          0.078
         ],
         [
           "1-2",
-          0.045
+          0.046
         ],
         [
           "2-0",
@@ -4215,7 +4215,7 @@
         ],
         [
           "2-1",
-          0.034
+          0.035
         ],
         [
           "0-3",
@@ -4223,10 +4223,10 @@
         ],
         [
           "2-2",
-          0.013
+          0.014
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -4240,57 +4240,57 @@
       "kickoff_label": "Thu 18 Jun \u00b7 04:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.509,
+      "p_home": 0.515,
       "p_draw": 0.288,
-      "p_away": 0.202,
+      "p_away": 0.198,
       "model_pick": "1-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.163,
-      "xg_home": 1.33,
-      "xg_away": 0.71,
+      "model_pick_prob": 0.175,
+      "xg_home": 1.31,
+      "xg_away": 0.66,
       "top_scores": [
         [
           "1-0",
-          0.163
+          0.175
         ],
         [
           "0-0",
-          0.14
+          0.147
         ],
         [
           "1-1",
-          0.133
+          0.128
         ],
         [
           "2-0",
-          0.115
+          0.12
         ],
         [
           "0-1",
-          0.082
+          0.085
         ],
         [
           "2-1",
-          0.082
+          0.079
         ],
         [
           "3-0",
-          0.051
+          0.052
         ],
         [
           "1-2",
-          0.043
+          0.04
         ],
         [
           "3-1",
-          0.036
+          0.034
         ],
         [
           "0-2",
-          0.033
+          0.03
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -4304,57 +4304,57 @@
       "kickoff_label": "Thu 18 Jun \u00b7 07:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.23,
-      "p_draw": 0.265,
-      "p_away": 0.506,
+      "p_home": 0.211,
+      "p_draw": 0.26,
+      "p_away": 0.529,
       "model_pick": "1-1",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.142,
-      "xg_home": 1.03,
-      "xg_away": 1.27,
+      "model_pick_prob": 0.137,
+      "xg_home": 0.95,
+      "xg_away": 1.34,
       "top_scores": [
         [
           "1-1",
-          0.142
+          0.137
         ],
         [
           "0-1",
-          0.116
+          0.127
         ],
         [
           "0-0",
-          0.11
-        ],
-        [
-          "1-0",
-          0.092
-        ],
-        [
-          "1-2",
-          0.083
+          0.109
         ],
         [
           "0-2",
-          0.081
+          0.09
+        ],
+        [
+          "1-0",
+          0.088
+        ],
+        [
+          "1-2",
+          0.086
         ],
         [
           "2-1",
-          0.068
+          0.062
         ],
         [
           "2-0",
-          0.053
+          0.046
         ],
         [
           "2-2",
-          0.043
+          0.041
         ],
         [
-          "1-3",
-          0.035
+          "0-3",
+          0.04
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -4368,57 +4368,57 @@
       "kickoff_label": "Wed 24 Jun \u00b7 04:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.782,
-      "p_draw": 0.159,
-      "p_away": 0.059,
+      "p_home": 0.77,
+      "p_draw": 0.167,
+      "p_away": 0.063,
       "model_pick": "1-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.177,
-      "xg_home": 1.89,
-      "xg_away": 0.44,
+      "model_pick_prob": 0.19,
+      "xg_home": 1.78,
+      "xg_away": 0.43,
       "top_scores": [
         [
           "1-0",
-          0.177
+          0.19
         ],
         [
           "2-0",
-          0.174
-        ],
-        [
-          "3-0",
-          0.11
+          0.173
         ],
         [
           "0-0",
-          0.104
+          0.115
+        ],
+        [
+          "3-0",
+          0.103
         ],
         [
           "1-1",
-          0.087
+          0.09
         ],
         [
           "2-1",
-          0.076
+          0.075
         ],
         [
           "4-0",
-          0.052
+          0.046
         ],
         [
           "3-1",
-          0.048
+          0.044
         ],
         [
           "0-1",
-          0.036
+          0.042
         ],
         [
           "4-1",
-          0.023
+          0.02
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -4432,57 +4432,57 @@
       "kickoff_label": "Wed 24 Jun \u00b7 07:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.203,
-      "p_draw": 0.262,
-      "p_away": 0.536,
+      "p_home": 0.237,
+      "p_draw": 0.272,
+      "p_away": 0.491,
       "model_pick": "1-1",
       "model_pick_result": "draw",
-      "model_pick_prob": 0.125,
-      "xg_home": 0.9,
-      "xg_away": 1.67,
+      "model_pick_prob": 0.133,
+      "xg_home": 0.99,
+      "xg_away": 1.46,
       "top_scores": [
         [
           "1-1",
-          0.125
+          0.133
         ],
         [
           "0-1",
           0.119
         ],
         [
+          "0-0",
+          0.094
+        ],
+        [
           "0-2",
-          0.107
+          0.092
         ],
         [
           "1-2",
-          0.096
-        ],
-        [
-          "0-0",
-          0.086
-        ],
-        [
-          "0-3",
-          0.06
+          0.091
         ],
         [
           "1-0",
-          0.059
-        ],
-        [
-          "1-3",
-          0.053
+          0.078
         ],
         [
           "2-1",
-          0.052
+          0.062
         ],
         [
           "2-2",
-          0.043
+          0.045
+        ],
+        [
+          "0-3",
+          0.045
+        ],
+        [
+          "1-3",
+          0.044
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -4496,57 +4496,57 @@
       "kickoff_label": "Sun 28 Jun \u00b7 05:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.104,
-      "p_draw": 0.202,
-      "p_away": 0.694,
-      "model_pick": "0-2",
+      "p_home": 0.12,
+      "p_draw": 0.22,
+      "p_away": 0.66,
+      "model_pick": "0-1",
       "model_pick_result": "away",
-      "model_pick_prob": 0.152,
-      "xg_home": 0.58,
-      "xg_away": 2.02,
+      "model_pick_prob": 0.157,
+      "xg_home": 0.61,
+      "xg_away": 1.78,
       "top_scores": [
         [
-          "0-2",
-          0.152
-        ],
-        [
           "0-1",
-          0.143
+          0.157
         ],
         [
-          "0-3",
-          0.102
+          "0-2",
+          0.146
         ],
         [
           "1-1",
-          0.094
+          0.105
+        ],
+        [
+          "0-0",
+          0.098
         ],
         [
           "1-2",
           0.088
         ],
         [
-          "0-0",
-          0.082
+          "0-3",
+          0.086
         ],
         [
           "1-3",
-          0.059
-        ],
-        [
-          "0-4",
           0.052
         ],
         [
           "1-0",
-          0.036
+          0.05
         ],
         [
-          "1-4",
+          "0-4",
+          0.038
+        ],
+        [
+          "2-1",
           0.03
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -4560,57 +4560,57 @@
       "kickoff_label": "Sun 28 Jun \u00b7 05:00 SGT",
       "resolved": true,
       "played": false,
-      "p_home": 0.66,
-      "p_draw": 0.218,
-      "p_away": 0.122,
+      "p_home": 0.641,
+      "p_draw": 0.225,
+      "p_away": 0.134,
       "model_pick": "1-0",
       "model_pick_result": "home",
-      "model_pick_prob": 0.156,
-      "xg_home": 1.56,
-      "xg_away": 0.68,
+      "model_pick_prob": 0.161,
+      "xg_home": 1.45,
+      "xg_away": 0.7,
       "top_scores": [
         [
           "1-0",
-          0.156
-        ],
-        [
-          "2-0",
-          0.13
+          0.161
         ],
         [
           "1-1",
-          0.122
+          0.126
         ],
         [
           "0-0",
-          0.116
+          0.123
+        ],
+        [
+          "2-0",
+          0.122
         ],
         [
           "2-1",
-          0.088
-        ],
-        [
-          "3-0",
-          0.067
+          0.086
         ],
         [
           "0-1",
-          0.063
+          0.074
+        ],
+        [
+          "3-0",
+          0.059
         ],
         [
           "3-1",
-          0.046
+          0.042
         ],
         [
           "1-2",
-          0.038
+          0.042
         ],
         [
           "2-2",
           0.03
         ]
       ],
-      "updated_utc": "2026-06-13 06:00 UTC",
+      "updated_utc": "2026-06-13 07:26 UTC",
       "scored": false
     },
     {
@@ -5105,11 +5105,6 @@
       "delta": 4
     },
     {
-      "team": "Paraguay",
-      "elo": 1908,
-      "delta": 16
-    },
-    {
       "team": "Senegal",
       "elo": 1905,
       "delta": 15
@@ -5120,6 +5115,11 @@
       "delta": 20
     },
     {
+      "team": "United States",
+      "elo": 1901,
+      "delta": 89
+    },
+    {
       "team": "Australia",
       "elo": 1899,
       "delta": 10
@@ -5128,11 +5128,6 @@
       "team": "Iran",
       "elo": 1895,
       "delta": -3
-    },
-    {
-      "team": "Canada",
-      "elo": 1895,
-      "delta": 14
     },
     {
       "team": "Austria",
@@ -5150,14 +5145,19 @@
       "delta": 197
     },
     {
+      "team": "Canada",
+      "elo": 1874,
+      "delta": -7
+    },
+    {
+      "team": "Paraguay",
+      "elo": 1857,
+      "delta": -36
+    },
+    {
       "team": "Scotland",
       "elo": 1849,
       "delta": 75
-    },
-    {
-      "team": "United States",
-      "elo": 1849,
-      "delta": 37
     },
     {
       "team": "Russia",
@@ -5340,6 +5340,11 @@
       "delta": -7
     },
     {
+      "team": "Bosnia and Herzegovina",
+      "elo": 1677,
+      "delta": 98
+    },
+    {
       "team": "United Arab Emirates",
       "elo": 1671,
       "delta": -9
@@ -5353,11 +5358,6 @@
       "team": "South Africa",
       "elo": 1660,
       "delta": -18
-    },
-    {
-      "team": "Bosnia and Herzegovina",
-      "elo": 1655,
-      "delta": 76
     },
     {
       "team": "Jamaica",
@@ -5920,14 +5920,14 @@
       "delta": -36
     },
     {
-      "team": "Afghanistan",
-      "elo": 1142,
-      "delta": -73
-    },
-    {
       "team": "Cook Islands",
       "elo": 1141,
       "delta": 0
+    },
+    {
+      "team": "Afghanistan",
+      "elo": 1141,
+      "delta": -74
     },
     {
       "team": "Myanmar",
@@ -5951,7 +5951,7 @@
     },
     {
       "team": "Pakistan",
-      "elo": 1106,
+      "elo": 1107,
       "delta": 109
     },
     {
@@ -6026,7 +6026,7 @@
     },
     {
       "team": "Maldives",
-      "elo": 983,
+      "elo": 984,
       "delta": -47
     },
     {
@@ -6081,193 +6081,58 @@
     }
   ],
   "form": {
-    "Morocco": [
+    "Cura\u00e7ao": [
       {
         "r": "D",
-        "s": "1-1",
-        "opp": "Ecuador"
-      },
-      {
-        "r": "W",
-        "s": "2-1",
-        "opp": "Paraguay"
-      },
-      {
-        "r": "W",
-        "s": "5-0",
-        "opp": "Burundi"
-      },
-      {
-        "r": "W",
-        "s": "4-0",
-        "opp": "Madagascar"
-      },
-      {
-        "r": "D",
-        "s": "1-1",
-        "opp": "Norway"
-      }
-    ],
-    "Sweden": [
-      {
-        "r": "D",
-        "s": "1-1",
-        "opp": "Slovenia"
-      },
-      {
-        "r": "W",
-        "s": "3-1",
-        "opp": "Ukraine"
-      },
-      {
-        "r": "W",
-        "s": "3-2",
-        "opp": "Poland"
-      },
-      {
-        "r": "L",
-        "s": "1-3",
-        "opp": "Norway"
-      },
-      {
-        "r": "D",
-        "s": "2-2",
-        "opp": "Greece"
-      }
-    ],
-    "United States": [
-      {
-        "r": "W",
-        "s": "5-1",
-        "opp": "Uruguay"
-      },
-      {
-        "r": "L",
-        "s": "2-5",
-        "opp": "Belgium"
+        "s": "0-0",
+        "opp": "Jamaica"
       },
       {
         "r": "L",
         "s": "0-2",
-        "opp": "Portugal"
-      },
-      {
-        "r": "W",
-        "s": "3-2",
-        "opp": "Senegal"
+        "opp": "China"
       },
       {
         "r": "L",
-        "s": "1-2",
-        "opp": "Germany"
-      }
-    ],
-    "Austria": [
-      {
-        "r": "W",
-        "s": "2-0",
-        "opp": "Cyprus"
+        "s": "1-5",
+        "opp": "Australia"
       },
       {
-        "r": "D",
-        "s": "1-1",
-        "opp": "Bosnia and Herzegovina"
-      },
-      {
-        "r": "W",
-        "s": "5-1",
-        "opp": "Ghana"
-      },
-      {
-        "r": "W",
-        "s": "1-0",
-        "opp": "South Korea"
-      },
-      {
-        "r": "W",
-        "s": "1-0",
-        "opp": "Tunisia"
-      }
-    ],
-    "Bosnia and Herzegovina": [
-      {
-        "r": "D",
-        "s": "1-1",
-        "opp": "Austria"
-      },
-      {
-        "r": "D",
-        "s": "1-1",
-        "opp": "Wales"
-      },
-      {
-        "r": "D",
-        "s": "1-1",
-        "opp": "Italy"
-      },
-      {
-        "r": "D",
-        "s": "0-0",
-        "opp": "North Macedonia"
-      },
-      {
-        "r": "D",
-        "s": "1-1",
-        "opp": "Panama"
-      }
-    ],
-    "Egypt": [
-      {
-        "r": "D",
-        "s": "0-0",
-        "opp": "Nigeria"
+        "r": "L",
+        "s": "1-4",
+        "opp": "Scotland"
       },
       {
         "r": "W",
         "s": "4-0",
-        "opp": "Saudi Arabia"
-      },
+        "opp": "Aruba"
+      }
+    ],
+    "Germany": [
       {
-        "r": "D",
-        "s": "0-0",
-        "opp": "Spain"
+        "r": "W",
+        "s": "6-0",
+        "opp": "Slovakia"
       },
       {
         "r": "W",
-        "s": "1-0",
-        "opp": "Russia"
-      },
-      {
-        "r": "L",
-        "s": "1-2",
-        "opp": "Brazil"
-      }
-    ],
-    "Czech Republic": [
-      {
-        "r": "D",
-        "s": "2-2",
-        "opp": "Republic of Ireland"
-      },
-      {
-        "r": "D",
-        "s": "2-2",
-        "opp": "Denmark"
+        "s": "4-3",
+        "opp": "Switzerland"
       },
       {
         "r": "W",
         "s": "2-1",
-        "opp": "Kosovo"
+        "opp": "Ghana"
       },
       {
         "r": "W",
-        "s": "5-1",
-        "opp": "Guatemala"
+        "s": "4-0",
+        "opp": "Finland"
       },
       {
-        "r": "L",
-        "s": "1-2",
-        "opp": "South Korea"
+        "r": "W",
+        "s": "2-1",
+        "opp": "United States"
       }
     ],
     "Netherlands": [
@@ -6297,58 +6162,31 @@
         "opp": "Uzbekistan"
       }
     ],
-    "Japan": [
+    "Morocco": [
       {
-        "r": "W",
-        "s": "2-0",
-        "opp": "Ghana"
-      },
-      {
-        "r": "W",
-        "s": "3-0",
-        "opp": "Bolivia"
-      },
-      {
-        "r": "W",
-        "s": "1-0",
-        "opp": "Scotland"
-      },
-      {
-        "r": "W",
-        "s": "1-0",
-        "opp": "England"
-      },
-      {
-        "r": "W",
-        "s": "1-0",
-        "opp": "Iceland"
-      }
-    ],
-    "Ivory Coast": [
-      {
-        "r": "W",
-        "s": "3-0",
-        "opp": "Burkina Faso"
-      },
-      {
-        "r": "L",
-        "s": "2-3",
-        "opp": "Egypt"
-      },
-      {
-        "r": "W",
-        "s": "4-0",
-        "opp": "South Korea"
-      },
-      {
-        "r": "W",
-        "s": "1-0",
-        "opp": "Scotland"
+        "r": "D",
+        "s": "1-1",
+        "opp": "Ecuador"
       },
       {
         "r": "W",
         "s": "2-1",
-        "opp": "France"
+        "opp": "Paraguay"
+      },
+      {
+        "r": "W",
+        "s": "5-0",
+        "opp": "Burundi"
+      },
+      {
+        "r": "W",
+        "s": "4-0",
+        "opp": "Madagascar"
+      },
+      {
+        "r": "D",
+        "s": "1-1",
+        "opp": "Norway"
       }
     ],
     "Iran": [
@@ -6378,6 +6216,249 @@
         "opp": "Mali"
       }
     ],
+    "Switzerland": [
+      {
+        "r": "D",
+        "s": "1-1",
+        "opp": "Kosovo"
+      },
+      {
+        "r": "L",
+        "s": "3-4",
+        "opp": "Germany"
+      },
+      {
+        "r": "D",
+        "s": "0-0",
+        "opp": "Norway"
+      },
+      {
+        "r": "W",
+        "s": "4-1",
+        "opp": "Jordan"
+      },
+      {
+        "r": "D",
+        "s": "1-1",
+        "opp": "Australia"
+      }
+    ],
+    "Turkey": [
+      {
+        "r": "D",
+        "s": "2-2",
+        "opp": "Spain"
+      },
+      {
+        "r": "W",
+        "s": "1-0",
+        "opp": "Romania"
+      },
+      {
+        "r": "W",
+        "s": "1-0",
+        "opp": "Kosovo"
+      },
+      {
+        "r": "W",
+        "s": "4-0",
+        "opp": "North Macedonia"
+      },
+      {
+        "r": "W",
+        "s": "2-1",
+        "opp": "Venezuela"
+      }
+    ],
+    "United States": [
+      {
+        "r": "L",
+        "s": "2-5",
+        "opp": "Belgium"
+      },
+      {
+        "r": "L",
+        "s": "0-2",
+        "opp": "Portugal"
+      },
+      {
+        "r": "W",
+        "s": "3-2",
+        "opp": "Senegal"
+      },
+      {
+        "r": "L",
+        "s": "1-2",
+        "opp": "Germany"
+      },
+      {
+        "r": "W",
+        "s": "4-1",
+        "opp": "Paraguay"
+      }
+    ],
+    "Panama": [
+      {
+        "r": "D",
+        "s": "1-1",
+        "opp": "South Africa"
+      },
+      {
+        "r": "W",
+        "s": "2-1",
+        "opp": "South Africa"
+      },
+      {
+        "r": "L",
+        "s": "2-6",
+        "opp": "Brazil"
+      },
+      {
+        "r": "W",
+        "s": "4-2",
+        "opp": "Dominican Republic"
+      },
+      {
+        "r": "D",
+        "s": "1-1",
+        "opp": "Bosnia and Herzegovina"
+      }
+    ],
+    "Ghana": [
+      {
+        "r": "L",
+        "s": "0-1",
+        "opp": "South Korea"
+      },
+      {
+        "r": "L",
+        "s": "1-5",
+        "opp": "Austria"
+      },
+      {
+        "r": "L",
+        "s": "1-2",
+        "opp": "Germany"
+      },
+      {
+        "r": "L",
+        "s": "0-2",
+        "opp": "Mexico"
+      },
+      {
+        "r": "D",
+        "s": "1-1",
+        "opp": "Wales"
+      }
+    ],
+    "Sweden": [
+      {
+        "r": "D",
+        "s": "1-1",
+        "opp": "Slovenia"
+      },
+      {
+        "r": "W",
+        "s": "3-1",
+        "opp": "Ukraine"
+      },
+      {
+        "r": "W",
+        "s": "3-2",
+        "opp": "Poland"
+      },
+      {
+        "r": "L",
+        "s": "1-3",
+        "opp": "Norway"
+      },
+      {
+        "r": "D",
+        "s": "2-2",
+        "opp": "Greece"
+      }
+    ],
+    "Japan": [
+      {
+        "r": "W",
+        "s": "2-0",
+        "opp": "Ghana"
+      },
+      {
+        "r": "W",
+        "s": "3-0",
+        "opp": "Bolivia"
+      },
+      {
+        "r": "W",
+        "s": "1-0",
+        "opp": "Scotland"
+      },
+      {
+        "r": "W",
+        "s": "1-0",
+        "opp": "England"
+      },
+      {
+        "r": "W",
+        "s": "1-0",
+        "opp": "Iceland"
+      }
+    ],
+    "Colombia": [
+      {
+        "r": "W",
+        "s": "3-0",
+        "opp": "Australia"
+      },
+      {
+        "r": "L",
+        "s": "1-2",
+        "opp": "Croatia"
+      },
+      {
+        "r": "L",
+        "s": "1-3",
+        "opp": "France"
+      },
+      {
+        "r": "W",
+        "s": "3-1",
+        "opp": "Costa Rica"
+      },
+      {
+        "r": "W",
+        "s": "2-0",
+        "opp": "Jordan"
+      }
+    ],
+    "Czech Republic": [
+      {
+        "r": "D",
+        "s": "2-2",
+        "opp": "Republic of Ireland"
+      },
+      {
+        "r": "D",
+        "s": "2-2",
+        "opp": "Denmark"
+      },
+      {
+        "r": "W",
+        "s": "2-1",
+        "opp": "Kosovo"
+      },
+      {
+        "r": "W",
+        "s": "5-1",
+        "opp": "Guatemala"
+      },
+      {
+        "r": "L",
+        "s": "1-2",
+        "opp": "South Korea"
+      }
+    ],
     "Qatar": [
       {
         "r": "L",
@@ -6405,85 +6486,31 @@
         "opp": "El Salvador"
       }
     ],
-    "Cura\u00e7ao": [
+    "Uruguay": [
+      {
+        "r": "W",
+        "s": "2-1",
+        "opp": "Uzbekistan"
+      },
       {
         "r": "D",
         "s": "0-0",
-        "opp": "Jamaica"
-      },
-      {
-        "r": "L",
-        "s": "0-2",
-        "opp": "China"
+        "opp": "Mexico"
       },
       {
         "r": "L",
         "s": "1-5",
-        "opp": "Australia"
-      },
-      {
-        "r": "L",
-        "s": "1-4",
-        "opp": "Scotland"
-      },
-      {
-        "r": "W",
-        "s": "4-0",
-        "opp": "Aruba"
-      }
-    ],
-    "Spain": [
-      {
-        "r": "D",
-        "s": "2-2",
-        "opp": "Turkey"
-      },
-      {
-        "r": "W",
-        "s": "3-0",
-        "opp": "Serbia"
-      },
-      {
-        "r": "D",
-        "s": "0-0",
-        "opp": "Egypt"
+        "opp": "United States"
       },
       {
         "r": "D",
         "s": "1-1",
-        "opp": "Iraq"
-      },
-      {
-        "r": "W",
-        "s": "3-1",
-        "opp": "Peru"
-      }
-    ],
-    "DR Congo": [
-      {
-        "r": "L",
-        "s": "0-1",
-        "opp": "Algeria"
-      },
-      {
-        "r": "W",
-        "s": "2-0",
-        "opp": "Bermuda"
-      },
-      {
-        "r": "W",
-        "s": "1-0",
-        "opp": "Jamaica"
+        "opp": "England"
       },
       {
         "r": "D",
         "s": "0-0",
-        "opp": "Denmark"
-      },
-      {
-        "r": "L",
-        "s": "1-2",
-        "opp": "Chile"
+        "opp": "Algeria"
       }
     ],
     "England": [
@@ -6540,93 +6567,34 @@
         "opp": "South Africa"
       }
     ],
-    "Saudi Arabia": [
+    "DR Congo": [
       {
         "r": "L",
-        "s": "0-4",
-        "opp": "Egypt"
-      },
-      {
-        "r": "L",
-        "s": "1-2",
-        "opp": "Serbia"
-      },
-      {
-        "r": "L",
-        "s": "1-2",
-        "opp": "Ecuador"
+        "s": "0-1",
+        "opp": "Algeria"
       },
       {
         "r": "W",
-        "s": "3-0",
-        "opp": "Puerto Rico"
+        "s": "2-0",
+        "opp": "Bermuda"
+      },
+      {
+        "r": "W",
+        "s": "1-0",
+        "opp": "Jamaica"
       },
       {
         "r": "D",
         "s": "0-0",
-        "opp": "Senegal"
-      }
-    ],
-    "Uzbekistan": [
-      {
-        "r": "D",
-        "s": "2-2",
-        "opp": "China"
-      },
-      {
-        "r": "W",
-        "s": "3-1",
-        "opp": "Gabon"
-      },
-      {
-        "r": "D",
-        "s": "0-0",
-        "opp": "Venezuela"
-      },
-      {
-        "r": "L",
-        "s": "0-2",
-        "opp": "Canada"
+        "opp": "Denmark"
       },
       {
         "r": "L",
         "s": "1-2",
-        "opp": "Netherlands"
-      }
-    ],
-    "Panama": [
-      {
-        "r": "D",
-        "s": "1-1",
-        "opp": "South Africa"
-      },
-      {
-        "r": "W",
-        "s": "2-1",
-        "opp": "South Africa"
-      },
-      {
-        "r": "L",
-        "s": "2-6",
-        "opp": "Brazil"
-      },
-      {
-        "r": "W",
-        "s": "4-2",
-        "opp": "Dominican Republic"
-      },
-      {
-        "r": "D",
-        "s": "1-1",
-        "opp": "Bosnia and Herzegovina"
+        "opp": "Chile"
       }
     ],
     "Paraguay": [
-      {
-        "r": "L",
-        "s": "1-2",
-        "opp": "United States"
-      },
       {
         "r": "W",
         "s": "2-1",
@@ -6646,546 +6614,11 @@
         "r": "W",
         "s": "4-0",
         "opp": "Nicaragua"
-      }
-    ],
-    "South Korea": [
-      {
-        "r": "L",
-        "s": "0-4",
-        "opp": "Ivory Coast"
-      },
-      {
-        "r": "L",
-        "s": "0-1",
-        "opp": "Austria"
-      },
-      {
-        "r": "W",
-        "s": "5-0",
-        "opp": "Trinidad and Tobago"
-      },
-      {
-        "r": "W",
-        "s": "1-0",
-        "opp": "El Salvador"
-      },
-      {
-        "r": "W",
-        "s": "2-1",
-        "opp": "Czech Republic"
-      }
-    ],
-    "Cape Verde": [
-      {
-        "r": "D",
-        "s": "1-1",
-        "opp": "Egypt"
-      },
-      {
-        "r": "L",
-        "s": "2-4",
-        "opp": "Chile"
-      },
-      {
-        "r": "D",
-        "s": "1-1",
-        "opp": "Finland"
-      },
-      {
-        "r": "W",
-        "s": "3-0",
-        "opp": "Serbia"
-      },
-      {
-        "r": "L",
-        "s": "0-3",
-        "opp": "Bermuda"
-      }
-    ],
-    "Colombia": [
-      {
-        "r": "W",
-        "s": "3-0",
-        "opp": "Australia"
-      },
-      {
-        "r": "L",
-        "s": "1-2",
-        "opp": "Croatia"
-      },
-      {
-        "r": "L",
-        "s": "1-3",
-        "opp": "France"
-      },
-      {
-        "r": "W",
-        "s": "3-1",
-        "opp": "Costa Rica"
-      },
-      {
-        "r": "W",
-        "s": "2-0",
-        "opp": "Jordan"
-      }
-    ],
-    "Switzerland": [
-      {
-        "r": "D",
-        "s": "1-1",
-        "opp": "Kosovo"
-      },
-      {
-        "r": "L",
-        "s": "3-4",
-        "opp": "Germany"
-      },
-      {
-        "r": "D",
-        "s": "0-0",
-        "opp": "Norway"
-      },
-      {
-        "r": "W",
-        "s": "4-1",
-        "opp": "Jordan"
-      },
-      {
-        "r": "D",
-        "s": "1-1",
-        "opp": "Australia"
-      }
-    ],
-    "South Africa": [
-      {
-        "r": "D",
-        "s": "1-1",
-        "opp": "Panama"
-      },
-      {
-        "r": "L",
-        "s": "1-2",
-        "opp": "Panama"
-      },
-      {
-        "r": "D",
-        "s": "0-0",
-        "opp": "Nicaragua"
-      },
-      {
-        "r": "W",
-        "s": "1-0",
-        "opp": "Jamaica"
-      },
-      {
-        "r": "L",
-        "s": "0-2",
-        "opp": "Mexico"
-      }
-    ],
-    "Scotland": [
-      {
-        "r": "W",
-        "s": "4-2",
-        "opp": "Denmark"
-      },
-      {
-        "r": "L",
-        "s": "0-1",
-        "opp": "Japan"
-      },
-      {
-        "r": "L",
-        "s": "0-1",
-        "opp": "Ivory Coast"
-      },
-      {
-        "r": "W",
-        "s": "4-1",
-        "opp": "Cura\u00e7ao"
-      },
-      {
-        "r": "W",
-        "s": "4-0",
-        "opp": "Bolivia"
-      }
-    ],
-    "Canada": [
-      {
-        "r": "W",
-        "s": "2-0",
-        "opp": "Venezuela"
-      },
-      {
-        "r": "D",
-        "s": "2-2",
-        "opp": "Iceland"
-      },
-      {
-        "r": "D",
-        "s": "0-0",
-        "opp": "Tunisia"
-      },
-      {
-        "r": "W",
-        "s": "2-0",
-        "opp": "Uzbekistan"
-      },
-      {
-        "r": "D",
-        "s": "1-1",
-        "opp": "Republic of Ireland"
-      }
-    ],
-    "Haiti": [
-      {
-        "r": "W",
-        "s": "2-0",
-        "opp": "Nicaragua"
-      },
-      {
-        "r": "L",
-        "s": "0-1",
-        "opp": "Tunisia"
-      },
-      {
-        "r": "D",
-        "s": "1-1",
-        "opp": "Iceland"
-      },
-      {
-        "r": "W",
-        "s": "4-0",
-        "opp": "New Zealand"
-      },
-      {
-        "r": "L",
-        "s": "1-2",
-        "opp": "Peru"
-      }
-    ],
-    "Norway": [
-      {
-        "r": "W",
-        "s": "4-1",
-        "opp": "Italy"
-      },
-      {
-        "r": "L",
-        "s": "1-2",
-        "opp": "Netherlands"
-      },
-      {
-        "r": "D",
-        "s": "0-0",
-        "opp": "Switzerland"
-      },
-      {
-        "r": "W",
-        "s": "3-1",
-        "opp": "Sweden"
-      },
-      {
-        "r": "D",
-        "s": "1-1",
-        "opp": "Morocco"
-      }
-    ],
-    "Croatia": [
-      {
-        "r": "W",
-        "s": "3-2",
-        "opp": "Montenegro"
-      },
-      {
-        "r": "W",
-        "s": "2-1",
-        "opp": "Colombia"
-      },
-      {
-        "r": "L",
-        "s": "1-3",
-        "opp": "Brazil"
-      },
-      {
-        "r": "L",
-        "s": "0-2",
-        "opp": "Belgium"
-      },
-      {
-        "r": "W",
-        "s": "2-1",
-        "opp": "Slovenia"
-      }
-    ],
-    "France": [
-      {
-        "r": "W",
-        "s": "3-1",
-        "opp": "Azerbaijan"
-      },
-      {
-        "r": "W",
-        "s": "2-1",
-        "opp": "Brazil"
-      },
-      {
-        "r": "W",
-        "s": "3-1",
-        "opp": "Colombia"
-      },
-      {
-        "r": "L",
-        "s": "1-2",
-        "opp": "Ivory Coast"
-      },
-      {
-        "r": "W",
-        "s": "3-1",
-        "opp": "Northern Ireland"
-      }
-    ],
-    "Australia": [
-      {
-        "r": "L",
-        "s": "0-3",
-        "opp": "Colombia"
-      },
-      {
-        "r": "W",
-        "s": "1-0",
-        "opp": "Cameroon"
-      },
-      {
-        "r": "W",
-        "s": "5-1",
-        "opp": "Cura\u00e7ao"
-      },
-      {
-        "r": "L",
-        "s": "0-1",
-        "opp": "Mexico"
-      },
-      {
-        "r": "D",
-        "s": "1-1",
-        "opp": "Switzerland"
-      }
-    ],
-    "Uruguay": [
-      {
-        "r": "W",
-        "s": "2-1",
-        "opp": "Uzbekistan"
-      },
-      {
-        "r": "D",
-        "s": "0-0",
-        "opp": "Mexico"
-      },
-      {
-        "r": "L",
-        "s": "1-5",
-        "opp": "United States"
-      },
-      {
-        "r": "D",
-        "s": "1-1",
-        "opp": "England"
-      },
-      {
-        "r": "D",
-        "s": "0-0",
-        "opp": "Algeria"
-      }
-    ],
-    "Algeria": [
-      {
-        "r": "L",
-        "s": "0-2",
-        "opp": "Nigeria"
-      },
-      {
-        "r": "W",
-        "s": "7-0",
-        "opp": "Guatemala"
-      },
-      {
-        "r": "D",
-        "s": "0-0",
-        "opp": "Uruguay"
-      },
-      {
-        "r": "W",
-        "s": "1-0",
-        "opp": "Netherlands"
-      },
-      {
-        "r": "W",
-        "s": "4-0",
-        "opp": "Bolivia"
-      }
-    ],
-    "Jordan": [
-      {
-        "r": "L",
-        "s": "2-3",
-        "opp": "Morocco"
-      },
-      {
-        "r": "D",
-        "s": "2-2",
-        "opp": "Costa Rica"
-      },
-      {
-        "r": "D",
-        "s": "2-2",
-        "opp": "Nigeria"
       },
       {
         "r": "L",
         "s": "1-4",
-        "opp": "Switzerland"
-      },
-      {
-        "r": "L",
-        "s": "0-2",
-        "opp": "Colombia"
-      }
-    ],
-    "Brazil": [
-      {
-        "r": "D",
-        "s": "1-1",
-        "opp": "Tunisia"
-      },
-      {
-        "r": "L",
-        "s": "1-2",
-        "opp": "France"
-      },
-      {
-        "r": "W",
-        "s": "3-1",
-        "opp": "Croatia"
-      },
-      {
-        "r": "W",
-        "s": "6-2",
-        "opp": "Panama"
-      },
-      {
-        "r": "W",
-        "s": "2-1",
-        "opp": "Egypt"
-      }
-    ],
-    "Senegal": [
-      {
-        "r": "L",
-        "s": "0-3",
-        "opp": "Morocco"
-      },
-      {
-        "r": "W",
-        "s": "2-0",
-        "opp": "Peru"
-      },
-      {
-        "r": "W",
-        "s": "3-1",
-        "opp": "Gambia"
-      },
-      {
-        "r": "L",
-        "s": "2-3",
         "opp": "United States"
-      },
-      {
-        "r": "D",
-        "s": "0-0",
-        "opp": "Saudi Arabia"
-      }
-    ],
-    "New Zealand": [
-      {
-        "r": "L",
-        "s": "0-2",
-        "opp": "Ecuador"
-      },
-      {
-        "r": "L",
-        "s": "0-2",
-        "opp": "Finland"
-      },
-      {
-        "r": "W",
-        "s": "4-1",
-        "opp": "Chile"
-      },
-      {
-        "r": "L",
-        "s": "0-4",
-        "opp": "Haiti"
-      },
-      {
-        "r": "L",
-        "s": "0-1",
-        "opp": "England"
-      }
-    ],
-    "Turkey": [
-      {
-        "r": "D",
-        "s": "2-2",
-        "opp": "Spain"
-      },
-      {
-        "r": "W",
-        "s": "1-0",
-        "opp": "Romania"
-      },
-      {
-        "r": "W",
-        "s": "1-0",
-        "opp": "Kosovo"
-      },
-      {
-        "r": "W",
-        "s": "4-0",
-        "opp": "North Macedonia"
-      },
-      {
-        "r": "W",
-        "s": "2-1",
-        "opp": "Venezuela"
-      }
-    ],
-    "Ghana": [
-      {
-        "r": "L",
-        "s": "0-1",
-        "opp": "South Korea"
-      },
-      {
-        "r": "L",
-        "s": "1-5",
-        "opp": "Austria"
-      },
-      {
-        "r": "L",
-        "s": "1-2",
-        "opp": "Germany"
-      },
-      {
-        "r": "L",
-        "s": "0-2",
-        "opp": "Mexico"
-      },
-      {
-        "r": "D",
-        "s": "1-1",
-        "opp": "Wales"
       }
     ],
     "Tunisia": [
@@ -7215,31 +6648,139 @@
         "opp": "Belgium"
       }
     ],
-    "Belgium": [
+    "Scotland": [
       {
         "r": "W",
-        "s": "7-0",
-        "opp": "Liechtenstein"
+        "s": "4-2",
+        "opp": "Denmark"
+      },
+      {
+        "r": "L",
+        "s": "0-1",
+        "opp": "Japan"
+      },
+      {
+        "r": "L",
+        "s": "0-1",
+        "opp": "Ivory Coast"
       },
       {
         "r": "W",
-        "s": "5-2",
-        "opp": "United States"
+        "s": "4-1",
+        "opp": "Cura\u00e7ao"
+      },
+      {
+        "r": "W",
+        "s": "4-0",
+        "opp": "Bolivia"
+      }
+    ],
+    "Croatia": [
+      {
+        "r": "W",
+        "s": "3-2",
+        "opp": "Montenegro"
+      },
+      {
+        "r": "W",
+        "s": "2-1",
+        "opp": "Colombia"
+      },
+      {
+        "r": "L",
+        "s": "1-3",
+        "opp": "Brazil"
+      },
+      {
+        "r": "L",
+        "s": "0-2",
+        "opp": "Belgium"
+      },
+      {
+        "r": "W",
+        "s": "2-1",
+        "opp": "Slovenia"
+      }
+    ],
+    "Egypt": [
+      {
+        "r": "D",
+        "s": "0-0",
+        "opp": "Nigeria"
+      },
+      {
+        "r": "W",
+        "s": "4-0",
+        "opp": "Saudi Arabia"
       },
       {
         "r": "D",
+        "s": "0-0",
+        "opp": "Spain"
+      },
+      {
+        "r": "W",
+        "s": "1-0",
+        "opp": "Russia"
+      },
+      {
+        "r": "L",
+        "s": "1-2",
+        "opp": "Brazil"
+      }
+    ],
+    "South Africa": [
+      {
+        "r": "D",
         "s": "1-1",
+        "opp": "Panama"
+      },
+      {
+        "r": "L",
+        "s": "1-2",
+        "opp": "Panama"
+      },
+      {
+        "r": "D",
+        "s": "0-0",
+        "opp": "Nicaragua"
+      },
+      {
+        "r": "W",
+        "s": "1-0",
+        "opp": "Jamaica"
+      },
+      {
+        "r": "L",
+        "s": "0-2",
         "opp": "Mexico"
+      }
+    ],
+    "France": [
+      {
+        "r": "W",
+        "s": "3-1",
+        "opp": "Azerbaijan"
       },
       {
         "r": "W",
-        "s": "2-0",
-        "opp": "Croatia"
+        "s": "2-1",
+        "opp": "Brazil"
       },
       {
         "r": "W",
-        "s": "5-0",
-        "opp": "Tunisia"
+        "s": "3-1",
+        "opp": "Colombia"
+      },
+      {
+        "r": "L",
+        "s": "1-2",
+        "opp": "Ivory Coast"
+      },
+      {
+        "r": "W",
+        "s": "3-1",
+        "opp": "Northern Ireland"
       }
     ],
     "Argentina": [
@@ -7269,58 +6810,112 @@
         "opp": "Iceland"
       }
     ],
-    "Germany": [
+    "Algeria": [
       {
-        "r": "W",
-        "s": "6-0",
-        "opp": "Slovakia"
+        "r": "L",
+        "s": "0-2",
+        "opp": "Nigeria"
       },
       {
         "r": "W",
-        "s": "4-3",
-        "opp": "Switzerland"
-      },
-      {
-        "r": "W",
-        "s": "2-1",
-        "opp": "Ghana"
-      },
-      {
-        "r": "W",
-        "s": "4-0",
-        "opp": "Finland"
-      },
-      {
-        "r": "W",
-        "s": "2-1",
-        "opp": "United States"
-      }
-    ],
-    "Portugal": [
-      {
-        "r": "W",
-        "s": "9-1",
-        "opp": "Armenia"
+        "s": "7-0",
+        "opp": "Guatemala"
       },
       {
         "r": "D",
         "s": "0-0",
+        "opp": "Uruguay"
+      },
+      {
+        "r": "W",
+        "s": "1-0",
+        "opp": "Netherlands"
+      },
+      {
+        "r": "W",
+        "s": "4-0",
+        "opp": "Bolivia"
+      }
+    ],
+    "Belgium": [
+      {
+        "r": "W",
+        "s": "7-0",
+        "opp": "Liechtenstein"
+      },
+      {
+        "r": "W",
+        "s": "5-2",
+        "opp": "United States"
+      },
+      {
+        "r": "D",
+        "s": "1-1",
         "opp": "Mexico"
       },
       {
         "r": "W",
         "s": "2-0",
-        "opp": "United States"
+        "opp": "Croatia"
       },
       {
         "r": "W",
-        "s": "2-1",
+        "s": "5-0",
+        "opp": "Tunisia"
+      }
+    ],
+    "Spain": [
+      {
+        "r": "D",
+        "s": "2-2",
+        "opp": "Turkey"
+      },
+      {
+        "r": "W",
+        "s": "3-0",
+        "opp": "Serbia"
+      },
+      {
+        "r": "D",
+        "s": "0-0",
+        "opp": "Egypt"
+      },
+      {
+        "r": "D",
+        "s": "1-1",
+        "opp": "Iraq"
+      },
+      {
+        "r": "W",
+        "s": "3-1",
+        "opp": "Peru"
+      }
+    ],
+    "New Zealand": [
+      {
+        "r": "L",
+        "s": "0-2",
+        "opp": "Ecuador"
+      },
+      {
+        "r": "L",
+        "s": "0-2",
+        "opp": "Finland"
+      },
+      {
+        "r": "W",
+        "s": "4-1",
         "opp": "Chile"
       },
       {
-        "r": "W",
-        "s": "2-1",
-        "opp": "Nigeria"
+        "r": "L",
+        "s": "0-4",
+        "opp": "Haiti"
+      },
+      {
+        "r": "L",
+        "s": "0-1",
+        "opp": "England"
       }
     ],
     "Ecuador": [
@@ -7350,6 +6945,330 @@
         "opp": "Guatemala"
       }
     ],
+    "Portugal": [
+      {
+        "r": "W",
+        "s": "9-1",
+        "opp": "Armenia"
+      },
+      {
+        "r": "D",
+        "s": "0-0",
+        "opp": "Mexico"
+      },
+      {
+        "r": "W",
+        "s": "2-0",
+        "opp": "United States"
+      },
+      {
+        "r": "W",
+        "s": "2-1",
+        "opp": "Chile"
+      },
+      {
+        "r": "W",
+        "s": "2-1",
+        "opp": "Nigeria"
+      }
+    ],
+    "Bosnia and Herzegovina": [
+      {
+        "r": "D",
+        "s": "1-1",
+        "opp": "Wales"
+      },
+      {
+        "r": "D",
+        "s": "1-1",
+        "opp": "Italy"
+      },
+      {
+        "r": "D",
+        "s": "0-0",
+        "opp": "North Macedonia"
+      },
+      {
+        "r": "D",
+        "s": "1-1",
+        "opp": "Panama"
+      },
+      {
+        "r": "D",
+        "s": "1-1",
+        "opp": "Canada"
+      }
+    ],
+    "Brazil": [
+      {
+        "r": "D",
+        "s": "1-1",
+        "opp": "Tunisia"
+      },
+      {
+        "r": "L",
+        "s": "1-2",
+        "opp": "France"
+      },
+      {
+        "r": "W",
+        "s": "3-1",
+        "opp": "Croatia"
+      },
+      {
+        "r": "W",
+        "s": "6-2",
+        "opp": "Panama"
+      },
+      {
+        "r": "W",
+        "s": "2-1",
+        "opp": "Egypt"
+      }
+    ],
+    "Norway": [
+      {
+        "r": "W",
+        "s": "4-1",
+        "opp": "Italy"
+      },
+      {
+        "r": "L",
+        "s": "1-2",
+        "opp": "Netherlands"
+      },
+      {
+        "r": "D",
+        "s": "0-0",
+        "opp": "Switzerland"
+      },
+      {
+        "r": "W",
+        "s": "3-1",
+        "opp": "Sweden"
+      },
+      {
+        "r": "D",
+        "s": "1-1",
+        "opp": "Morocco"
+      }
+    ],
+    "Jordan": [
+      {
+        "r": "L",
+        "s": "2-3",
+        "opp": "Morocco"
+      },
+      {
+        "r": "D",
+        "s": "2-2",
+        "opp": "Costa Rica"
+      },
+      {
+        "r": "D",
+        "s": "2-2",
+        "opp": "Nigeria"
+      },
+      {
+        "r": "L",
+        "s": "1-4",
+        "opp": "Switzerland"
+      },
+      {
+        "r": "L",
+        "s": "0-2",
+        "opp": "Colombia"
+      }
+    ],
+    "Haiti": [
+      {
+        "r": "W",
+        "s": "2-0",
+        "opp": "Nicaragua"
+      },
+      {
+        "r": "L",
+        "s": "0-1",
+        "opp": "Tunisia"
+      },
+      {
+        "r": "D",
+        "s": "1-1",
+        "opp": "Iceland"
+      },
+      {
+        "r": "W",
+        "s": "4-0",
+        "opp": "New Zealand"
+      },
+      {
+        "r": "L",
+        "s": "1-2",
+        "opp": "Peru"
+      }
+    ],
+    "Uzbekistan": [
+      {
+        "r": "D",
+        "s": "2-2",
+        "opp": "China"
+      },
+      {
+        "r": "W",
+        "s": "3-1",
+        "opp": "Gabon"
+      },
+      {
+        "r": "D",
+        "s": "0-0",
+        "opp": "Venezuela"
+      },
+      {
+        "r": "L",
+        "s": "0-2",
+        "opp": "Canada"
+      },
+      {
+        "r": "L",
+        "s": "1-2",
+        "opp": "Netherlands"
+      }
+    ],
+    "Australia": [
+      {
+        "r": "L",
+        "s": "0-3",
+        "opp": "Colombia"
+      },
+      {
+        "r": "W",
+        "s": "1-0",
+        "opp": "Cameroon"
+      },
+      {
+        "r": "W",
+        "s": "5-1",
+        "opp": "Cura\u00e7ao"
+      },
+      {
+        "r": "L",
+        "s": "0-1",
+        "opp": "Mexico"
+      },
+      {
+        "r": "D",
+        "s": "1-1",
+        "opp": "Switzerland"
+      }
+    ],
+    "Cape Verde": [
+      {
+        "r": "D",
+        "s": "1-1",
+        "opp": "Egypt"
+      },
+      {
+        "r": "L",
+        "s": "2-4",
+        "opp": "Chile"
+      },
+      {
+        "r": "D",
+        "s": "1-1",
+        "opp": "Finland"
+      },
+      {
+        "r": "W",
+        "s": "3-0",
+        "opp": "Serbia"
+      },
+      {
+        "r": "L",
+        "s": "0-3",
+        "opp": "Bermuda"
+      }
+    ],
+    "Saudi Arabia": [
+      {
+        "r": "L",
+        "s": "0-4",
+        "opp": "Egypt"
+      },
+      {
+        "r": "L",
+        "s": "1-2",
+        "opp": "Serbia"
+      },
+      {
+        "r": "L",
+        "s": "1-2",
+        "opp": "Ecuador"
+      },
+      {
+        "r": "W",
+        "s": "3-0",
+        "opp": "Puerto Rico"
+      },
+      {
+        "r": "D",
+        "s": "0-0",
+        "opp": "Senegal"
+      }
+    ],
+    "Austria": [
+      {
+        "r": "W",
+        "s": "2-0",
+        "opp": "Cyprus"
+      },
+      {
+        "r": "D",
+        "s": "1-1",
+        "opp": "Bosnia and Herzegovina"
+      },
+      {
+        "r": "W",
+        "s": "5-1",
+        "opp": "Ghana"
+      },
+      {
+        "r": "W",
+        "s": "1-0",
+        "opp": "South Korea"
+      },
+      {
+        "r": "W",
+        "s": "1-0",
+        "opp": "Tunisia"
+      }
+    ],
+    "South Korea": [
+      {
+        "r": "L",
+        "s": "0-4",
+        "opp": "Ivory Coast"
+      },
+      {
+        "r": "L",
+        "s": "0-1",
+        "opp": "Austria"
+      },
+      {
+        "r": "W",
+        "s": "5-0",
+        "opp": "Trinidad and Tobago"
+      },
+      {
+        "r": "W",
+        "s": "1-0",
+        "opp": "El Salvador"
+      },
+      {
+        "r": "W",
+        "s": "2-1",
+        "opp": "Czech Republic"
+      }
+    ],
     "Iraq": [
       {
         "r": "L",
@@ -7376,440 +7295,521 @@
         "s": "0-2",
         "opp": "Venezuela"
       }
+    ],
+    "Ivory Coast": [
+      {
+        "r": "W",
+        "s": "3-0",
+        "opp": "Burkina Faso"
+      },
+      {
+        "r": "L",
+        "s": "2-3",
+        "opp": "Egypt"
+      },
+      {
+        "r": "W",
+        "s": "4-0",
+        "opp": "South Korea"
+      },
+      {
+        "r": "W",
+        "s": "1-0",
+        "opp": "Scotland"
+      },
+      {
+        "r": "W",
+        "s": "2-1",
+        "opp": "France"
+      }
+    ],
+    "Canada": [
+      {
+        "r": "D",
+        "s": "2-2",
+        "opp": "Iceland"
+      },
+      {
+        "r": "D",
+        "s": "0-0",
+        "opp": "Tunisia"
+      },
+      {
+        "r": "W",
+        "s": "2-0",
+        "opp": "Uzbekistan"
+      },
+      {
+        "r": "D",
+        "s": "1-1",
+        "opp": "Republic of Ireland"
+      },
+      {
+        "r": "D",
+        "s": "1-1",
+        "opp": "Bosnia and Herzegovina"
+      }
+    ],
+    "Senegal": [
+      {
+        "r": "L",
+        "s": "0-3",
+        "opp": "Morocco"
+      },
+      {
+        "r": "W",
+        "s": "2-0",
+        "opp": "Peru"
+      },
+      {
+        "r": "W",
+        "s": "3-1",
+        "opp": "Gambia"
+      },
+      {
+        "r": "L",
+        "s": "2-3",
+        "opp": "United States"
+      },
+      {
+        "r": "D",
+        "s": "0-0",
+        "opp": "Saudi Arabia"
+      }
     ]
   },
   "tournament": {
     "Mexico": {
-      "win_group": 0.4629,
-      "advance": 0.9022,
-      "R16": 0.5323,
-      "QF": 0.257,
-      "SF": 0.1179,
-      "Final": 0.049,
-      "champion": 0.0207
+      "win_group": 0.5395,
+      "advance": 0.9886,
+      "R16": 0.5998,
+      "QF": 0.2882,
+      "SF": 0.1289,
+      "Final": 0.0542,
+      "champion": 0.0216
     },
     "South Africa": {
-      "win_group": 0.0566,
-      "advance": 0.3814,
-      "R16": 0.108,
-      "QF": 0.0247,
-      "SF": 0.0045,
-      "Final": 0.0005,
-      "champion": 0.0001
+      "win_group": 0.0098,
+      "advance": 0.2354,
+      "R16": 0.0628,
+      "QF": 0.0143,
+      "SF": 0.0027,
+      "Final": 0.0004,
+      "champion": 0.0002
     },
     "South Korea": {
-      "win_group": 0.3646,
-      "advance": 0.8578,
-      "R16": 0.4513,
-      "QF": 0.187,
-      "SF": 0.072,
-      "Final": 0.0263,
-      "champion": 0.0091
+      "win_group": 0.4264,
+      "advance": 0.9792,
+      "R16": 0.5502,
+      "QF": 0.2213,
+      "SF": 0.0936,
+      "Final": 0.0337,
+      "champion": 0.0119
     },
     "Czech Republic": {
-      "win_group": 0.1159,
-      "advance": 0.5613,
-      "R16": 0.2062,
-      "QF": 0.057,
-      "SF": 0.0155,
-      "Final": 0.0038,
-      "champion": 0.0008
+      "win_group": 0.0243,
+      "advance": 0.4713,
+      "R16": 0.1643,
+      "QF": 0.0491,
+      "SF": 0.0114,
+      "Final": 0.0032,
+      "champion": 0.0004
     },
     "Canada": {
-      "win_group": 0.4447,
-      "advance": 0.9345,
-      "R16": 0.507,
-      "QF": 0.202,
-      "SF": 0.0782,
-      "Final": 0.0309,
-      "champion": 0.0115
+      "win_group": 0.3156,
+      "advance": 0.8508,
+      "R16": 0.4279,
+      "QF": 0.1671,
+      "SF": 0.0617,
+      "Final": 0.0244,
+      "champion": 0.0079
     },
     "Bosnia and Herzegovina": {
-      "win_group": 0.034,
-      "advance": 0.3602,
-      "R16": 0.0803,
-      "QF": 0.014,
-      "SF": 0.0023,
+      "win_group": 0.0534,
+      "advance": 0.4487,
+      "R16": 0.0985,
+      "QF": 0.0177,
+      "SF": 0.0031,
       "Final": 0.0004,
       "champion": 0.0001
     },
     "Qatar": {
-      "win_group": 0.0386,
-      "advance": 0.3911,
-      "R16": 0.074,
-      "QF": 0.0129,
-      "SF": 0.0015,
-      "Final": 0.0001,
-      "champion": 0.0
+      "win_group": 0.0754,
+      "advance": 0.4364,
+      "R16": 0.0891,
+      "QF": 0.0146,
+      "SF": 0.0019,
+      "Final": 0.0003,
+      "champion": 0.0001
     },
     "Switzerland": {
-      "win_group": 0.4827,
-      "advance": 0.945,
-      "R16": 0.5436,
-      "QF": 0.2294,
-      "SF": 0.088,
-      "Final": 0.0362,
-      "champion": 0.0126
+      "win_group": 0.5555,
+      "advance": 0.9245,
+      "R16": 0.5072,
+      "QF": 0.2124,
+      "SF": 0.0769,
+      "Final": 0.0307,
+      "champion": 0.0114
     },
     "Brazil": {
-      "win_group": 0.695,
-      "advance": 0.9882,
-      "R16": 0.6694,
-      "QF": 0.4447,
-      "SF": 0.2858,
-      "Final": 0.1553,
-      "champion": 0.0893
+      "win_group": 0.6129,
+      "advance": 0.9781,
+      "R16": 0.6234,
+      "QF": 0.4102,
+      "SF": 0.259,
+      "Final": 0.1432,
+      "champion": 0.0794
     },
     "Morocco": {
-      "win_group": 0.2621,
-      "advance": 0.9099,
-      "R16": 0.4955,
-      "QF": 0.301,
-      "SF": 0.1606,
-      "Final": 0.0781,
-      "champion": 0.0341
+      "win_group": 0.3352,
+      "advance": 0.9267,
+      "R16": 0.5136,
+      "QF": 0.3031,
+      "SF": 0.1664,
+      "Final": 0.0838,
+      "champion": 0.0399
     },
     "Haiti": {
-      "win_group": 0.0088,
-      "advance": 0.2098,
-      "R16": 0.0427,
-      "QF": 0.0095,
+      "win_group": 0.0146,
+      "advance": 0.2485,
+      "R16": 0.0503,
+      "QF": 0.012,
       "SF": 0.0015,
       "Final": 0.0003,
       "champion": 0.0001
     },
     "Scotland": {
-      "win_group": 0.0341,
-      "advance": 0.4931,
-      "R16": 0.1605,
-      "QF": 0.0576,
-      "SF": 0.0177,
-      "Final": 0.0049,
-      "champion": 0.0013
+      "win_group": 0.0374,
+      "advance": 0.4611,
+      "R16": 0.1452,
+      "QF": 0.0534,
+      "SF": 0.0158,
+      "Final": 0.0045,
+      "champion": 0.0011
     },
     "United States": {
-      "win_group": 0.1812,
-      "advance": 0.6298,
-      "R16": 0.2964,
-      "QF": 0.1043,
-      "SF": 0.0345,
-      "Final": 0.0132,
-      "champion": 0.0043
+      "win_group": 0.5526,
+      "advance": 0.9675,
+      "R16": 0.5296,
+      "QF": 0.2267,
+      "SF": 0.0846,
+      "Final": 0.0316,
+      "champion": 0.0097
     },
     "Paraguay": {
-      "win_group": 0.3698,
-      "advance": 0.8224,
-      "R16": 0.4803,
-      "QF": 0.2231,
-      "SF": 0.0955,
-      "Final": 0.043,
-      "champion": 0.0171
+      "win_group": 0.0447,
+      "advance": 0.5132,
+      "R16": 0.2463,
+      "QF": 0.0997,
+      "SF": 0.0393,
+      "Final": 0.0158,
+      "champion": 0.006
     },
     "Australia": {
-      "win_group": 0.3239,
-      "advance": 0.7941,
-      "R16": 0.4417,
-      "QF": 0.2032,
-      "SF": 0.0829,
-      "Final": 0.0372,
-      "champion": 0.0143
+      "win_group": 0.3132,
+      "advance": 0.8192,
+      "R16": 0.4642,
+      "QF": 0.2067,
+      "SF": 0.0856,
+      "Final": 0.0361,
+      "champion": 0.0142
     },
     "Turkey": {
-      "win_group": 0.1252,
-      "advance": 0.5063,
-      "R16": 0.2432,
-      "QF": 0.0927,
-      "SF": 0.0344,
-      "Final": 0.0125,
-      "champion": 0.0044
+      "win_group": 0.0893,
+      "advance": 0.45,
+      "R16": 0.21,
+      "QF": 0.0767,
+      "SF": 0.0277,
+      "Final": 0.0085,
+      "champion": 0.0027
     },
     "Germany": {
-      "win_group": 0.3623,
-      "advance": 0.926,
-      "R16": 0.5543,
-      "QF": 0.2742,
-      "SF": 0.1315,
-      "Final": 0.059,
-      "champion": 0.024
+      "win_group": 0.3273,
+      "advance": 0.9061,
+      "R16": 0.5375,
+      "QF": 0.2719,
+      "SF": 0.1321,
+      "Final": 0.0549,
+      "champion": 0.0235
     },
     "Cura\u00e7ao": {
-      "win_group": 0.0073,
-      "advance": 0.111,
-      "R16": 0.0211,
-      "QF": 0.0035,
-      "SF": 0.0004,
+      "win_group": 0.0081,
+      "advance": 0.1328,
+      "R16": 0.0228,
+      "QF": 0.0039,
+      "SF": 0.0006,
       "Final": 0.0,
       "champion": 0.0
     },
     "Ivory Coast": {
-      "win_group": 0.1438,
-      "advance": 0.757,
+      "win_group": 0.137,
+      "advance": 0.738,
       "R16": 0.3151,
-      "QF": 0.1125,
-      "SF": 0.0374,
-      "Final": 0.0111,
-      "champion": 0.0035
+      "QF": 0.1153,
+      "SF": 0.0389,
+      "Final": 0.0125,
+      "champion": 0.0029
     },
     "Ecuador": {
-      "win_group": 0.4865,
-      "advance": 0.9534,
-      "R16": 0.62,
-      "QF": 0.3523,
-      "SF": 0.1949,
-      "Final": 0.0981,
-      "champion": 0.0494
+      "win_group": 0.5275,
+      "advance": 0.9568,
+      "R16": 0.6341,
+      "QF": 0.364,
+      "SF": 0.2004,
+      "Final": 0.1045,
+      "champion": 0.052
     },
     "Netherlands": {
-      "win_group": 0.3257,
-      "advance": 0.8599,
-      "R16": 0.4026,
-      "QF": 0.2243,
-      "SF": 0.1127,
-      "Final": 0.051,
-      "champion": 0.0219
+      "win_group": 0.2706,
+      "advance": 0.8634,
+      "R16": 0.3939,
+      "QF": 0.2151,
+      "SF": 0.104,
+      "Final": 0.0445,
+      "champion": 0.0183
     },
     "Japan": {
-      "win_group": 0.5564,
-      "advance": 0.9409,
-      "R16": 0.4928,
-      "QF": 0.3113,
-      "SF": 0.1717,
-      "Final": 0.0862,
-      "champion": 0.0406
+      "win_group": 0.6475,
+      "advance": 0.97,
+      "R16": 0.5379,
+      "QF": 0.3527,
+      "SF": 0.2031,
+      "Final": 0.1088,
+      "champion": 0.0529
     },
     "Sweden": {
-      "win_group": 0.0522,
-      "advance": 0.3942,
-      "R16": 0.0983,
-      "QF": 0.0313,
-      "SF": 0.0083,
-      "Final": 0.0016,
-      "champion": 0.0006
+      "win_group": 0.0367,
+      "advance": 0.3627,
+      "R16": 0.0895,
+      "QF": 0.0256,
+      "SF": 0.0067,
+      "Final": 0.0022,
+      "champion": 0.0003
     },
     "Tunisia": {
-      "win_group": 0.0657,
-      "advance": 0.4758,
-      "R16": 0.1278,
-      "QF": 0.0401,
-      "SF": 0.0106,
-      "Final": 0.0027,
-      "champion": 0.0004
+      "win_group": 0.0452,
+      "advance": 0.4328,
+      "R16": 0.1143,
+      "QF": 0.0365,
+      "SF": 0.0102,
+      "Final": 0.0022,
+      "champion": 0.0008
     },
     "Belgium": {
       "win_group": 0.3846,
-      "advance": 0.8294,
-      "R16": 0.4746,
-      "QF": 0.2121,
-      "SF": 0.0902,
-      "Final": 0.0377,
-      "champion": 0.0138
+      "advance": 0.8243,
+      "R16": 0.476,
+      "QF": 0.2228,
+      "SF": 0.0945,
+      "Final": 0.0435,
+      "champion": 0.0157
     },
     "Egypt": {
-      "win_group": 0.1519,
-      "advance": 0.5898,
-      "R16": 0.2456,
-      "QF": 0.0783,
-      "SF": 0.0244,
-      "Final": 0.0086,
-      "champion": 0.0024
+      "win_group": 0.1351,
+      "advance": 0.5588,
+      "R16": 0.2333,
+      "QF": 0.0736,
+      "SF": 0.0216,
+      "Final": 0.0064,
+      "champion": 0.0019
     },
     "Iran": {
-      "win_group": 0.3513,
-      "advance": 0.8054,
-      "R16": 0.4337,
-      "QF": 0.1845,
-      "SF": 0.0694,
-      "Final": 0.0296,
-      "champion": 0.0102
+      "win_group": 0.3539,
+      "advance": 0.809,
+      "R16": 0.4449,
+      "QF": 0.1924,
+      "SF": 0.0737,
+      "Final": 0.0299,
+      "champion": 0.0107
     },
     "New Zealand": {
-      "win_group": 0.1123,
-      "advance": 0.4902,
-      "R16": 0.1678,
-      "QF": 0.043,
-      "SF": 0.0107,
-      "Final": 0.0029,
-      "champion": 0.0006
+      "win_group": 0.1263,
+      "advance": 0.5218,
+      "R16": 0.1867,
+      "QF": 0.0503,
+      "SF": 0.0121,
+      "Final": 0.004,
+      "champion": 0.001
     },
     "Spain": {
-      "win_group": 0.5498,
-      "advance": 0.9711,
-      "R16": 0.6066,
-      "QF": 0.4192,
-      "SF": 0.2908,
-      "Final": 0.1858,
-      "champion": 0.1089
+      "win_group": 0.5377,
+      "advance": 0.9706,
+      "R16": 0.6104,
+      "QF": 0.4243,
+      "SF": 0.2995,
+      "Final": 0.1893,
+      "champion": 0.1105
     },
     "Cape Verde": {
-      "win_group": 0.0119,
-      "advance": 0.2195,
-      "R16": 0.0382,
-      "QF": 0.0073,
-      "SF": 0.001,
-      "Final": 0.0001,
+      "win_group": 0.0132,
+      "advance": 0.221,
+      "R16": 0.0365,
+      "QF": 0.008,
+      "SF": 0.0013,
+      "Final": 0.0003,
       "champion": 0.0001
     },
     "Saudi Arabia": {
-      "win_group": 0.0329,
-      "advance": 0.431,
-      "R16": 0.102,
-      "QF": 0.0282,
-      "SF": 0.0058,
-      "Final": 0.0013,
+      "win_group": 0.0353,
+      "advance": 0.4325,
+      "R16": 0.104,
+      "QF": 0.0301,
+      "SF": 0.0069,
+      "Final": 0.0019,
       "champion": 0.0003
     },
     "Uruguay": {
-      "win_group": 0.4053,
-      "advance": 0.9443,
-      "R16": 0.46,
-      "QF": 0.2617,
-      "SF": 0.1453,
-      "Final": 0.0736,
-      "champion": 0.0324
+      "win_group": 0.4138,
+      "advance": 0.9457,
+      "R16": 0.4748,
+      "QF": 0.2756,
+      "SF": 0.1597,
+      "Final": 0.0799,
+      "champion": 0.0368
     },
     "France": {
-      "win_group": 0.4697,
-      "advance": 0.8872,
-      "R16": 0.596,
-      "QF": 0.3517,
-      "SF": 0.2044,
-      "Final": 0.1072,
-      "champion": 0.0505
+      "win_group": 0.4788,
+      "advance": 0.8862,
+      "R16": 0.5915,
+      "QF": 0.3483,
+      "SF": 0.201,
+      "Final": 0.1066,
+      "champion": 0.0549
     },
     "Senegal": {
-      "win_group": 0.2442,
-      "advance": 0.751,
-      "R16": 0.3769,
-      "QF": 0.1636,
-      "SF": 0.0684,
-      "Final": 0.0257,
-      "champion": 0.0092
-    },
-    "Iraq": {
-      "win_group": 0.0496,
-      "advance": 0.3317,
-      "R16": 0.104,
-      "QF": 0.0274,
-      "SF": 0.0073,
-      "Final": 0.0015,
-      "champion": 0.0001
-    },
-    "Norway": {
-      "win_group": 0.2365,
-      "advance": 0.7391,
-      "R16": 0.3908,
-      "QF": 0.1771,
-      "SF": 0.08,
-      "Final": 0.0317,
-      "champion": 0.0126
-    },
-    "Argentina": {
-      "win_group": 0.8181,
-      "advance": 0.9919,
-      "R16": 0.6906,
-      "QF": 0.5428,
-      "SF": 0.3979,
-      "Final": 0.2768,
-      "champion": 0.1945
-    },
-    "Algeria": {
-      "win_group": 0.0981,
-      "advance": 0.7164,
-      "R16": 0.2656,
-      "QF": 0.1217,
-      "SF": 0.0526,
-      "Final": 0.02,
-      "champion": 0.006
-    },
-    "Austria": {
-      "win_group": 0.0653,
-      "advance": 0.6197,
-      "R16": 0.2225,
-      "QF": 0.0974,
-      "SF": 0.0379,
-      "Final": 0.014,
-      "champion": 0.004
-    },
-    "Jordan": {
-      "win_group": 0.0186,
-      "advance": 0.2893,
-      "R16": 0.0707,
-      "QF": 0.0221,
-      "SF": 0.0052,
-      "Final": 0.0013,
-      "champion": 0.0001
-    },
-    "Portugal": {
-      "win_group": 0.2845,
-      "advance": 0.8276,
-      "R16": 0.5258,
-      "QF": 0.293,
-      "SF": 0.1487,
-      "Final": 0.0739,
-      "champion": 0.0338
-    },
-    "DR Congo": {
-      "win_group": 0.0425,
-      "advance": 0.3644,
-      "R16": 0.1224,
-      "QF": 0.0372,
-      "SF": 0.0108,
-      "Final": 0.0029,
-      "champion": 0.0007
-    },
-    "Uzbekistan": {
-      "win_group": 0.076,
-      "advance": 0.4969,
-      "R16": 0.1991,
-      "QF": 0.0738,
-      "SF": 0.0249,
-      "Final": 0.007,
-      "champion": 0.0019
-    },
-    "Colombia": {
-      "win_group": 0.5971,
-      "advance": 0.9455,
-      "R16": 0.6834,
-      "QF": 0.454,
-      "SF": 0.2497,
-      "Final": 0.1453,
-      "champion": 0.0821
-    },
-    "England": {
-      "win_group": 0.6439,
-      "advance": 0.9643,
-      "R16": 0.6349,
-      "QF": 0.3963,
-      "SF": 0.2262,
-      "Final": 0.1192,
-      "champion": 0.0655
-    },
-    "Croatia": {
-      "win_group": 0.2501,
-      "advance": 0.8354,
-      "R16": 0.4012,
-      "QF": 0.1769,
-      "SF": 0.074,
-      "Final": 0.0287,
+      "win_group": 0.2369,
+      "advance": 0.7429,
+      "R16": 0.3741,
+      "QF": 0.1605,
+      "SF": 0.0646,
+      "Final": 0.025,
       "champion": 0.0097
     },
+    "Iraq": {
+      "win_group": 0.0548,
+      "advance": 0.3655,
+      "R16": 0.119,
+      "QF": 0.0344,
+      "SF": 0.0084,
+      "Final": 0.002,
+      "champion": 0.0006
+    },
+    "Norway": {
+      "win_group": 0.2295,
+      "advance": 0.725,
+      "R16": 0.3891,
+      "QF": 0.1749,
+      "SF": 0.0767,
+      "Final": 0.0302,
+      "champion": 0.0106
+    },
+    "Argentina": {
+      "win_group": 0.8108,
+      "advance": 0.9893,
+      "R16": 0.6805,
+      "QF": 0.5387,
+      "SF": 0.3967,
+      "Final": 0.2777,
+      "champion": 0.195
+    },
+    "Algeria": {
+      "win_group": 0.1051,
+      "advance": 0.7198,
+      "R16": 0.2641,
+      "QF": 0.1244,
+      "SF": 0.0549,
+      "Final": 0.0211,
+      "champion": 0.0072
+    },
+    "Austria": {
+      "win_group": 0.0602,
+      "advance": 0.5756,
+      "R16": 0.2039,
+      "QF": 0.0857,
+      "SF": 0.0341,
+      "Final": 0.0104,
+      "champion": 0.0032
+    },
+    "Jordan": {
+      "win_group": 0.0239,
+      "advance": 0.3285,
+      "R16": 0.0832,
+      "QF": 0.029,
+      "SF": 0.0077,
+      "Final": 0.0015,
+      "champion": 0.0005
+    },
+    "Portugal": {
+      "win_group": 0.3059,
+      "advance": 0.8312,
+      "R16": 0.5333,
+      "QF": 0.2974,
+      "SF": 0.1499,
+      "Final": 0.0764,
+      "champion": 0.0357
+    },
+    "DR Congo": {
+      "win_group": 0.0457,
+      "advance": 0.3729,
+      "R16": 0.1285,
+      "QF": 0.0401,
+      "SF": 0.012,
+      "Final": 0.0031,
+      "champion": 0.0009
+    },
+    "Uzbekistan": {
+      "win_group": 0.0842,
+      "advance": 0.5084,
+      "R16": 0.2099,
+      "QF": 0.0762,
+      "SF": 0.0261,
+      "Final": 0.0081,
+      "champion": 0.0024
+    },
+    "Colombia": {
+      "win_group": 0.5641,
+      "advance": 0.9294,
+      "R16": 0.6719,
+      "QF": 0.4444,
+      "SF": 0.245,
+      "Final": 0.1422,
+      "champion": 0.0793
+    },
+    "England": {
+      "win_group": 0.628,
+      "advance": 0.9525,
+      "R16": 0.6163,
+      "QF": 0.3789,
+      "SF": 0.2142,
+      "Final": 0.1095,
+      "champion": 0.0563
+    },
+    "Croatia": {
+      "win_group": 0.2266,
+      "advance": 0.7842,
+      "R16": 0.3683,
+      "QF": 0.1582,
+      "SF": 0.0647,
+      "Final": 0.0254,
+      "champion": 0.0086
+    },
     "Ghana": {
-      "win_group": 0.0403,
-      "advance": 0.3681,
-      "R16": 0.0747,
-      "QF": 0.0165,
-      "SF": 0.0028,
-      "Final": 0.0005,
+      "win_group": 0.0458,
+      "advance": 0.369,
+      "R16": 0.0809,
+      "QF": 0.0149,
+      "SF": 0.0031,
+      "Final": 0.0004,
       "champion": 0.0001
     },
     "Panama": {
-      "win_group": 0.0658,
-      "advance": 0.4856,
-      "R16": 0.1488,
-      "QF": 0.0447,
-      "SF": 0.0112,
-      "Final": 0.003,
-      "champion": 0.0004
+      "win_group": 0.0996,
+      "advance": 0.5744,
+      "R16": 0.1912,
+      "QF": 0.0589,
+      "SF": 0.0159,
+      "Final": 0.0044,
+      "champion": 0.0009
     }
   }
 }
