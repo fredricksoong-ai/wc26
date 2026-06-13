@@ -30,7 +30,7 @@ import pandas as pd
 PROJ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(PROJ)
 
-from src import data, dixon_coles as dc, elo as E, evaluate, fixtures as fx, scoring
+from src import data, dixon_coles as dc, elo as E, evaluate, fixtures as fx, scoring, simulate as sim
 
 RAW = os.path.join(PROJ, "data", "raw")
 DEPLOY = os.path.join(PROJ, "deploy")
@@ -126,7 +126,7 @@ def main() -> int:
             print(f"  WARN unmatched fixture names (add to ALIASES): {sorted(unmatched)}")
 
         for r in fdf.itertuples():
-            date = r.date.strftime("%Y-%m-%d") if r.date is not None else None
+            date = r.date.strftime("%Y-%m-%d") if pd.notna(r.date) else None
             sgt_iso, sgt_label = to_sgt(date, getattr(r, "time", None))
             meta = {"date": date, "round": r.round, "group": r.group, "ground": r.ground,
                     "team1": r.team1, "team2": r.team2,
@@ -229,6 +229,24 @@ def main() -> int:
                         "s": f"{gf}-{ga}", "opp": opp})
         form[t] = seq
 
+    # Monte-Carlo tournament odds (needs the bracket: groups + knockout slots)
+    tournament = {}
+    if os.path.exists(fpath):
+        try:
+            groups, ko_games = sim.parse_structure(fpath)
+            sim_teams = [t for ts in groups.values() for t in ts if t in known]
+            full_groups = sum(1 for ts in groups.values() if len([t for t in ts if t in known]) == 4)
+            if full_groups == 12 and ko_games:
+                EG, PADV = sim.build_tables(sim_teams, dm, em, W_DC)
+                odds = sim.simulate(sim_teams, groups, ko_games, EG, PADV, n_sims=20000, seed=1)
+                tournament = {t: {k: round(v, 4) for k, v in s.items()} for t, s in odds.items()}
+                print(f"  tournament sim: {len(tournament)} teams, "
+                      f"favourite { max(tournament, key=lambda x: tournament[x]['champion']) }")
+            else:
+                print(f"  tournament sim skipped (only {full_groups}/12 full groups)")
+        except Exception as e:
+            print(f"  tournament sim skipped: {e}")
+
     payload = {
         "generated_utc": _now(),
         "model": f"Dixon-Coles (xi={XI}) + Elo ensemble (w_DC={W_DC}), neutral venues",
@@ -239,6 +257,7 @@ def main() -> int:
         "fixtures": fixtures_out,
         "ratings": ratings,
         "form": form,
+        "tournament": tournament,
     }
     dump_json(payload, OUT)
     print(f"wrote {OUT}")

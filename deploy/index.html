@@ -63,6 +63,8 @@
   .cform{display:flex;align-items:center;gap:7px;margin-top:6px;font-size:11px;color:var(--muted)} .cform .ft{min-width:104px;color:var(--ink)}
   .formends{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
   .chev{font-weight:700;font-size:12px;font-variant-numeric:tabular-nums} .chev.up{color:var(--good)} .chev.dn{color:var(--bad)} .chev.fl{color:var(--muted)}
+  .orow{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line)} .orow:last-child{border:0}
+  .obar{height:7px;border-radius:5px;background:var(--card2);overflow:hidden;margin-top:5px} .obar i{display:block;height:100%;background:var(--good)}
   .dayhdr{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin:16px 4px 2px;padding-bottom:5px;border-bottom:1px solid var(--line)}
   .hidden{display:none} .err{padding:20px 16px;color:var(--away)}
   footer{color:var(--muted);font-size:11px;text-align:center;padding:18px 16px 0}
@@ -79,12 +81,14 @@
   <div class="tab active" data-view="fixtures">Picks</div>
   <div class="tab" data-view="results">Results</div>
   <div class="tab" data-view="ratings">Ratings</div>
+  <div class="tab" data-view="odds">Win it</div>
   <div class="tab" data-view="explainer">Explainer</div>
 </div>
 <main>
   <div id="fixtures"></div>
   <div id="results" class="hidden"></div>
   <div id="ratings" class="hidden ratings"></div>
+  <div id="odds" class="hidden"></div>
   <div id="explainer" class="hidden exp"></div>
 </main>
 <footer id="foot"></footer>
@@ -114,6 +118,7 @@ function init(d){
   $("#model").textContent=`${d.model||""} · pool: ${RP} result + ${EP} scoreline`;
   $("#updated").innerHTML=`Last updated <b>${toSGT(d.generated_utc)}</b> · refreshes ~twice daily`;
   $("#explainer").innerHTML=explainerHTML();
+  renderOdds(d.tournament||{});
   const wcr=(d.ratings||[]).filter(r=>(d.form||{})[r.team]);
   const show=wcr.length?wcr:(d.ratings||[]).slice(0,40);
   $("#ratings").innerHTML=`<div class="subline">How the model rates the ${show.length} teams — Elo strength, movement vs a year ago (▲▼), and recent form (oldest → newest).</div>`+
@@ -237,6 +242,22 @@ function scoreboard(t){
   <div class="subline">You called the <b>correct result in ${t.yR} of ${t.yN}</b> games, and the <b>exact scoreline in ${t.yE}</b>. (Result = ${RP} pts, scoreline = ${EP} pts.)</div>`;
 }
 
+function renderOdds(tour){
+  const arr=Object.entries(tour).map(([team,p])=>({team,...p})).sort((a,b)=>b.champion-a.champion);
+  if(!arr.length){ $("#odds").innerHTML=`<div class="err">Tournament odds appear once the full bracket is in the data.</div>`; return; }
+  const mx=arr[0].champion||1;
+  $("#odds").innerHTML=`<div class="subline">Each nation's chance to <b>win the World Cup</b>, from 20,000 simulated tournaments — the model plays every game, group stage through final, over and over.</div>`+
+    arr.map((r,i)=>`<div class="orow">
+      <div class="rank">${i+1}</div>
+      <div style="flex:1;min-width:0">
+        <div class="rname">${r.team}</div>
+        <div class="obar"><i style="width:${Math.max(2,Math.round(r.champion/mx*100))}%"></i></div>
+        <div style="font-size:10.5px;color:var(--muted);margin-top:4px">final ${pc(r.Final)}% · semis ${pc(r.SF)}% · last 8 ${pc(r.QF)}% · last 32 ${pc(r.advance)}%</div>
+      </div>
+      <div style="text-align:right"><div style="font-weight:700;color:var(--good)">${(r.champion*100).toFixed(1)}%</div><div style="font-size:10px;color:var(--muted)">title</div></div>
+    </div>`).join("");
+}
+
 function toSGT(utc){ if(!utc)return"–"; const m=utc.match(/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/); if(!m)return utc;
   const d=new Date(Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5]));
   return d.toLocaleString("en-GB",{timeZone:"Asia/Singapore",weekday:"short",day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})+" SGT"; }
@@ -267,11 +288,13 @@ function explainerHTML(){return `
   <h3>Recent form</h3>
   <p>Each team's last five results as <span class="fdot W">W</span> <span class="fdot D">D</span> <span class="fdot L">L</span> (oldest left, newest right; tap a square for the score). The model already weights recent games more heavily, so this is a peek at what it's reacting to.</p>
   <h3>Power ratings + movement</h3>
-  <p>The Ratings tab ranks the tournament teams by Elo strength. The <span class="k">▲ / ▼</span> shows how much each rating has moved over the past year — who's trending up into the World Cup and who's sliding.</p>`;}
+  <p>The Ratings tab ranks the tournament teams by Elo strength. The <span class="k">▲ / ▼</span> shows how much each rating has moved over the past year — who's trending up into the World Cup and who's sliding.</p>
+  <h3>Win it (tournament odds)</h3>
+  <p>The model plays the <span class="k">entire tournament 20,000 times</span> — every group game as a random scoreline, then the knockout bracket — and counts how often each nation wins its group, reaches each round, and lifts the trophy. One simulation is luck; 20,000 averages the luck out into a probability. That's why a clear favourite still only sits around 1-in-5: even the best team has to win seven knockout games where anything can happen.</p>`;}
 
 document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
   document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active")); t.classList.add("active");
-  const v=t.dataset.view; ["fixtures","results","ratings","explainer"].forEach(id=>$("#"+id).classList.toggle("hidden", id!==v));
+  const v=t.dataset.view; ["fixtures","results","ratings","odds","explainer"].forEach(id=>$("#"+id).classList.toggle("hidden", id!==v));
 }));
 </script>
 </body>

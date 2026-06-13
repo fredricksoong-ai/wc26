@@ -96,6 +96,15 @@ def load_fixtures(path: str | Path = "../data/raw/worldcup2026.json") -> pd.Data
     return df
 
 
+def normalize_team(name: str, aliases: dict | None = None) -> str:
+    """Resolve one team name to the model's spelling (playoff slot, '&', aliases)."""
+    n = _resolve(name).replace(" & ", " and ")   # resolve playoff slots FIRST
+    if _is_placeholder(n):
+        return n
+    aliases = {**ALIASES, **(aliases or {})}
+    return aliases.get(n, n)
+
+
 def reconcile_names(fixtures: pd.DataFrame, model_teams, aliases: dict | None = None):
     """Map fixture team names onto the model's team set.
 
