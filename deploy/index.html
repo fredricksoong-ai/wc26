@@ -52,6 +52,9 @@
   .rank{width:22px;text-align:right;color:var(--muted);font-size:12px} .rname{flex:1;font-weight:600} .relo{color:var(--muted);font-variant-numeric:tabular-nums}
   .exp h3{font-size:14px;margin:16px 2px 6px} .exp p{font-size:13px;color:var(--muted);margin:0 2px 8px;line-height:1.55}
   .exp .k{color:var(--ink);font-weight:600} .exp .dot{display:inline-block;width:10px;height:10px;border-radius:2px;vertical-align:-1px;margin-right:4px}
+  .rconf{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:12px;background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:5px 9px}
+  .rconf b{color:var(--ink)} .rconf .lv{font-weight:700;font-size:11px}
+  .rconf.strong .lv{color:var(--good)} .rconf.lean .lv{color:var(--away)} .rconf.toss .lv{color:var(--muted)}
   .dayhdr{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin:16px 4px 2px;padding-bottom:5px;border-bottom:1px solid var(--line)}
   .hidden{display:none} .err{padding:20px 16px;color:var(--away)}
   footer{color:var(--muted);font-size:11px;text-align:center;padding:18px 16px 0}
@@ -137,6 +140,13 @@ function renderAll(){
 
 // the model's call = the most likely scoreline (top of its frozen distribution).
 // deriving it from top_scores self-corrects older games picked under the old logic.
+// result confidence: the model's most likely OUTCOME (not scoreline) + how sure.
+// this is the model's strongest signal — use it for the result points.
+function confidence(f){
+  const ps=[["win",f.p_home,f.team1],["draw",f.p_draw,"Draw"],["win",f.p_away,f.team2]].sort((a,b)=>b[1]-a[1]);
+  const [kind,p,who]=ps[0];
+  return {who, p, kind, lvl:p>=0.6?"strong":p>=0.45?"lean":"toss"};
+}
 const modelCall=f=>(f.top_scores&&f.top_scores[0])?f.top_scores[0][0]:f.model_pick;
 const modelProb=f=>(f.top_scores&&f.top_scores[0])?f.top_scores[0][1]:f.model_pick_prob;
 const dayKey=f=>(f.kickoff_sgt||f.date||"").slice(0,10);
@@ -151,7 +161,7 @@ function selOpts(sel){let s="";for(let i=0;i<=7;i++)s+=`<option value="${i}" ${s
 
 function pickCard(f){
   const i=ALLFIX.indexOf(f);
-  const mc=modelCall(f), mpr=modelProb(f);
+  const mc=modelCall(f), mpr=modelProb(f), cf=confidence(f);
   const tops=(f.top_scores||[]).map(t=>`<span class="chip ${t[0]===mc?'best':''}">${t[0]} · ${pc(t[1])}%</span>`).join("");
   const mprob=mpr!=null?` <span style="color:var(--muted);font-weight:400">${pc(mpr)}%</span>`:"";
   const xg=f.xg_home!=null?`<div style="font-size:11px;color:var(--muted);margin-top:9px">expected goals <b style="color:var(--ink)">${f.xg_home} – ${f.xg_away}</b></div>`:"";
@@ -170,6 +180,7 @@ function pickCard(f){
     </div>
     <div class="bar"><i class="h" style="width:${pc(f.p_home)}%"></i><i class="d" style="width:${pc(f.p_draw)}%"></i><i class="a" style="width:${pc(f.p_away)}%"></i></div>
     <div class="legend"><span style="color:var(--home)">${f.team1} <b>${pc(f.p_home)}%</b></span><span>Draw <b>${pc(f.p_draw)}%</b></span><span style="color:var(--away)">${f.team2} <b>${pc(f.p_away)}%</b></span></div>
+    <div class="rconf ${cf.lvl}">result call: <b>${cf.kind==="draw"?"Draw":cf.who+" win"}</b> <span class="lv">${cf.lvl==="toss"?"toss-up":cf.lvl} ${pc(cf.p)}%</span></div>
     ${xg}
     <div style="font-size:11px;color:var(--muted);margin:10px 0 5px">likeliest scorelines</div>
     <div class="tops">${tops}</div>
