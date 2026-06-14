@@ -130,9 +130,9 @@ def main() -> int:
         so its 'scoreline' is the naive one implied by its result (it competes on
         result + RPS, not exact scores).
         """
-        def mode(matrix):
-            (i, j), _ = scoring.top_scorelines(matrix, 1)[0]
-            return f"{i}-{j}"
+        def mode(matrix):                  # most-likely scoreline AND its probability
+            (i, j), p = scoring.top_scorelines(matrix, 1)[0]
+            return f"{i}-{j}", round(float(p), 3)
         def amax(p):
             return max(("home", "draw", "away"), key=lambda kk: p[kk])
         def vec(p):
@@ -147,14 +147,14 @@ def main() -> int:
         enp = E.ensemble_probs(dcp, elp, W_DC)
         out = {}
         if pm is not None and t1 in pm.teams and t2 in pm.teams:
-            ps = mode(pm.score_matrix(t1, t2, neutral=True))
-            out["poisson"] = {"score": ps, "result": res_of(ps),
+            ps, psp = mode(pm.score_matrix(t1, t2, neutral=True))
+            out["poisson"] = {"score": ps, "sp": psp, "result": res_of(ps),
                               "probs": vec(pm.outcome_probs(t1, t2, neutral=True))}
-        ds = mode(dcm)
+        ds, dsp = mode(dcm)
         es = naive[amax(elp)]
-        out["dixon_coles"] = {"score": ds, "result": res_of(ds), "probs": vec(dcp)}
-        out["elo"] = {"score": es, "result": res_of(es), "probs": vec(elp)}
-        out["ensemble"] = {"score": ds, "result": res_of(ds), "probs": vec(enp)}
+        out["dixon_coles"] = {"score": ds, "sp": dsp, "result": res_of(ds), "probs": vec(dcp)}
+        out["elo"] = {"score": es, "sp": None, "result": res_of(es), "probs": vec(elp)}  # Elo: no score model
+        out["ensemble"] = {"score": ds, "sp": dsp, "result": res_of(ds), "probs": vec(enp)}
         return out
 
     def score_models(lb, actual):

@@ -275,9 +275,10 @@ function modelSays(f){
     const idx={home:0,draw:1,away:2}[v.result];
     const r=v.result==="draw"?"draw":`${v.result==="home"?f.team1:f.team2} win`;
     const pct=(v.probs&&v.probs[idx]!=null)?` <span style="color:var(--ink)">${pc(v.probs[idx])}%</span>`:"";
+    const sp=(v.sp!=null)?` <span style="color:var(--muted);font-weight:400">${pc(v.sp)}%</span>`:"";
     return `<div style="display:flex;align-items:center;gap:8px;font-size:12px;padding:3px 0">
       <span style="color:${LB_COLORS[m]||'#888'}">●</span><span style="flex:1;color:var(--muted)">${LB_LABELS[m]||m}</span>
-      <b style="color:var(--ink)">${v.score}</b><span style="color:var(--muted);font-size:11px;min-width:104px;text-align:right">${r}${pct}</span></div>`;
+      <b style="color:var(--ink)">${v.score}</b>${sp}<span style="color:var(--muted);font-size:11px;min-width:104px;text-align:right">${r}${pct}</span></div>`;
   }).join("");
   return `<div class="modtog" onclick="var e=this.nextElementSibling;e.classList.toggle('open');this.textContent=e.classList.contains('open')?'hide models':'what each model says ›'">what each model says ›</div><div class="collapsible">${rows}</div>`;
 }
