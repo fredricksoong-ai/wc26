@@ -42,7 +42,7 @@ FILES = {
 # only spend a credit on the first run after each target window passes.
 SGT = timezone(timedelta(hours=8))
 ODDS_TARGETS_SGT = (18, 22)          # 6pm and 10pm Singapore time
-ODDS_FLOOR_H = 12                    # also refetch if the snapshot is older than this
+ODDS_FLOOR_H = 24                    # only refetch off-schedule if a whole day was missed
 ODDS_FILE = os.path.join(PROJ, "deploy", "odds.json")
 
 
@@ -56,7 +56,9 @@ def _last_odds_fetch(path: str):
 
 
 def _should_fetch_odds(path: str):
-    """(should_fetch, reason). Fetch on the first run after 6pm/10pm SGT, or if stale."""
+    """(should_fetch, reason). Forced by a manual refresh; else 6pm/10pm SGT or stale."""
+    if os.environ.get("FORCE_ODDS"):            # the ↻ button (manual workflow_dispatch)
+        return True, "manual refresh — forced"
     now = datetime.now(timezone.utc)
     last = _last_odds_fetch(path)
     if last is None:
