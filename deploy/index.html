@@ -15,7 +15,7 @@
   header{padding:18px 16px 4px;position:relative} h1{font-size:19px;margin:0;padding-right:44px}
   .sub{color:var(--muted);font-size:12px;margin-top:4px}
   .updated{color:var(--muted);font-size:11px;margin-top:6px}
-  @keyframes spin{to{transform:rotate(360deg)}} #refreshBtn.spin{animation:spin .9s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}} #refreshIco{display:inline-block} #refreshIco.spin{animation:spin .9s linear infinite}
   .updated b{color:var(--ink)}
   .metrics{display:flex;gap:8px;padding:10px 16px;flex-wrap:wrap}
   .pill{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 11px;font-size:12px;color:var(--muted)}
@@ -80,7 +80,7 @@
   <h1>⚽ World Cup 2026 Predictor ⚽</h1>
   <div class="updated" id="updated">loading…</div>
   <div id="buildNote" style="color:var(--pick);font-size:11px;margin-top:3px;min-height:14px"></div>
-  <button id="refreshBtn" onclick="triggerRefresh()" title="Fetch latest" style="position:absolute;top:16px;right:14px;width:34px;height:34px;background:rgba(167,139,250,.15);color:var(--pick);border:1px solid rgba(167,139,250,.4);border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;line-height:1">↻</button>
+  <button id="refreshBtn" onclick="triggerRefresh()" title="Fetch latest" style="position:absolute;top:16px;right:14px;width:34px;height:34px;background:rgba(167,139,250,.15);color:var(--pick);border:1px solid rgba(167,139,250,.4);border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;line-height:1"><span id="refreshIco">↻</span></button>
 </header>
 <div class="metrics" id="metrics"></div>
 <div class="tabs">
@@ -124,13 +124,14 @@ function scorePick(p,act){ if(!p||p[0]==null||p[1]==null||!act)return null;
 let refreshPoll=null;
 async function triggerRefresh(){
   const b=document.getElementById("refreshBtn"); if(!b||b.disabled)return;
+  const ico=document.getElementById("refreshIco");
   const prev=(DATA&&DATA.generated_utc)||"";
   const note=document.getElementById("buildNote");
-  b.disabled=true; b.style.color="var(--pick)"; b.textContent="↻"; b.classList.add("spin"); b.title="Triggering…";
+  b.disabled=true; b.style.color="var(--pick)"; ico.textContent="↻"; ico.classList.add("spin"); b.title="Triggering…";
   if(note)note.textContent="Triggering…";
-  const stop=()=>{clearInterval(refreshPoll); b.classList.remove("spin");};
-  const reset=()=>{stop(); b.textContent="↻"; b.style.color="var(--pick)"; b.title="Fetch latest"; b.disabled=false; if(note)note.textContent="";};
-  const fail=msg=>{stop(); b.textContent="✕"; b.style.color="var(--bad)"; b.title="Failed — "+msg; b.disabled=false; if(note)note.textContent="Refresh failed"; setTimeout(reset,6000);};
+  const stop=()=>{clearInterval(refreshPoll); ico.classList.remove("spin");};
+  const reset=()=>{stop(); ico.textContent="↻"; b.style.color="var(--pick)"; b.title="Fetch latest"; b.disabled=false; if(note)note.textContent="";};
+  const fail=msg=>{stop(); ico.textContent="✕"; b.style.color="var(--bad)"; b.title="Failed — "+msg; b.disabled=false; if(note)note.textContent="Refresh failed"; setTimeout(reset,6000);};
   try{
     const r=await fetch("/refresh",{method:"POST"});
     const j=await r.json().catch(()=>({}));
@@ -141,17 +142,17 @@ async function triggerRefresh(){
     clearInterval(refreshPoll);
     refreshPoll=setInterval(async()=>{
       tries++;
-      if(note)note.textContent=`Building… checking for new data (${tries}/${max})`;
+      if(note)note.textContent=`Building (${tries}/${max})...`;
       try{
         const d=await (await fetch("predictions.json",{cache:"no-store"})).json();
         if(d.generated_utc && d.generated_utc!==prev){
-          stop(); b.textContent="✓"; b.style.color="var(--good)"; b.title="Updated";
+          stop(); ico.textContent="✓"; b.style.color="var(--good)"; b.title="Updated";
           if(note)note.textContent="Updated ✓ refreshing…";
           setTimeout(()=>location.reload(),900);
           return;
         }
       }catch(e){}
-      if(tries>=max){ stop(); b.textContent="↻"; b.style.color="var(--pick)"; b.title="Still building — tap reload shortly"; b.disabled=false; if(note)note.textContent="Still building — reload shortly"; }
+      if(tries>=max){ stop(); ico.textContent="↻"; b.style.color="var(--pick)"; b.title="Still building — tap reload shortly"; b.disabled=false; if(note)note.textContent="Still building — reload shortly"; }
     },every);
   }catch(e){ fail(String(e)); console.error(e); }
 }
