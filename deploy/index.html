@@ -297,11 +297,11 @@ function resultCard(f){
   // the ensemble (the adviser), then the other rungs, from the league data
   let modelRows="";
   if(f.lb_scored){
-    modelRows=["ensemble","poisson","dixon_coles","elo"].filter(m=>f.lb_scored[m]).map(m=>{
+    modelRows=["ensemble","poisson","dixon_coles","elo","market"].filter(m=>f.lb_scored[m]).map(m=>{
       const v=f.lb[m]||{}, s=f.lb_scored[m];
       const label=m==="ensemble"?"Model (Ensemble)":LB_LABELS[m];
       const col=m==="ensemble"?"var(--pick)":(LB_COLORS[m]||"var(--muted)");
-      const sp=m==="elo"?null:(v.sp!=null?v.sp:ensSp(v.score)); // own %, else ensemble's (legacy frozen games)
+      const sp=(m==="elo"||m==="market")?null:(v.sp!=null?v.sp:ensSp(v.score)); // Elo/Market: naive score, no % ; else own, else ensemble's (legacy)
       return row(label,col,v.score||"—",sp,s.result_hit,s.exact_hit,(s.result_hit?RP:0)+(s.exact_hit?EP:0));
     }).join("");
   } else {
