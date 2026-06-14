@@ -15,6 +15,7 @@
   header{padding:18px 16px 4px;position:relative} h1{font-size:19px;margin:0;padding-right:44px}
   .sub{color:var(--muted);font-size:12px;margin-top:4px}
   .updated{color:var(--muted);font-size:11px;margin-top:6px}
+  @keyframes spin{to{transform:rotate(360deg)}} #refreshBtn.spin{animation:spin .9s linear infinite}
   .updated b{color:var(--ink)}
   .metrics{display:flex;gap:8px;padding:10px 16px;flex-wrap:wrap}
   .pill{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 11px;font-size:12px;color:var(--muted)}
@@ -78,6 +79,7 @@
 <header>
   <h1>⚽ World Cup 2026 Predictor ⚽</h1>
   <div class="updated" id="updated">loading…</div>
+  <div id="buildNote" style="color:var(--pick);font-size:11px;margin-top:3px;min-height:14px"></div>
   <button id="refreshBtn" onclick="triggerRefresh()" title="Fetch latest" style="position:absolute;top:16px;right:14px;width:34px;height:34px;background:rgba(167,139,250,.15);color:var(--pick);border:1px solid rgba(167,139,250,.4);border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;line-height:1">↻</button>
 </header>
 <div class="metrics" id="metrics"></div>
@@ -119,16 +121,38 @@ function scorePick(p,act){ if(!p||p[0]==null||p[1]==null||!act)return null;
   const rh=resultOf(p[0],p[1])===resultOf(act[0],act[1]); const eh=p[0]===act[0]&&p[1]===act[1];
   return {pts:(rh?RP:0)+(eh?EP:0), rh, eh}; }
 
+let refreshPoll=null;
 async function triggerRefresh(){
   const b=document.getElementById("refreshBtn"); if(!b||b.disabled)return;
-  b.disabled=true; b.style.color="var(--muted)"; b.textContent="…"; b.title="Triggering…";
-  const reset=()=>{b.textContent="↻"; b.style.color="var(--pick)"; b.title="Fetch latest"; b.disabled=false;};
-  const fail=msg=>{b.textContent="✕"; b.style.color="var(--bad)"; b.title="Failed — "+msg; b.disabled=false; setTimeout(reset,5000);};
+  const prev=(DATA&&DATA.generated_utc)||"";
+  const note=document.getElementById("buildNote");
+  b.disabled=true; b.style.color="var(--pick)"; b.textContent="↻"; b.classList.add("spin"); b.title="Triggering…";
+  if(note)note.textContent="Triggering…";
+  const stop=()=>{clearInterval(refreshPoll); b.classList.remove("spin");};
+  const reset=()=>{stop(); b.textContent="↻"; b.style.color="var(--pick)"; b.title="Fetch latest"; b.disabled=false; if(note)note.textContent="";};
+  const fail=msg=>{stop(); b.textContent="✕"; b.style.color="var(--bad)"; b.title="Failed — "+msg; b.disabled=false; if(note)note.textContent="Refresh failed"; setTimeout(reset,6000);};
   try{
     const r=await fetch("/refresh",{method:"POST"});
     const j=await r.json().catch(()=>({}));
-    if(r.ok&&j.ok){ b.textContent="✓"; b.style.color="var(--good)"; b.title="Building… reload in ~2 min"; setTimeout(reset,5000); }
-    else { fail((j&&j.error)||("HTTP "+r.status)); console.error("refresh failed",r.status,j); }
+    if(!(r.ok&&j.ok)){ fail((j&&j.error)||("HTTP "+r.status)); console.error("refresh failed",r.status,j); return; }
+    // dispatch accepted — now wait for the rebuilt predictions.json to land
+    b.title="Building… waiting for fresh data";
+    let tries=0; const max=20, every=12000;       // ~4 min
+    clearInterval(refreshPoll);
+    refreshPoll=setInterval(async()=>{
+      tries++;
+      if(note)note.textContent=`Building… checking for new data (${tries}/${max})`;
+      try{
+        const d=await (await fetch("predictions.json",{cache:"no-store"})).json();
+        if(d.generated_utc && d.generated_utc!==prev){
+          stop(); b.textContent="✓"; b.style.color="var(--good)"; b.title="Updated";
+          if(note)note.textContent="Updated ✓ refreshing…";
+          setTimeout(()=>location.reload(),900);
+          return;
+        }
+      }catch(e){}
+      if(tries>=max){ stop(); b.textContent="↻"; b.style.color="var(--pick)"; b.title="Still building — tap reload shortly"; b.disabled=false; if(note)note.textContent="Still building — reload shortly"; }
+    },every);
   }catch(e){ fail(String(e)); console.error(e); }
 }
 
