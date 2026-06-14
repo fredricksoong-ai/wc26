@@ -272,7 +272,7 @@ function scoreboard(t){
 }
 
 let lbChart=null;
-const LB_COLORS={poisson:"#f59e0b",dixon_coles:"#3b82f6",elo:"#34d399",ensemble:"#a78bfa"};
+const LB_COLORS={poisson:"#f472b6",dixon_coles:"#2dd4bf",elo:"#34d399",ensemble:"#a78bfa"};
 const LB_LABELS={poisson:"Poisson",dixon_coles:"Dixon–Coles",elo:"Elo",ensemble:"Ensemble"};
 function modelSays(f){
   if(!f.lb) return "";
@@ -288,8 +288,8 @@ function modelSays(f){
       <span style="color:var(--muted);text-align:right">${spt}</span>
       <span style="color:${rcol};font-size:11px;text-align:right;white-space:nowrap">${r}${pct}</span>`;
   }).join("");
-  return `<div class="modtog" onclick="var e=this.nextElementSibling;e.classList.toggle('open');this.textContent=e.classList.contains('open')?'hide models':'what each model says ›'">what each model says ›</div>
-    <div class="collapsible"><div style="display:grid;grid-template-columns:14px minmax(0,1fr) auto auto auto;gap:6px 8px;align-items:center;font-size:12px;margin-top:6px">${cells}</div></div>`;
+  return `<div style="color:var(--home);font-weight:700;font-size:13px;margin-top:10px">What each model says</div>
+    <div style="display:grid;grid-template-columns:14px minmax(0,1fr) auto auto auto;gap:6px 8px;align-items:center;font-size:12px;margin-top:6px">${cells}</div>`;
 }
 function renderLeague(d){
   const lb=d.leaderboard;
