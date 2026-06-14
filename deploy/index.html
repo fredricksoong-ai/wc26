@@ -270,6 +270,7 @@ function pickCard(f){
     <div class="formends"><span>${formStrip(f.team1)}</span><span>${formStrip(f.team2)}</span></div>
     <div class="tops" style="margin-top:13px">${tops}</div>
     ${modelSays(f)}
+    ${marketLine(f)}
     <div class="pickbox">${pickUI}</div>
   </div>`;
 }
@@ -327,8 +328,17 @@ function scoreboard(t){
 }
 
 let lbChart=null;
-const LB_COLORS={poisson:"#f472b6",dixon_coles:"#facc15",elo:"#34d399",ensemble:"#a78bfa"};
-const LB_LABELS={poisson:"Poisson",dixon_coles:"Dixon–Coles",elo:"Elo",ensemble:"Ensemble"};
+const LB_COLORS={poisson:"#f472b6",dixon_coles:"#facc15",elo:"#34d399",ensemble:"#a78bfa",market:"#e5e7eb"};
+const LB_LABELS={poisson:"Poisson",dixon_coles:"Dixon–Coles",elo:"Elo",ensemble:"Ensemble",market:"Market"};
+// edge vs the bookmakers: where the model (ensemble) most disagrees with the de-vigged market
+function marketLine(f){
+  const mk=f.lb&&f.lb.market&&f.lb.market.probs; if(!mk) return "";
+  const mod=[f.p_home,f.p_draw,f.p_away]; if(mod.some(x=>x==null)) return "";
+  let bi=0,bd=0; for(let i=0;i<3;i++){const dd=mod[i]-mk[i]; if(Math.abs(dd)>Math.abs(bd)){bd=dd;bi=i;}}
+  const lab=bi===0?f.team1:bi===2?f.team2:"Draw";
+  const col=bd>=0?"var(--good)":"var(--bad)", sign=bd>=0?"+":"";
+  return `<div style="font-size:12px;margin-top:8px;color:var(--muted)">vs market · <b style="color:var(--ink)">${lab}</b> model <b style="color:var(--ink)">${pc(mod[bi])}%</b> vs market ${pc(mk[bi])}% <span style="color:${col};font-weight:700">(${sign}${pc(bd)})</span></div>`;
+}
 function modelSays(f){
   if(!f.lb) return "";
   const ORDER=["ensemble","poisson","dixon_coles","elo"]; // Elo last (no scoreline %)
@@ -356,8 +366,10 @@ function renderLeague(d){
   lb.games.forEach(g=>{ const yp=userPickFor(g.key); if(yp&&yp[0]!=null){ yn++; const a=g.actual.split("-").map(Number);
     if(resultOf(yp[0],yp[1])===resultOf(a[0],a[1]))yr++; if(yp[0]===a[0]&&yp[1]===a[1])ye++; }});
   // points (RP per correct result + EP per exact score) and RPS; rank by points then RPS
-  const rows=M.map((m,i)=>{const s=lb.standings[m]; return {m,label:L[i],
-    pts:s.result_hits*RP+s.exact_hits*EP, rps:s.rps};}).sort((a,b)=>(b.pts-a.pts)||(a.rps-b.rps));
+  const rows=M.map((m,i)=>{const s=lb.standings[m]; return {m,label:L[i],g:s.games||0,
+    pts:s.result_hits*RP+s.exact_hits*EP, rps:s.rps};})
+    .filter(r=>r.g>0)                                   // Market only appears once it has priced games
+    .sort((a,b)=>(b.pts-a.pts)||((a.rps??9)-(b.rps??9)));
   let html=`<div class="subline">Every rung makes its honest call on each game; scored on your pool rules (<b>${RP}</b> result + <b>${EP}</b> exact) plus <b>RPS</b> (probability quality, lower = better). Backfilled and live over ${ng} game${ng==1?'':'s'}.</div>`;
   html+=`<div style="position:relative;height:210px;margin:4px 0 16px"><canvas id="lbchart"></canvas></div>`;
   html+=`<div class="lbhdr"><span style="flex:1">model</span><span class="lbn">pts</span><span class="lbn">RPS</span></div>`;
@@ -376,16 +388,21 @@ function renderLeague(d){
     if(lbChart)lbChart.destroy();
     // cumulative pool-points race: each game adds 0/2/3/5 so the lines diverge and
     // show who's pulling ahead (RPS still lives in the table). You is tracked too.
-    const cum={}, run={}; M.forEach(m=>{cum[m]=[];run[m]=0;});
+    const cum={}, run={}, started={}; M.forEach(m=>{cum[m]=[];run[m]=0;started[m]=false;});
     let yrun=0; const youCum=[];
     lb.games.forEach(g=>{
       const a=g.actual.split("-").map(Number);
-      M.forEach(m=>{ const s=(g.scored||{})[m]||{}; run[m]+=(s.result_hit?RP:0)+(s.exact_hit?EP:0); cum[m].push(run[m]); });
+      M.forEach(m=>{
+        const sc=(g.scored||{})[m];
+        if(sc){ started[m]=true; run[m]+=(sc.result_hit?RP:0)+(sc.exact_hit?EP:0); cum[m].push(run[m]); }
+        else { cum[m].push(started[m]?run[m]:null); }   // null before a model's first game (e.g. Market)
+      });
       const yp=userPickFor(g.key);
       if(yp&&yp[0]!=null){ if(resultOf(yp[0],yp[1])===resultOf(a[0],a[1]))yrun+=RP; if(yp[0]===a[0]&&yp[1]===a[1])yrun+=EP; }
       youCum.push(yrun);
     });
-    const dsets=M.map((m,i)=>({label:L[i],data:cum[m],borderColor:LB_COLORS[m],backgroundColor:LB_COLORS[m],borderWidth:2,tension:.2,pointRadius:2}));
+    const present=M.filter(m=>started[m]);
+    const dsets=present.map(m=>({label:LB_LABELS[m]||m,data:cum[m],borderColor:LB_COLORS[m],backgroundColor:LB_COLORS[m],borderWidth:2,tension:.2,pointRadius:2,spanGaps:false}));
     dsets.push({label:"You",data:youCum,borderColor:"#22d3ee",backgroundColor:"#22d3ee",borderWidth:2,borderDash:[5,4],tension:.2,pointRadius:2});
     lbChart=new Chart(document.getElementById("lbchart"),{type:"line",
       data:{labels:lb.games.map((g,i)=>i+1),datasets:dsets},
@@ -466,6 +483,10 @@ function explainerHTML(){return `
   <p>Two methods blended: <span class="k">Dixon–Coles</span> models goals from recent scoring form; <span class="k">Elo</span> is a running team-strength rating built from every international ever played. Combining them is more accurate than either alone, especially for teams with little recent data.</p>
   <h3>Host advantage</h3>
   <p>Most games are treated as <span class="k">neutral</span> — no home edge. The exception is the three hosts: when <span class="k">USA, Mexico or Canada</span> play in their own country (a 🏠 badge on the card), the model applies its fitted home advantage to that side. Mexico at altitude in Mexico City, for instance, gets a real bump.</p>
+  <h3>Market (the bookies)</h3>
+  <p>A <span class="k">Market</span> contestant in the League is the bookmakers' odds, averaged across books and stripped of their margin (the overround) to give clean probabilities. Beating the market's RPS is hard — it's the real test of whether the model is any good. Market only appears once odds coverage begins, so it's scored over its own games.</p>
+  <h3>vs market (edge)</h3>
+  <p>On each upcoming card, the line where the model most <span class="k">disagrees</span> with the bookies: e.g. <i>model 48% vs market 41%</i> on a side. A positive gap means the model rates that outcome higher than the market does — your contrarian signal. Big disagreements are where your pool pick is a genuine call, for better or worse.</p>
   <h3>Result call</h3>
   <p>The model's most likely <span class="k">outcome</span> (win/draw) and how sure it is — <span class="k">strong</span> (≥60%), <span class="k">lean</span> (≥45%) or <span class="k">toss-up</span>. This is the model's most reliable signal, so it's the one to trust for the result points.</p>
   <h3>Recent form</h3>

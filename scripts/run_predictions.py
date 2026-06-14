@@ -224,7 +224,20 @@ def main() -> int:
     except Exception as e:
         pm = None; print(f"  (Poisson rung-1 skipped: {e})")
 
-    LB_MODELS = ["poisson", "dixon_coles", "elo", "ensemble"]
+    LB_MODELS = ["poisson", "dixon_coles", "elo", "ensemble", "market"]
+
+    # bookmaker odds (optional): de-vigged consensus probs keyed by team pair.
+    odds_list = json.load(open(os.path.join(RAW, "odds.json"))) if os.path.exists(os.path.join(RAW, "odds.json")) else []
+    odds_idx = {frozenset((o["home"], o["away"])): o for o in odds_list}
+
+    def market_probs(t1, t2):
+        """De-vigged market 1X2 oriented to t1=home/t2=away, or None if not priced."""
+        o = odds_idx.get(frozenset((t1, t2)))
+        if not o:
+            return None
+        if o["home"] == t1: return {"home": o["p_home"], "draw": o["p_draw"], "away": o["p_away"]}
+        if o["home"] == t2: return {"home": o["p_away"], "draw": o["p_draw"], "away": o["p_home"]}
+        return None
 
     def model_eval(t1, t2, ground):
         """Each rung's HONEST prediction — not a pool-gamed pick.
@@ -260,6 +273,10 @@ def main() -> int:
         out["dixon_coles"] = {"score": ds, "sp": dsp, "result": res_of(ds), "probs": vec(dcp)}
         out["elo"] = {"score": es, "sp": None, "result": res_of(es), "probs": vec(elp)}  # Elo: no score model
         out["ensemble"] = {"score": ds, "sp": dsp, "result": res_of(ds), "probs": vec(enp)}
+        mp = market_probs(t1, t2)
+        if mp is not None:                      # bookmaker consensus, scored like Elo (naive score, no scoreline model)
+            mscore = naive[amax(mp)]
+            out["market"] = {"score": mscore, "sp": None, "result": res_of(mscore), "probs": vec(mp)}
         return out
 
     def score_models(lb, actual):
@@ -436,23 +453,26 @@ def main() -> int:
     lb_src = sorted([f for f in fixtures_out if f.get("lb_scored")],
                     key=lambda f: (f.get("kickoff_sgt") or f.get("date") or ""))
     res = {m: 0 for m in LB_MODELS}; exa = {m: 0 for m in LB_MODELS}; rsum = {m: 0.0 for m in LB_MODELS}
+    nm = {m: 0 for m in LB_MODELS}                       # per-model game count (Market joins late)
     cum_rps = {m: [] for m in LB_MODELS}
     lb_games = []
-    for n, f in enumerate(lb_src, 1):
+    for f in lb_src:
         sc = f["lb_scored"]
         for m in LB_MODELS:
-            s = sc.get(m, {})
+            if m not in sc:                              # model didn't cover this game (e.g. Market pre-coverage)
+                continue
+            nm[m] += 1; s = sc[m]
             res[m] += 1 if s.get("result_hit") else 0
             exa[m] += 1 if s.get("exact_hit") else 0
-            rsum[m] += s.get("rps", 0.0); cum_rps[m].append(round(rsum[m] / n, 4))
+            rsum[m] += s.get("rps", 0.0); cum_rps[m].append(round(rsum[m] / nm[m], 4))
         lb_games.append({"date": f.get("date"), "label": f"{f['team1']} v {f['team2']}",
                          "key": _key(f.get("date"), f["team1"], f["team2"]),
                          "actual": f"{f['actual'][0]}-{f['actual'][1]}",
                          "lb": f.get("lb", {}), "scored": sc})
     ng = len(lb_src)
-    standings = {m: {"result_hits": res[m], "exact_hits": exa[m], "games": ng,
-                     "rps": round(rsum[m] / ng, 4) if ng else None} for m in LB_MODELS}
-    leaderboard = {"models": LB_MODELS, "labels": ["Poisson", "Dixon–Coles", "Elo", "Ensemble"],
+    standings = {m: {"result_hits": res[m], "exact_hits": exa[m], "games": nm[m],
+                     "rps": round(rsum[m] / nm[m], 4) if nm[m] else None} for m in LB_MODELS}
+    leaderboard = {"models": LB_MODELS, "labels": ["Poisson", "Dixon–Coles", "Elo", "Ensemble", "Market"],
                    "games": lb_games, "cum_rps": cum_rps, "standings": standings}
 
     payload = {

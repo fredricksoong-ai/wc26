@@ -13,6 +13,7 @@ corrupts the existing copy.
 """
 from __future__ import annotations
 
+import json
 import os
 import sys
 import tempfile
@@ -20,7 +21,9 @@ from datetime import datetime, timezone
 
 import requests
 
-RAW_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "raw")
+PROJ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(PROJ)
+RAW_DIR = os.path.join(PROJ, "data", "raw")
 
 MARTJ42 = "https://raw.githubusercontent.com/martj42/international_results/master"
 OPENFOOTBALL = "https://raw.githubusercontent.com/openfootball/worldcup.json/master"
@@ -63,6 +66,22 @@ def main() -> int:
         except Exception as e:  # keep going; one bad source shouldn't sink the rest
             failures.append(name)
             print(f"  FAIL {name:22} {e}")
+
+    # bookmaker odds (optional): only if a key is configured. Fail-soft — a missing
+    # or rate-limited odds feed must never sink the run; the model works without it.
+    key = os.environ.get("ODDS_API_KEY")
+    if key:
+        try:
+            from src import odds as O
+            events, remaining = O.fetch_odds(key)
+            parsed = O.parse(events)
+            with open(os.path.join(RAW_DIR, "odds.json"), "w") as f:
+                json.dump(parsed, f, indent=2)
+            print(f"  ok   odds.json            {len(parsed):>3} matches priced | {remaining} credits left")
+        except Exception as e:
+            print(f"  WARN odds skipped: {e}")
+    else:
+        print("  (no ODDS_API_KEY set — skipping bookmaker odds)")
 
     # quick sanity line on the headline file
     try:

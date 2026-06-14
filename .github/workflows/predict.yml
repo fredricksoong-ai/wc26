@@ -37,8 +37,10 @@ jobs:
             && cp /tmp/picks.json deploy/picks.json \
             && echo "carried over ledger" || echo "no live ledger yet, using committed one"
 
-      - name: Pull data (martj42 results + openfootball fixtures)
+      - name: Pull data (martj42 results + openfootball fixtures + bookmaker odds)
         run: python scripts/update_data.py
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
 
       - name: Validate the fixture list
         run: python scripts/check_fixtures.py
