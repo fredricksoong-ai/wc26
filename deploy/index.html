@@ -41,7 +41,7 @@
   .pickbox .lk{color:var(--you);font-weight:700} .pickbox .locked{color:var(--muted)}
   .res{display:flex;align-items:center;gap:7px;font-size:12px;margin-top:9px;color:var(--muted);flex-wrap:wrap}
   .rrow2{display:flex;align-items:center;gap:7px;margin-top:9px;font-size:12px;flex-wrap:wrap} .rrow2 .lbl{min-width:64px;font-weight:600} .rrow2 .pts{margin-left:auto}
-  .tag{border-radius:6px;padding:2px 7px;font-size:11px;font-weight:700}
+  .tag{border-radius:6px;padding:2px 7px;font-size:11px;font-weight:700;white-space:nowrap}
   .tag.ok{background:rgba(52,211,153,.15);color:var(--good)} .tag.no{background:rgba(248,113,113,.13);color:var(--bad)}
   .pts{margin-left:auto;font-weight:700;color:var(--good)} .pts.zero{color:var(--muted)}
   .vs{font-size:11px;color:var(--muted);margin-top:6px}
@@ -246,7 +246,8 @@ function resultCard(f){
       const v=f.lb[m]||{}, s=f.lb_scored[m];
       const label=m==="ensemble"?"Model (Ensemble)":LB_LABELS[m];
       const col=m==="ensemble"?"var(--pick)":(LB_COLORS[m]||"var(--muted)");
-      return row(label,col,v.score||"—",v.sp,s.result_hit,s.exact_hit,(s.result_hit?RP:0)+(s.exact_hit?EP:0));
+      const sp=m==="elo"?null:(v.sp!=null?v.sp:ensSp(v.score)); // own %, else ensemble's (legacy frozen games)
+      return row(label,col,v.score||"—",sp,s.result_hit,s.exact_hit,(s.result_hit?RP:0)+(s.exact_hit?EP:0));
     }).join("");
   } else {
     const mc=modelCall(f), ms=mc?scorePick(mc.split("-").map(Number),f.actual):null;
