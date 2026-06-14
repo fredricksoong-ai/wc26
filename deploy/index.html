@@ -197,6 +197,7 @@ function selOpts(sel){let s="";for(let i=0;i<=7;i++)s+=`<option value="${i}" ${s
 function pickCard(f){
   const i=ALLFIX.indexOf(f);
   const mc=modelCall(f), cf=confidence(f);
+  const rcol=cf.kind==="draw"?"var(--draw)":(cf.who===f.team1?"var(--home)":"var(--away)");
   const tops=(f.top_scores||[]).slice(0,6).map(t=>`<span class="chip ${t[0]===mc?'best':''}">${t[0]} · ${pc(t[1])}%</span>`).join("");
   const xg=f.xg_home!=null?`xG ${f.xg_home} – ${f.xg_away} · `:"";
   const yp=pickArr(f), locked=isLocked(f);
@@ -208,7 +209,7 @@ function pickCard(f){
     <div class="frow">
       <div><div class="teams">${f.team1}<span class="v">v</span>${f.team2}</div>
         <div class="meta">${xg}${timeOnly(f)} · ${f.group||f.round||""}</div></div>
-      <div style="text-align:right;flex-shrink:0"><div class="rc-${cf.lvl}" style="font-weight:700;font-size:13px">${cf.kind==="draw"?"Draw":cf.who+" win"}</div><div style="color:var(--muted);font-size:11px">${cf.lvl==="toss"?"toss-up":cf.lvl} · ${pc(cf.p)}%</div></div>
+      <div style="text-align:right;flex-shrink:0"><div style="color:${rcol};font-weight:700;font-size:13px">${cf.kind==="draw"?"Draw":cf.who+" win"}</div><div style="font-size:11px"><span class="rc-${cf.lvl}">${cf.lvl==="toss"?"toss-up":cf.lvl}</span> <span style="color:var(--muted)">· ${pc(cf.p)}%</span></div></div>
     </div>
     <div class="bar"><i class="h" style="width:${pc(f.p_home)}%"></i><i class="d" style="width:${pc(f.p_draw)}%"></i><i class="a" style="width:${pc(f.p_away)}%"></i></div>
     <div class="legend"><span style="color:var(--home)">${f.team1} <b>${pc(f.p_home)}%</b></span><span>Draw <b>${pc(f.p_draw)}%</b></span><span style="color:var(--away)">${f.team2} <b>${pc(f.p_away)}%</b></span></div>
