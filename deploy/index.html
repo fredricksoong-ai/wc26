@@ -85,8 +85,7 @@
 <body>
 <header>
   <h1>⚽ World Cup 2026 Predictor ⚽</h1>
-  <div class="updated" id="updated">loading…</div>
-  <div id="buildNote" style="color:var(--pick);font-size:11px;margin-top:3px;min-height:14px"></div>
+  <div class="updated"><span id="updated">loading…</span><span id="buildNote" style="color:var(--pick);margin-left:8px"></span></div>
   <button id="refreshBtn" onclick="triggerRefresh()" title="Fetch latest" style="position:absolute;top:16px;right:14px;width:34px;height:34px;background:rgba(167,139,250,.15);color:var(--pick);border:1px solid rgba(167,139,250,.4);border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;line-height:1"><span id="refreshIco">↻</span></button>
 </header>
 <div class="metrics" id="metrics"></div>
@@ -199,10 +198,19 @@ function tallies(){
 function renderAll(){
   const t=tallies(), d=DATA;
   const erps=(d.leaderboard&&d.leaderboard.standings&&d.leaderboard.standings.ensemble&&d.leaderboard.standings.ensemble.rps);
+  // trend: compare the latest running RPS to the previous game (lower = better)
+  const cr=d.leaderboard&&d.leaderboard.cum_rps&&d.leaderboard.cum_rps.ensemble;
+  let rpsTrend="";
+  if(cr&&cr.length>=2){
+    const dlt=cr[cr.length-1]-cr[cr.length-2];
+    if(dlt<-0.0005)      rpsTrend=` <span style="color:var(--good)" title="improving — RPS fell ${Math.abs(dlt).toFixed(3)}">▲</span>`;
+    else if(dlt>0.0005)  rpsTrend=` <span style="color:var(--bad)" title="getting worse — RPS rose ${dlt.toFixed(3)}">▼</span>`;
+    else                 rpsTrend=` <span style="color:var(--muted)" title="steady">–</span>`;
+  }
   $("#metrics").innerHTML=[
     `<span class="pill">you <b class="y">${t.yP}</b>/${t.yMax}</span>`,
     `<span class="pill">model <b class="p">${t.mP}</b>/${t.mMax}</span>`,
-    `<span class="pill">accuracy (RPS) <b>${erps??(d.summary||{}).live_rps??"–"}</b></span>`,
+    `<span class="pill">accuracy (RPS) <b>${erps??(d.summary||{}).live_rps??"–"}</b>${rpsTrend}</span>`,
   ].join("");
   $("#foot").textContent="Lower RPS = more accurate · picks lock at kickoff (SGT) · saved on this device";
 
@@ -288,7 +296,7 @@ function resultCard(f){
   // the ensemble (the adviser), then the other rungs, from the league data
   let modelRows="";
   if(f.lb_scored){
-    modelRows=["ensemble","dixon_coles","elo","poisson"].filter(m=>f.lb_scored[m]).map(m=>{
+    modelRows=["ensemble","poisson","dixon_coles","elo"].filter(m=>f.lb_scored[m]).map(m=>{
       const v=f.lb[m]||{}, s=f.lb_scored[m];
       const label=m==="ensemble"?"Model (Ensemble)":LB_LABELS[m];
       const col=m==="ensemble"?"var(--pick)":(LB_COLORS[m]||"var(--muted)");
@@ -323,7 +331,8 @@ const LB_COLORS={poisson:"#f472b6",dixon_coles:"#facc15",elo:"#34d399",ensemble:
 const LB_LABELS={poisson:"Poisson",dixon_coles:"Dixon–Coles",elo:"Elo",ensemble:"Ensemble"};
 function modelSays(f){
   if(!f.lb) return "";
-  const cells=Object.entries(f.lb).map(([m,v])=>{
+  const ORDER=["ensemble","poisson","dixon_coles","elo"]; // Elo last (no scoreline %)
+  const cells=ORDER.filter(m=>f.lb[m]).map(m=>{ const v=f.lb[m];
     const idx={home:0,draw:1,away:2}[v.result];
     const r=v.result==="draw"?"draw":`${v.result==="home"?f.team1:f.team2} win`;
     const rcol=v.result==="home"?"var(--home)":v.result==="away"?"var(--away)":"var(--draw)";
@@ -365,12 +374,24 @@ function renderLeague(d){
   $("#league").innerHTML=html;
   if(window.Chart){
     if(lbChart)lbChart.destroy();
+    // cumulative pool-points race: each game adds 0/2/3/5 so the lines diverge and
+    // show who's pulling ahead (RPS still lives in the table). You is tracked too.
+    const cum={}, run={}; M.forEach(m=>{cum[m]=[];run[m]=0;});
+    let yrun=0; const youCum=[];
+    lb.games.forEach(g=>{
+      const a=g.actual.split("-").map(Number);
+      M.forEach(m=>{ const s=(g.scored||{})[m]||{}; run[m]+=(s.result_hit?RP:0)+(s.exact_hit?EP:0); cum[m].push(run[m]); });
+      const yp=userPickFor(g.key);
+      if(yp&&yp[0]!=null){ if(resultOf(yp[0],yp[1])===resultOf(a[0],a[1]))yrun+=RP; if(yp[0]===a[0]&&yp[1]===a[1])yrun+=EP; }
+      youCum.push(yrun);
+    });
+    const dsets=M.map((m,i)=>({label:L[i],data:cum[m],borderColor:LB_COLORS[m],backgroundColor:LB_COLORS[m],borderWidth:2,tension:.2,pointRadius:2}));
+    dsets.push({label:"You",data:youCum,borderColor:"#22d3ee",backgroundColor:"#22d3ee",borderWidth:2,borderDash:[5,4],tension:.2,pointRadius:2});
     lbChart=new Chart(document.getElementById("lbchart"),{type:"line",
-      data:{labels:lb.games.map((g,i)=>i+1),
-        datasets:M.map((m,i)=>({label:L[i],data:lb.cum_rps[m],borderColor:LB_COLORS[m],backgroundColor:LB_COLORS[m],borderWidth:2,tension:.25,pointRadius:2}))},
+      data:{labels:lb.games.map((g,i)=>i+1),datasets:dsets},
       options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
-        plugins:{legend:{labels:{color:"#90a0b8",boxWidth:10,font:{size:11}}},title:{display:true,text:"running RPS — lower is better",color:"#6b7a90",font:{size:11}}},
-        scales:{x:{ticks:{color:"#6b7a90",maxTicksLimit:8},grid:{color:"#1f2c44"}},y:{ticks:{color:"#6b7a90"},grid:{color:"#1f2c44"}}}}});
+        plugins:{legend:{labels:{color:"#90a0b8",boxWidth:10,font:{size:11}}},title:{display:true,text:"running pool points — higher is better",color:"#6b7a90",font:{size:11}}},
+        scales:{x:{ticks:{color:"#6b7a90",maxTicksLimit:8},grid:{color:"#1f2c44"}},y:{beginAtZero:true,ticks:{color:"#6b7a90",precision:0},grid:{color:"#1f2c44"}}}}});
   }
 }
 
