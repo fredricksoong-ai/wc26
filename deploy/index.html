@@ -52,7 +52,8 @@
   .sbtn:active{background:rgba(255,255,255,.14)} .sbtn:disabled{opacity:.25;cursor:default}
   .snum{font-size:20px;font-weight:800;color:var(--you);padding:3px 0;font-variant-numeric:tabular-nums} .snum.unset{color:var(--muted)}
   .pstat{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex:none}
-  .pstat.ok{background:var(--good);color:#0b1220}
+  @keyframes pop{0%{transform:scale(.3);opacity:0}55%{transform:scale(1.25)}100%{transform:scale(1);opacity:1}}
+  .pstat.ok{background:var(--good);color:#0b1220;animation:pop .32s ease-out}
   .res{display:flex;align-items:center;gap:7px;font-size:12px;margin-top:9px;color:var(--muted);flex-wrap:wrap}
   .rrow2{display:flex;align-items:center;gap:7px;margin-top:9px;font-size:12px;flex-wrap:wrap} .rrow2 .lbl{min-width:64px;font-weight:600} .rrow2 .pts{margin-left:auto}
   .tag{border-radius:6px;padding:2px 7px;font-size:11px;font-weight:700;white-space:nowrap}
@@ -269,7 +270,7 @@ function pickCard(f){
       `<div class="snum${val==null?' unset':''}">${val==null?'?':val}</div>`+
       `<button class="sbtn" ${locked?'disabled':''} onclick="bumpPick(${i},${side},-1)">−</button></div>`;
   const status=locked?`<span class="pstat lock">🔒</span>`:both?`<span class="pstat ok">✓</span>`:`<span class="pstat"></span>`;
-  const pickUI=`<span class="picklbl">Your pick</span><div class="stepper">${box(0,a)}${status}${box(1,b)}</div>`;
+  const pickUI=`<div class="stepper">${box(0,a)}${status}${box(1,b)}</div>`;
   return `<div class="card">
     <div class="frow">
       <div><div class="teams">${f.team1}<span class="v">v</span>${f.team2}</div>
