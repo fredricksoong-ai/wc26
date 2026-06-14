@@ -147,8 +147,9 @@ def main() -> int:
         enp = E.ensemble_probs(dcp, elp, W_DC)
         out = {}
         if pm is not None and t1 in pm.teams and t2 in pm.teams:
-            ps = mode(pm.score_matrix(t1, t2))
-            out["poisson"] = {"score": ps, "result": res_of(ps), "probs": vec(pm.outcome_probs(t1, t2))}
+            ps = mode(pm.score_matrix(t1, t2, neutral=True))
+            out["poisson"] = {"score": ps, "result": res_of(ps),
+                              "probs": vec(pm.outcome_probs(t1, t2, neutral=True))}
         ds = mode(dcm)
         es = naive[amax(elp)]
         out["dixon_coles"] = {"score": ds, "result": res_of(ds), "probs": vec(dcp)}

@@ -60,9 +60,9 @@ class PoissonModel:
     teams: list[str]
     max_goals: int = 10
 
-    def expected_goals(self, home_team: str, away_team: str) -> tuple[float, float]:
-        """lambda_home, lambda_away for this fixture."""
-        lam_home = self._mu(team=home_team, opponent=away_team, home=1)
+    def expected_goals(self, home_team: str, away_team: str, neutral: bool = False) -> tuple[float, float]:
+        """lambda_home, lambda_away. neutral=True drops home advantage (World Cup venues)."""
+        lam_home = self._mu(team=home_team, opponent=away_team, home=0 if neutral else 1)
         lam_away = self._mu(team=away_team, opponent=home_team, home=0)
         return lam_home, lam_away
 
@@ -70,21 +70,21 @@ class PoissonModel:
         row = pd.DataFrame([{"team": team, "opponent": opponent, "home": home}])
         return float(self.result.predict(row).iloc[0])
 
-    def score_matrix(self, home_team: str, away_team: str) -> np.ndarray:
+    def score_matrix(self, home_team: str, away_team: str, neutral: bool = False) -> np.ndarray:
         """P(home=i, away=j) grid, shape (max_goals+1, max_goals+1).
 
         Independence assumption: joint = product of the two marginal Poissons.
         (Rung 2 / Dixon-Coles relaxes this for low scores.)
         """
-        lam_h, lam_a = self.expected_goals(home_team, away_team)
+        lam_h, lam_a = self.expected_goals(home_team, away_team, neutral=neutral)
         k = np.arange(self.max_goals + 1)
         p_home = poisson.pmf(k, lam_h)
         p_away = poisson.pmf(k, lam_a)
         return np.outer(p_home, p_away)
 
-    def outcome_probs(self, home_team: str, away_team: str) -> dict[str, float]:
+    def outcome_probs(self, home_team: str, away_team: str, neutral: bool = False) -> dict[str, float]:
         """Collapse the grid into home-win / draw / away-win probabilities."""
-        m = self.score_matrix(home_team, away_team)
+        m = self.score_matrix(home_team, away_team, neutral=neutral)
         home_win = np.tril(m, -1).sum()  # i > j
         draw = np.trace(m)               # i == j
         away_win = np.triu(m, 1).sum()   # i < j
