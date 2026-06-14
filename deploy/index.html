@@ -12,7 +12,7 @@
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;padding:env(safe-area-inset-top) 0 40px}
-  header{padding:18px 16px 4px} h1{font-size:19px;margin:0}
+  header{padding:18px 16px 4px;position:relative} h1{font-size:19px;margin:0;padding-right:44px}
   .sub{color:var(--muted);font-size:12px;margin-top:4px}
   .updated{color:var(--muted);font-size:11px;margin-top:6px}
   .updated b{color:var(--ink)}
@@ -78,7 +78,7 @@
 <header>
   <h1>⚽ World Cup 2026 Predictor ⚽</h1>
   <div class="updated" id="updated">loading…</div>
-  <button id="refreshBtn" onclick="triggerRefresh()" title="Fetch latest" style="margin-top:8px;background:rgba(167,139,250,.15);color:var(--pick);border:1px solid rgba(167,139,250,.4);border-radius:8px;padding:6px 12px;font-size:14px;font-weight:700;cursor:pointer">↻</button>
+  <button id="refreshBtn" onclick="triggerRefresh()" title="Fetch latest" style="position:absolute;top:16px;right:14px;width:34px;height:34px;background:rgba(167,139,250,.15);color:var(--pick);border:1px solid rgba(167,139,250,.4);border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;line-height:1">↻</button>
 </header>
 <div class="metrics" id="metrics"></div>
 <div class="tabs">
@@ -121,13 +121,15 @@ function scorePick(p,act){ if(!p||p[0]==null||p[1]==null||!act)return null;
 
 async function triggerRefresh(){
   const b=document.getElementById("refreshBtn"); if(!b||b.disabled)return;
-  const orig=b.textContent; b.disabled=true; b.textContent="Triggering…";
+  b.disabled=true; b.style.color="var(--muted)"; b.textContent="…"; b.title="Triggering…";
+  const reset=()=>{b.textContent="↻"; b.style.color="var(--pick)"; b.title="Fetch latest"; b.disabled=false;};
+  const fail=msg=>{b.textContent="✕"; b.style.color="var(--bad)"; b.title="Failed — "+msg; b.disabled=false; setTimeout(reset,5000);};
   try{
     const r=await fetch("/refresh",{method:"POST"});
     const j=await r.json().catch(()=>({}));
-    if(r.ok&&j.ok){ b.textContent="Building… reload in ~2 min ✓"; }
-    else { b.textContent="Failed ✗"; b.disabled=false; setTimeout(()=>b.textContent=orig,4000); console.error("refresh failed",j); }
-  }catch(e){ b.textContent="Failed ✗"; b.disabled=false; setTimeout(()=>b.textContent=orig,4000); console.error(e); }
+    if(r.ok&&j.ok){ b.textContent="✓"; b.style.color="var(--good)"; b.title="Building… reload in ~2 min"; setTimeout(reset,5000); }
+    else { fail((j&&j.error)||("HTTP "+r.status)); console.error("refresh failed",r.status,j); }
+  }catch(e){ fail(String(e)); console.error(e); }
 }
 
 fetch("predictions.json",{cache:"no-store"}).then(r=>r.json()).then(d=>{DATA=d;init(d)})
