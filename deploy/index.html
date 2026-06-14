@@ -229,13 +229,14 @@ function setPick(i,side,val){
 
 function resultCard(f){
   const yp=pickArr(f), ys=scorePick(yp,f.actual);
-  const mc=modelCall(f), ms=mc?scorePick(mc.split("-").map(Number),f.actual):null;
   const ytxt=yp&&yp[0]!=null?`${yp[0]}-${yp[1]}`:"—";
   const winner=f.actual[0]>f.actual[1]?f.team1:f.actual[0]<f.actual[1]?f.team2:null;
   const akey=`${f.actual[0]}-${f.actual[1]}`, ahit=(f.top_scores||[]).find(t=>t[0]===akey);
   const apct=ahit?` <span style="font-size:11px;color:var(--muted);font-weight:600">${pc(ahit[1])}%</span>`:"";
-  const ticks=s=>s?`<span class="tag ${s.rh?'ok':'no'}">${s.rh?'✓':'✗'} result</span><span class="tag ${s.eh?'ok':'no'}">${s.eh?'✓':'✗'} scoreline</span><span class="pts ${s.pts?'':'zero'}">+${s.pts}</span>`:`<span style="color:var(--muted)">no pick</span>`;
-  const mticks=s=>`<span class="tag ${s.result_hit?'ok':'no'}">${s.result_hit?'✓':'✗'} result</span><span class="tag ${s.exact_hit?'ok':'no'}">${s.exact_hit?'✓':'✗'} scoreline</span>`;
+  // each scoreline's probability per the adviser (ensemble), same basis as the top-right actual %
+  const spOf=sc=>{const h=(f.top_scores||[]).find(t=>t[0]===sc);return h?` <span style="color:var(--muted);font-weight:400;font-size:11px">${pc(h[1])}%</span>`:"";};
+  const row=(label,col,score,rh,eh,pts)=>`<div class="rrow2"><span class="lbl" style="color:${col};min-width:116px">${label}</span><span style="flex:none;width:72px;color:${col};font-weight:700">${score}${spOf(score)}</span><span class="tag ${rh?'ok':'no'}">${rh?'✓':'✗'} result</span><span class="tag ${eh?'ok':'no'}">${eh?'✓':'✗'} scoreline</span><span class="pts ${pts?'':'zero'}">+${pts}</span></div>`;
+  const youRow=ys?row("Your Pick","var(--you)",ytxt,ys.rh,ys.eh,ys.pts):`<div class="rrow2"><span class="lbl" style="color:var(--you);min-width:116px">Your Pick</span><span style="color:var(--muted)">no pick</span></div>`;
   // the ensemble (the adviser), then the other rungs, from the league data
   let modelRows="";
   if(f.lb_scored){
@@ -243,10 +244,11 @@ function resultCard(f){
       const v=f.lb[m]||{}, s=f.lb_scored[m];
       const label=m==="ensemble"?"Model (Ensemble)":LB_LABELS[m];
       const col=m==="ensemble"?"var(--pick)":(LB_COLORS[m]||"var(--muted)");
-      return `<div class="rrow2"><span class="lbl" style="color:${col};min-width:118px">${label}</span><b style="color:${col}">${v.score||"—"}</b>${mticks(s)}</div>`;
+      return row(label,col,v.score||"—",s.result_hit,s.exact_hit,(s.result_hit?RP:0)+(s.exact_hit?EP:0));
     }).join("");
   } else {
-    modelRows=`<div class="rrow2"><span class="lbl" style="color:var(--pick);min-width:118px">Model (Ensemble)</span><b style="color:var(--pick)">${mc||"—"}</b>${ticks(ms)}</div>`;
+    const mc=modelCall(f), ms=mc?scorePick(mc.split("-").map(Number),f.actual):null;
+    modelRows=ms?row("Model (Ensemble)","var(--pick)",mc,ms.rh,ms.eh,ms.pts):"";
   }
   return `<div class="card">
     <div class="frow">
@@ -254,7 +256,7 @@ function resultCard(f){
         <div class="meta">${timeOnly(f)} · ${f.group||f.round||""} · ${winner?winner+" won":"draw"}</div></div>
       <div class="score">${f.actual[0]}–${f.actual[1]}${apct}</div>
     </div>
-    <div class="rrow2"><span class="lbl" style="color:var(--you)">Your Pick</span><b style="color:var(--you)">${ytxt}</b>${ticks(ys)}</div>
+    ${youRow}
     ${modelRows}
   </div>`;
 }
