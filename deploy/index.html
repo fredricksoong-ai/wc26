@@ -45,8 +45,14 @@
   .chip{background:var(--card2);border:1px solid var(--line);border-radius:7px;padding:3px 7px;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
   .chip.best{border-color:var(--pick);color:var(--ink)} .chip.mine{border-color:var(--you);color:var(--ink)}
   .pickbox{display:flex;align-items:center;gap:8px;margin-top:11px;padding-top:10px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);flex-wrap:wrap}
-  .pickbox select{background:var(--card2);color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:5px 7px;font-size:14px;font-variant-numeric:tabular-nums}
-  .pickbox .lk{color:var(--you);font-weight:700} .pickbox .locked{color:var(--muted)}
+  .picklbl{color:var(--muted);flex:none}
+  .stepper{flex:1;display:flex;justify-content:center;align-items:center;gap:16px}
+  .sbox{display:flex;flex-direction:column;align-items:center;width:58px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,.04)}
+  .sbtn{width:100%;border:none;background:rgba(255,255,255,.07);color:var(--ink);font-size:15px;font-weight:700;padding:4px 0;cursor:pointer;line-height:1;font-family:inherit}
+  .sbtn:active{background:rgba(255,255,255,.14)} .sbtn:disabled{opacity:.25;cursor:default}
+  .snum{font-size:20px;font-weight:800;color:var(--you);padding:3px 0;font-variant-numeric:tabular-nums} .snum.unset{color:var(--muted)}
+  .pstat{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex:none}
+  .pstat.ok{background:var(--good);color:#0b1220}
   .res{display:flex;align-items:center;gap:7px;font-size:12px;margin-top:9px;color:var(--muted);flex-wrap:wrap}
   .rrow2{display:flex;align-items:center;gap:7px;margin-top:9px;font-size:12px;flex-wrap:wrap} .rrow2 .lbl{min-width:64px;font-weight:600} .rrow2 .pts{margin-left:auto}
   .tag{border-radius:6px;padding:2px 7px;font-size:11px;font-weight:700;white-space:nowrap}
@@ -257,10 +263,13 @@ function pickCard(f){
   const tops=(f.top_scores||[]).slice(0,6).map(t=>`<span class="chip ${t[0]===mc?'best':''}">${t[0]} · ${pc(t[1])}%</span>`).join("");
   const xg=f.xg_home!=null?`xG ${f.xg_home} – ${f.xg_away} · `:"";
   const yp=pickArr(f), locked=isLocked(f);
-  const ytxt=yp&&yp[0]!=null&&yp[1]!=null?`${yp[0]}-${yp[1]}`:"not set";
-  const pickUI=locked
-    ? `<span class="locked">🔒 Your Pick <b class="lk" style="color:var(--you)">${ytxt}</b> (locked)</span>`
-    : `<span style="color:var(--you);font-weight:600">Your Pick</span><select onchange="setPick(${i},0,this.value)">${selOpts(yp?yp[0]:null)}</select><span>–</span><select onchange="setPick(${i},1,this.value)">${selOpts(yp?yp[1]:null)}</select><span style="color:var(--you)">${yp&&yp[0]!=null&&yp[1]!=null?'saved ✓':''}</span>`;
+  const a=yp&&yp[0]!=null?yp[0]:null, b=yp&&yp[1]!=null?yp[1]:null, both=a!=null&&b!=null;
+  const box=(side,val)=>`<div class="sbox">`+
+      `<button class="sbtn" ${locked?'disabled':''} onclick="bumpPick(${i},${side},1)">+</button>`+
+      `<div class="snum${val==null?' unset':''}">${val==null?'?':val}</div>`+
+      `<button class="sbtn" ${locked?'disabled':''} onclick="bumpPick(${i},${side},-1)">−</button></div>`;
+  const status=locked?`<span class="pstat lock">🔒</span>`:both?`<span class="pstat ok">✓</span>`:`<span class="pstat"></span>`;
+  const pickUI=`<span class="picklbl">Your pick</span><div class="stepper">${box(0,a)}${status}${box(1,b)}</div>`;
   return `<div class="card">
     <div class="frow">
       <div><div class="teams">${f.team1}<span class="v">v</span>${f.team2}</div>
@@ -282,6 +291,16 @@ function setPick(i,side,val){
   const cur=P[k]||pickArr(f)||[null,null];
   cur[side]=val===""?null:+val;
   P[k]=cur; savePicks(P); renderAll();
+}
+// FotMob-style stepper: + from ? -> 0, - below 0 -> back to ? (clears), cap at 10
+function bumpPick(i,side,delta){
+  if(isLocked(ALLFIX[i]))return;
+  const f=ALLFIX[i],k=keyOf(f),P=loadPicks();
+  const cur=(P[k]||pickArr(f)||[null,null]).slice();
+  let v=cur[side];
+  if(v==null){ if(delta>0)v=0; }
+  else { v+=delta; if(v<0)v=null; else if(v>10)v=10; }
+  cur[side]=v; P[k]=cur; savePicks(P); renderAll();
 }
 
 function resultCard(f){
