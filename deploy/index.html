@@ -78,6 +78,7 @@
 <header>
   <h1>⚽ World Cup 2026 Predictor ⚽</h1>
   <div class="updated" id="updated">loading…</div>
+  <button id="refreshBtn" onclick="triggerRefresh()" title="Fetch latest" style="margin-top:8px;background:rgba(167,139,250,.15);color:var(--pick);border:1px solid rgba(167,139,250,.4);border-radius:8px;padding:6px 12px;font-size:14px;font-weight:700;cursor:pointer">↻</button>
 </header>
 <div class="metrics" id="metrics"></div>
 <div class="tabs">
@@ -117,6 +118,17 @@ const resultOf=(h,a)=>h>a?"home":h<a?"away":"draw";
 function scorePick(p,act){ if(!p||p[0]==null||p[1]==null||!act)return null;
   const rh=resultOf(p[0],p[1])===resultOf(act[0],act[1]); const eh=p[0]===act[0]&&p[1]===act[1];
   return {pts:(rh?RP:0)+(eh?EP:0), rh, eh}; }
+
+async function triggerRefresh(){
+  const b=document.getElementById("refreshBtn"); if(!b||b.disabled)return;
+  const orig=b.textContent; b.disabled=true; b.textContent="Triggering…";
+  try{
+    const r=await fetch("/refresh",{method:"POST"});
+    const j=await r.json().catch(()=>({}));
+    if(r.ok&&j.ok){ b.textContent="Building… reload in ~2 min ✓"; }
+    else { b.textContent="Failed ✗"; b.disabled=false; setTimeout(()=>b.textContent=orig,4000); console.error("refresh failed",j); }
+  }catch(e){ b.textContent="Failed ✗"; b.disabled=false; setTimeout(()=>b.textContent=orig,4000); console.error(e); }
+}
 
 fetch("predictions.json",{cache:"no-store"}).then(r=>r.json()).then(d=>{DATA=d;init(d)})
   .catch(e=>{$("#fixtures").innerHTML=`<div class="err">Couldn't load predictions.json.<br>${e}</div>`});
