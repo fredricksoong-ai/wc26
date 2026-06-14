@@ -89,6 +89,61 @@ def _parse(s):
     return int(a), int(b)
 
 
+# --- Host advantage (2026 is co-hosted; hosts play real home games) ------------
+# Every other game is neutral, but USA/Mexico/Canada playing in their own country
+# get the model's fitted home edge. Venue -> host country from the openfootball
+# `ground` city; all 16 venues are in one of the three hosts.
+HOST_COUNTRY = {"United States": "USA", "Mexico": "MEX", "Canada": "CAN"}
+_MEX = ("Mexico City", "Guadalajara", "Monterrey")
+_CAN = ("Toronto", "Vancouver")
+_USA = ("Atlanta", "San Francisco", "Los Angeles", "Seattle", "New York",
+        "Boston", "Philadelphia", "Miami", "Houston", "Dallas", "Kansas City")
+
+
+def _venue_country(ground):
+    g = (str(ground) if ground is not None else "").strip()
+    if g.startswith(_MEX): return "MEX"
+    if g.startswith(_CAN): return "CAN"
+    if g.startswith(_USA): return "USA"
+    return None
+
+
+def host_side(t1, t2, ground):
+    """The side playing at home (a 2026 host in its own country), or None."""
+    c = _venue_country(ground)
+    if c is None:
+        return None
+    if HOST_COUNTRY.get(t1) == c: return t1
+    if HOST_COUNTRY.get(t2) == c: return t2
+    return None
+
+
+def o_probs(probfn, t1, t2, ground):
+    """outcome_probs oriented as t1=home/t2=away, applying host advantage if a host plays home."""
+    h = host_side(t1, t2, ground)
+    if h is None: return probfn(t1, t2, neutral=True)
+    if h == t1:   return probfn(t1, t2, neutral=False)
+    p = probfn(t2, t1, neutral=False)                    # host is t2: compute then flip
+    return {"home": p["away"], "draw": p["draw"], "away": p["home"]}
+
+
+def o_matrix(model, t1, t2, ground):
+    """score_matrix with rows=t1 goals, cols=t2 goals, host advantage applied."""
+    h = host_side(t1, t2, ground)
+    if h is None: return model.score_matrix(t1, t2, neutral=True)
+    if h == t1:   return model.score_matrix(t1, t2, neutral=False)
+    return model.score_matrix(t2, t1, neutral=False).T
+
+
+def o_xg(model, t1, t2, ground):
+    """expected_goals as (t1, t2), host advantage applied."""
+    h = host_side(t1, t2, ground)
+    if h is None: return model.expected_goals(t1, t2, neutral=True)
+    if h == t1:   return model.expected_goals(t1, t2, neutral=False)
+    a, b = model.expected_goals(t2, t1, neutral=False)
+    return (b, a)
+
+
 def backtest_rps(rec, full):
     d = rec.sort_values("date"); cut = int(len(d) * 0.8)
     tr, te = d.iloc[:cut], d.iloc[cut:]
@@ -108,6 +163,56 @@ def backtest_rps(rec, full):
     return {"ensemble_rps": round(ens["rps"], 4), "baseline_rps": round(base["rps"], 4)}
 
 
+def calibration_backtest(rec, full):
+    """Out-of-sample reliability: are the model's probabilities trustworthy?
+
+    Train the ensemble on everything up to ~12 months ago, predict the most recent
+    year, then pool every (predicted prob, did-it-happen) pair across home/draw/away
+    and bin by predicted probability. A well-calibrated model has observed frequency
+    ≈ predicted probability in each bin. Also reports holdout RPS/Brier/log-loss/acc.
+    """
+    import numpy as np
+    d = rec.sort_values("date")
+    test_min = d["date"].max() - pd.Timedelta(days=365)
+    tr, te = d[d["date"] < test_min], d[d["date"] >= test_min]
+    if len(tr) < 200 or len(te) < 50:          # thin history -> fall back to 80/20
+        cut = int(len(d) * 0.8)
+        tr, te = d.iloc[:cut], d.iloc[cut:]
+        test_min = te["date"].min()
+    dm_c = dc.fit(tr, xi=XI)
+    em_c = E.fit(full[full["date"] < test_min])
+    known = set(dm_c.teams) & set(em_c.teams)
+    rows, outs = [], []
+    for r in te.itertuples():
+        if r.home_team in known and r.away_team in known:
+            neutral = bool(getattr(r, "neutral", False))
+            p = E.ensemble_probs(dm_c.outcome_probs(r.home_team, r.away_team, neutral=neutral),
+                                 em_c.outcome_probs(r.home_team, r.away_team, neutral=neutral), W_DC)
+            rows.append([p["home"], p["draw"], p["away"]])
+            outs.append(evaluate.result_to_outcome(r.home_score, r.away_score))
+    if not rows:
+        return None
+    pred = [[] for _ in range(10)]; hit = [[] for _ in range(10)]
+    for p, o in zip(rows, outs):
+        oh = [1 if c == o else 0 for c in ("home", "draw", "away")]
+        for c in range(3):
+            b = min(int(p[c] * 10), 9)
+            pred[b].append(p[c]); hit[b].append(oh[c])
+    bins = [{"p": round((b + 0.5) / 10, 2),
+             "pred": round(float(np.mean(pred[b])), 3),
+             "obs": round(float(np.mean(hit[b])), 3),
+             "n": len(pred[b])} for b in range(10) if pred[b]]
+    ms = evaluate.mean_scores(rows, outs)
+    acc = float(np.mean([["home", "draw", "away"][int(np.argmax(p))] == o for p, o in zip(rows, outs)]))
+    br = (tr.assign(o=[evaluate.result_to_outcome(h, a) for h, a in zip(tr.home_score, tr.away_score)])
+          ["o"].value_counts(normalize=True).reindex(["home", "draw", "away"]).fillna(0).values)
+    base = evaluate.mean_scores([br] * len(outs), outs)
+    return {"bins": bins, "n": len(outs), "window": "last 365 days",
+            "metrics": {"rps": round(ms["rps"], 4), "brier": round(ms["brier"], 4),
+                        "log_loss": round(ms["log_loss"], 4), "acc": round(acc, 3),
+                        "baseline_rps": round(base["rps"], 4)}}
+
+
 def main() -> int:
     full = data.load_results(os.path.join(RAW, "results.csv"))
     rec = data.filter_teams(data.filter_recent(full, years=RECENT_YEARS), MIN_MATCHES)
@@ -121,7 +226,7 @@ def main() -> int:
 
     LB_MODELS = ["poisson", "dixon_coles", "elo", "ensemble"]
 
-    def model_eval(t1, t2):
+    def model_eval(t1, t2, ground):
         """Each rung's HONEST prediction — not a pool-gamed pick.
 
         Per model: its most-likely scoreline, its most-likely result, and its 1X2
@@ -141,15 +246,15 @@ def main() -> int:
             i, j = sc.split("-"); return scoring._result(int(i), int(j))
         naive = {"home": "1-0", "draw": "1-1", "away": "0-1"}
 
-        dcm = dm.score_matrix(t1, t2, neutral=True)
-        dcp = dm.outcome_probs(t1, t2, neutral=True)
-        elp = em.outcome_probs(t1, t2, neutral=True)
+        dcm = o_matrix(dm, t1, t2, ground)
+        dcp = o_probs(dm.outcome_probs, t1, t2, ground)
+        elp = o_probs(em.outcome_probs, t1, t2, ground)
         enp = E.ensemble_probs(dcp, elp, W_DC)
         out = {}
         if pm is not None and t1 in pm.teams and t2 in pm.teams:
-            ps, psp = mode(pm.score_matrix(t1, t2, neutral=True))
+            ps, psp = mode(o_matrix(pm, t1, t2, ground))
             out["poisson"] = {"score": ps, "sp": psp, "result": res_of(ps),
-                              "probs": vec(pm.outcome_probs(t1, t2, neutral=True))}
+                              "probs": vec(o_probs(pm.outcome_probs, t1, t2, ground))}
         ds, dsp = mode(dcm)
         es = naive[amax(elp)]
         out["dixon_coles"] = {"score": ds, "sp": dsp, "result": res_of(ds), "probs": vec(dcp)}
@@ -184,6 +289,7 @@ def main() -> int:
             meta = {"date": date, "round": r.round, "group": r.group, "ground": r.ground,
                     "team1": r.team1, "team2": r.team2,
                     "kickoff_sgt": sgt_iso, "kickoff_label": sgt_label,
+                    "host": host_side(r.team1, r.team2, r.ground),
                     "resolved": bool(r.resolved), "played": bool(r.played)}
             if not r.resolved or r.team1 not in known or r.team2 not in known:
                 fixtures_out.append(meta)
@@ -191,22 +297,22 @@ def main() -> int:
 
             k = _key(date, r.team1, r.team2)
             entry = ledger.get(k)
-            matrix = dm.score_matrix(r.team1, r.team2, neutral=True)
+            matrix = o_matrix(dm, r.team1, r.team2, r.ground)
 
             if not r.played:
-                probs = E.ensemble_probs(dm.outcome_probs(r.team1, r.team2, neutral=True),
-                                         em.outcome_probs(r.team1, r.team2, neutral=True), W_DC)
+                probs = E.ensemble_probs(o_probs(dm.outcome_probs, r.team1, r.team2, r.ground),
+                                         o_probs(em.outcome_probs, r.team1, r.team2, r.ground), W_DC)
                 # honest forecast: the most likely scoreline (mode of the DC grid)
                 # plus expected goals (the average). No pool-points optimisation.
                 tops = [[f"{i}-{j}", round(p, 3)] for (i, j), p in scoring.top_scorelines(matrix, 10)]
                 (mi, mj), mprob = scoring.top_scorelines(matrix, 1)[0]
-                xgh, xga = dm.expected_goals(r.team1, r.team2, neutral=True)
+                xgh, xga = o_xg(dm, r.team1, r.team2, r.ground)
                 entry = {"p_home": round(probs["home"], 3), "p_draw": round(probs["draw"], 3),
                          "p_away": round(probs["away"], 3),
                          "model_pick": f"{mi}-{mj}", "model_pick_result": scoring._result(mi, mj),
                          "model_pick_prob": round(float(mprob), 3),
                          "xg_home": round(float(xgh), 2), "xg_away": round(float(xga), 2),
-                         "top_scores": tops, "lb": model_eval(r.team1, r.team2),
+                         "top_scores": tops, "lb": model_eval(r.team1, r.team2, r.ground),
                          "updated_utc": _now(), "played": False, "scored": False}
                 ledger[k] = entry
             else:  # played — robust: scores the forecast if present, ALWAYS fills the league
@@ -219,7 +325,7 @@ def main() -> int:
                     entry.update(scored=True, model_earned=msc["points"], model_result_hit=msc["result_hit"],
                                  model_exact_hit=msc["exact_hit"], max_points=msc["max_points"],
                                  rps=round(evaluate.rps([entry["p_home"], entry["p_draw"], entry["p_away"]], ao), 4))
-                lb = entry.get("lb") or model_eval(r.team1, r.team2)   # frozen probs, else post-hoc
+                lb = entry.get("lb") or model_eval(r.team1, r.team2, r.ground)   # frozen probs, else post-hoc
                 entry["lb"] = lb
                 entry["lb_scored"] = score_models(lb, actual)          # always recompute (corrects old rows)
                 if "model_pick" not in entry:
@@ -351,9 +457,10 @@ def main() -> int:
 
     payload = {
         "generated_utc": _now(),
-        "model": f"Dixon-Coles (xi={XI}) + Elo ensemble (w_DC={W_DC}), neutral venues",
+        "model": f"Dixon-Coles (xi={XI}) + Elo ensemble (w_DC={W_DC}); host advantage for USA/Mexico/Canada",
         "scoring": {"result_pts": RESULT_PTS, "exact_pts": EXACT_PTS},
         "backtest": backtest_rps(rec, full),
+        "calibration": calibration_backtest(rec, full),
         "summary": summary,
         "n_fixtures": len(fixtures_out),
         "fixtures": fixtures_out,

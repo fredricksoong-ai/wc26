@@ -16,6 +16,13 @@
   .sub{color:var(--muted);font-size:12px;margin-top:4px}
   .updated{color:var(--muted);font-size:11px;margin-top:6px}
   @keyframes spin{to{transform:rotate(360deg)}} #refreshIco{display:inline-block} #refreshIco.spin{animation:spin .9s linear infinite}
+  .calrow{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:12px}
+  .callab{width:40px;color:var(--muted);text-align:right;flex:none}
+  .caltrack{position:relative;height:10px;flex:1;background:rgba(255,255,255,.06);border-radius:5px}
+  .caltrack .obsfill{position:absolute;left:0;top:0;bottom:0;background:var(--good);border-radius:5px;opacity:.85}
+  .caltrack .predmark{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+  .calval{width:34px;text-align:right;color:var(--ink);font-weight:600;flex:none}
+  .caln{width:34px;text-align:right;color:var(--muted);flex:none}
   .updated b{color:var(--ink)}
   .metrics{display:flex;gap:8px;padding:10px 16px;flex-wrap:wrap}
   .pill{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 11px;font-size:12px;color:var(--muted)}
@@ -247,7 +254,7 @@ function pickCard(f){
   return `<div class="card">
     <div class="frow">
       <div><div class="teams">${f.team1}<span class="v">v</span>${f.team2}</div>
-        <div class="meta">${xg}${timeOnly(f)} · ${f.group||f.round||""}</div></div>
+        <div class="meta">${xg}${timeOnly(f)} · ${f.group||f.round||""}${f.host?` · <span style="color:${f.host===f.team2?'var(--away)':'var(--home)'}">🏠 ${f.host}</span>`:""}</div></div>
       <div style="text-align:right;flex-shrink:0"><div style="color:${rcol};font-weight:700;font-size:13px">${cf.kind==="draw"?"Draw":cf.who+" win"}</div><div style="font-size:11px"><span class="rc-${cf.lvl}">${cf.lvl==="toss"?"toss-up":cf.lvl}</span> <span style="color:var(--muted)">· ${pc(cf.p)}%</span></div></div>
     </div>
     <div class="bar"><i class="h" style="width:${pc(f.p_home)}%"></i><i class="d" style="width:${pc(f.p_draw)}%"></i><i class="a" style="width:${pc(f.p_away)}%"></i></div>
@@ -401,6 +408,21 @@ function toSGT(utc){ if(!utc)return"–"; const m=utc.match(/(\d{4})-(\d{2})-(\d
   const d=new Date(Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5]));
   return d.toLocaleString("en-GB",{timeZone:"Asia/Singapore",weekday:"short",day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})+" SGT"; }
 
+function calibrationHTML(){
+  const c=(DATA||{}).calibration; if(!c||!c.bins||!c.bins.length) return "";
+  const m=c.metrics||{};
+  const rows=c.bins.map(b=>{
+    const pred=Math.round(b.pred*100), obs=Math.round(b.obs*100);
+    return `<div class="calrow"><span class="callab">~${Math.round(b.p*100)}%</span>`+
+      `<div class="caltrack"><i class="obsfill" style="width:${obs}%"></i><i class="predmark" style="left:${pred}%"></i></div>`+
+      `<span class="calval">${obs}%</span><span class="caln">${b.n}</span></div>`;
+  }).join("");
+  return `<h3>How calibrated is it? <span class="k">(out-of-sample)</span></h3>
+   <p>Trained on history up to a year ago, then tested on the <b>${c.n}</b> internationals it had never seen — so this is honest, not fitted. Out-of-sample <span class="k">RPS ${m.rps}</span> (≈0.33 is random, ${m.baseline_rps} is just picking base rates), and it called the right result <span class="k">${Math.round((m.acc||0)*100)}%</span> of the time.</p>
+   <p style="color:var(--muted);font-size:11px;margin:6px 0 2px"><span style="display:inline-block;width:18px;height:8px;background:var(--good);opacity:.85;border-radius:4px;vertical-align:middle"></span> how often it happened &nbsp; <span style="display:inline-block;width:2px;height:12px;background:var(--ink);vertical-align:middle"></span> what the model predicted</p>
+   ${rows}
+   <p style="color:var(--muted);font-size:11px">Read each row as: of all the times the model gave roughly that probability, how often the thing actually happened. Tick ≈ green edge = trustworthy. Here it's close across the board — a touch under-confident at the extremes (when it says 85–95%, it's usually right even more often).</p>`;
+}
 function explainerHTML(){return `
   <h3>What this is</h3>
   <p>A statistical model that forecasts every World Cup match — its honest best guess at the score, not a pick engineered to win your pool. You enter your own picks separately.</p>
@@ -418,10 +440,11 @@ function explainerHTML(){return `
   <p>Your pool points vs how the model's predicted scoreline would have scored over the same games — see if your judgement beats the forecast.</p>
   <h3>Accuracy (RPS)</h3>
   <p>Ranked Probability Score grades how good the probabilities are — <span class="k">lower is better</span>. Roughly: 0.10 excellent, 0.20 average, 0.33 = random guessing.</p>
+  ${calibrationHTML()}
   <h3>Dixon–Coles + Elo ensemble</h3>
   <p>Two methods blended: <span class="k">Dixon–Coles</span> models goals from recent scoring form; <span class="k">Elo</span> is a running team-strength rating built from every international ever played. Combining them is more accurate than either alone, especially for teams with little recent data.</p>
-  <h3>Neutral venues</h3>
-  <p>Almost all World Cup games are at neutral sites, so the model removes home advantage from its predictions.</p>
+  <h3>Host advantage</h3>
+  <p>Most games are treated as <span class="k">neutral</span> — no home edge. The exception is the three hosts: when <span class="k">USA, Mexico or Canada</span> play in their own country (a 🏠 badge on the card), the model applies its fitted home advantage to that side. Mexico at altitude in Mexico City, for instance, gets a real bump.</p>
   <h3>Result call</h3>
   <p>The model's most likely <span class="k">outcome</span> (win/draw) and how sure it is — <span class="k">strong</span> (≥60%), <span class="k">lean</span> (≥45%) or <span class="k">toss-up</span>. This is the model's most reliable signal, so it's the one to trust for the result points.</p>
   <h3>Recent form</h3>
