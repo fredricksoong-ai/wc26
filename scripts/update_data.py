@@ -17,7 +17,7 @@ import json
 import os
 import sys
 import tempfile
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 import requests
 
@@ -35,6 +35,44 @@ FILES = {
     "former_names.csv": f"{MARTJ42}/former_names.csv",
     "worldcup2026.json": f"{OPENFOOTBALL}/2026/worldcup.json",
 }
+
+# Odds are fetched on a fixed schedule — 6pm and 10pm Singapore time — plus a 12h
+# safety floor. The pipeline carries deploy/odds.json forward from the live site
+# each run (the bot never commits), so we can tell when it was last fetched and
+# only spend a credit on the first run after each target window passes.
+SGT = timezone(timedelta(hours=8))
+ODDS_TARGETS_SGT = (18, 22)          # 6pm and 10pm Singapore time
+ODDS_FLOOR_H = 12                    # also refetch if the snapshot is older than this
+ODDS_FILE = os.path.join(PROJ, "deploy", "odds.json")
+
+
+def _last_odds_fetch(path: str):
+    """Datetime of the last odds fetch from the carried-forward file, or None."""
+    try:
+        meta = json.load(open(path))
+        return datetime.strptime(meta["fetched_utc"], "%Y-%m-%d %H:%M UTC").replace(tzinfo=timezone.utc)
+    except Exception:
+        return None
+
+
+def _should_fetch_odds(path: str):
+    """(should_fetch, reason). Fetch on the first run after 6pm/10pm SGT, or if stale."""
+    now = datetime.now(timezone.utc)
+    last = _last_odds_fetch(path)
+    if last is None:
+        return True, "no prior snapshot"
+    age_h = (now - last).total_seconds() / 3600.0
+    if age_h >= ODDS_FLOOR_H:
+        return True, f"{age_h:.1f}h old (>{ODDS_FLOOR_H}h floor)"
+    now_sgt = now.astimezone(SGT)
+    passed = []
+    for h in ODDS_TARGETS_SGT:                       # most recent 6pm/10pm SGT that has passed
+        t = now_sgt.replace(hour=h, minute=0, second=0, microsecond=0)
+        passed += [t, t - timedelta(days=1)]
+    last_target = max(t for t in passed if t <= now_sgt)
+    if last.astimezone(SGT) < last_target:
+        return True, f"scheduled {last_target.strftime('%H:%M')} SGT window"
+    return False, f"{age_h:.1f}h old, already fetched since the last window"
 
 
 def download(url: str, dest: str, timeout: int = 60) -> int:
@@ -71,18 +109,23 @@ def main() -> int:
     # or rate-limited odds feed must never sink the run; the model works without it.
     key = os.environ.get("ODDS_API_KEY")
     if key:
-        try:
-            from src import odds as O
-            events, remaining = O.fetch_odds(key)
-            parsed = O.parse(events)
-            payload = {"fetched_utc": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
-                       "credits_remaining": int(remaining) if str(remaining or "").isdigit() else None,
-                       "matches": parsed}
-            with open(os.path.join(RAW_DIR, "odds.json"), "w") as f:
-                json.dump(payload, f, indent=2)
-            print(f"  ok   odds.json            {len(parsed):>3} matches priced | {remaining} credits left")
-        except Exception as e:
-            print(f"  WARN odds skipped: {e}")
+        do_fetch, why = _should_fetch_odds(ODDS_FILE)
+        if not do_fetch:
+            print(f"  odds.json reused ({why}) — no credit spent")
+        else:
+            try:
+                from src import odds as O
+                events, remaining = O.fetch_odds(key)
+                parsed = O.parse(events)
+                payload = {"fetched_utc": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+                           "credits_remaining": int(remaining) if str(remaining or "").isdigit() else None,
+                           "matches": parsed}
+                os.makedirs(os.path.dirname(ODDS_FILE), exist_ok=True)
+                with open(ODDS_FILE, "w") as f:
+                    json.dump(payload, f, indent=2)
+                print(f"  ok   odds.json [{why}]  {len(parsed):>3} matches priced | {remaining} credits left")
+            except Exception as e:
+                print(f"  WARN odds skipped: {e}")
     else:
         print("  (no ODDS_API_KEY set — skipping bookmaker odds)")
 

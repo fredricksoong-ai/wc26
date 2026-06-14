@@ -10,6 +10,8 @@ on:
   schedule:
     - cron: "0 */3 * * *"     # every 3h UTC -> SGT 02,05,08,11,14,17,20,23
                               # covers the WC result window (games finish ~02:00-14:00 SGT)
+    - cron: "0 10 * * *"      # 18:00 SGT — scheduled odds fetch (6pm)
+    - cron: "0 14 * * *"      # 22:00 SGT — scheduled odds fetch (10pm)
   workflow_dispatch: {}
 
 concurrency:
@@ -36,6 +38,12 @@ jobs:
           curl -fsS https://wc26-3kx.pages.dev/picks.json -o /tmp/picks.json \
             && cp /tmp/picks.json deploy/picks.json \
             && echo "carried over ledger" || echo "no live ledger yet, using committed one"
+
+      # carry odds.json forward too, so the 12h fetch throttle can see its age
+      - name: Carry over the odds snapshot from the live site
+        run: |
+          curl -fsS https://wc26-3kx.pages.dev/odds.json -o deploy/odds.json \
+            && echo "carried over odds snapshot" || echo "no live odds yet (first run or odds off)"
 
       - name: Pull data (martj42 results + openfootball fixtures + bookmaker odds)
         run: python scripts/update_data.py

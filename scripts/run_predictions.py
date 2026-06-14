@@ -227,7 +227,8 @@ def main() -> int:
     LB_MODELS = ["poisson", "dixon_coles", "elo", "ensemble", "market"]
 
     # bookmaker odds (optional): de-vigged consensus probs keyed by team pair.
-    odds_path = os.path.join(RAW, "odds.json")
+    # Lives in deploy/ so it's carried forward from the live site between runs (throttle).
+    odds_path = os.path.join(DEPLOY, "odds.json")
     odds_raw = json.load(open(odds_path)) if os.path.exists(odds_path) else []
     odds_meta = odds_raw if isinstance(odds_raw, dict) else {}          # {fetched_utc, credits_remaining, matches}
     odds_list = odds_meta.get("matches", odds_raw if isinstance(odds_raw, list) else [])
