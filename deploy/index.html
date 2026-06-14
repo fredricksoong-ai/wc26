@@ -237,7 +237,7 @@ function resultCard(f){
   // gave that exact score (each model's own; ensemble's for Your Pick). null -> no % shown.
   const spTag=sp=>sp!=null?` <span style="color:var(--muted);font-weight:400;font-size:11px">${pc(sp)}%</span>`:"";
   const ensSp=sc=>{const h=(f.top_scores||[]).find(t=>t[0]===sc);return h?h[1]:null;};
-  const row=(label,col,score,sp,rh,eh,pts)=>`<div class="rrow2" style="flex-wrap:nowrap;gap:6px"><span class="lbl" style="color:${col};min-width:108px;flex-shrink:0">${label}</span><span style="flex:none;width:62px;color:${col};font-weight:700">${score}${spTag(sp)}</span><span class="tag ${rh?'ok':'no'}" style="margin-left:auto">${rh?'✓':'✗'} result</span><span class="tag ${eh?'ok':'no'}">${eh?'✓':'✗'} scoreline</span></div>`;
+  const row=(label,col,score,sp,rh,eh,pts)=>`<div class="rrow2" style="flex-wrap:nowrap;gap:6px"><span class="lbl" style="color:${col};min-width:108px;flex-shrink:0">${label}</span><span style="flex:none;width:74px;margin-left:auto;text-align:right;color:${col};font-weight:700">${score}${spTag(sp)}</span><span class="tag ${rh?'ok':'no'}">${rh?'✓':'✗'} result</span><span class="tag ${eh?'ok':'no'}">${eh?'✓':'✗'} scoreline</span></div>`;
   const youRow=ys?row("Your Pick","var(--you)",ytxt,ensSp(ytxt),ys.rh,ys.eh,ys.pts):`<div class="rrow2"><span class="lbl" style="color:var(--you);min-width:116px">Your Pick</span><span style="color:var(--muted)">no pick</span></div>`;
   // the ensemble (the adviser), then the other rungs, from the league data
   let modelRows="";
