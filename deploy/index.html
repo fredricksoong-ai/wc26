@@ -212,7 +212,9 @@ function renderAll(){
     `<span class="pill">model <b class="p">${t.mP}</b>/${t.mMax}</span>`,
     `<span class="pill">accuracy (RPS) <b>${erps??(d.summary||{}).live_rps??"–"}</b>${rpsTrend}</span>`,
   ].join("");
-  $("#foot").textContent="Lower RPS = more accurate · picks lock at kickoff (SGT) · saved on this device";
+  let foot="Lower RPS = more accurate · picks lock at kickoff (SGT) · saved on this device";
+  if(d.odds&&d.odds.credits_remaining!=null) foot+=` · odds API: ${d.odds.credits_remaining} credits left`;
+  $("#foot").textContent=foot;
 
   const up=ALLFIX.filter(f=>!f.played).sort((a,b)=>(a.kickoff_sgt||"").localeCompare(b.kickoff_sgt||""));
   const done=ALLFIX.filter(f=>f.played&&f.actual).sort((a,b)=>(b.kickoff_sgt||"").localeCompare(a.kickoff_sgt||""));

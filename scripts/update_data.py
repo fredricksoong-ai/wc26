@@ -75,8 +75,11 @@ def main() -> int:
             from src import odds as O
             events, remaining = O.fetch_odds(key)
             parsed = O.parse(events)
+            payload = {"fetched_utc": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+                       "credits_remaining": int(remaining) if str(remaining or "").isdigit() else None,
+                       "matches": parsed}
             with open(os.path.join(RAW_DIR, "odds.json"), "w") as f:
-                json.dump(parsed, f, indent=2)
+                json.dump(payload, f, indent=2)
             print(f"  ok   odds.json            {len(parsed):>3} matches priced | {remaining} credits left")
         except Exception as e:
             print(f"  WARN odds skipped: {e}")

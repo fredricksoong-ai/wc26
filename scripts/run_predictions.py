@@ -227,7 +227,10 @@ def main() -> int:
     LB_MODELS = ["poisson", "dixon_coles", "elo", "ensemble", "market"]
 
     # bookmaker odds (optional): de-vigged consensus probs keyed by team pair.
-    odds_list = json.load(open(os.path.join(RAW, "odds.json"))) if os.path.exists(os.path.join(RAW, "odds.json")) else []
+    odds_path = os.path.join(RAW, "odds.json")
+    odds_raw = json.load(open(odds_path)) if os.path.exists(odds_path) else []
+    odds_meta = odds_raw if isinstance(odds_raw, dict) else {}          # {fetched_utc, credits_remaining, matches}
+    odds_list = odds_meta.get("matches", odds_raw if isinstance(odds_raw, list) else [])
     odds_idx = {frozenset((o["home"], o["away"])): o for o in odds_list}
 
     def market_probs(t1, t2):
@@ -481,6 +484,8 @@ def main() -> int:
         "scoring": {"result_pts": RESULT_PTS, "exact_pts": EXACT_PTS},
         "backtest": backtest_rps(rec, full),
         "calibration": calibration_backtest(rec, full),
+        "odds": ({"credits_remaining": odds_meta.get("credits_remaining"),
+                  "fetched_utc": odds_meta.get("fetched_utc"), "priced": len(odds_list)} if odds_meta else None),
         "summary": summary,
         "n_fixtures": len(fixtures_out),
         "fixtures": fixtures_out,
