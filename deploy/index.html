@@ -12,7 +12,11 @@
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;padding:env(safe-area-inset-top) 0 40px;touch-action:manipulation}
-  header{padding:18px 16px 4px;position:relative} h1{font-size:19px;margin:0;padding-right:44px}
+  header{padding:14px 14px 4px}
+  .hrow{display:flex;align-items:center;gap:10px} h1{font-size:16px;margin:0;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .hbtns{display:flex;align-items:center;gap:8px;flex:none}
+  .hbtn{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;line-height:1}
+  .hbtn.primary{background:rgba(167,139,250,.15);color:var(--pick);border:1px solid rgba(167,139,250,.4)} .hbtn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
   .sub{color:var(--muted);font-size:12px;margin-top:4px}
   .updated{color:var(--muted);font-size:11px;margin-top:6px}
   @keyframes spin{to{transform:rotate(360deg)}} #refreshIco{display:inline-block} #refreshIco.spin{animation:spin .9s linear infinite}
@@ -64,7 +68,6 @@
   .vok{color:var(--good);font-weight:700} .vwarn{color:var(--away);font-weight:700}
   .cardfoot{display:flex;align-items:center;gap:8px;margin-top:8px;min-height:16px}
   .snapbtn{flex:none;background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;padding:0;line-height:1} .vfill{flex:1;text-align:center}
-  .expbtn{flex:none;width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:rgba(167,139,250,.15);color:var(--pick);border:1px solid rgba(167,139,250,.4);border-radius:8px;font-size:15px;font-weight:700;cursor:pointer}
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
   .modalbox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;width:100%;max-width:460px;max-height:85vh;overflow:auto;display:flex;flex-direction:column}
   .modalhd{display:flex;align-items:center;justify-content:space-between;font-weight:700;color:var(--ink);margin-bottom:10px} .hdbtns{display:flex;align-items:center;gap:16px;font-weight:400} .modalhd .mx{display:flex;align-items:center;cursor:pointer;color:var(--muted);font-size:16px} .hdbtns svg{display:block}
@@ -100,7 +103,7 @@
   .lbn{width:48px;text-align:right;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
   .orow{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line)} .orow:last-child{border:0}
   .obar{height:7px;border-radius:5px;background:var(--card2);overflow:hidden;margin-top:5px} .obar i{display:block;height:100%;background:var(--good)}
-  .dayhdr{display:flex;align-items:center;justify-content:space-between;min-height:30px;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin:16px 2px 2px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .dayhdr{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin:16px 2px 2px;padding-bottom:5px;border-bottom:1px solid var(--line)}
   .hidden{display:none} .err{padding:20px 16px;color:var(--away)}
   footer{color:var(--muted);font-size:11px;text-align:center;padding:18px 16px 0}
   .nextstrip{display:flex;align-items:center;gap:8px;margin:2px 14px;padding:8px 12px;background:var(--card2);border:1px solid var(--line);border-radius:10px;font-size:12px;color:var(--muted);cursor:pointer}
@@ -111,9 +114,14 @@
 </head>
 <body>
 <header>
-  <h1>⚽ World Cup 2026 Predictor ⚽</h1>
+  <div class="hrow">
+    <h1>⚽ World Cup 2026 Predictor ⚽</h1>
+    <div class="hbtns">
+      <button class="hbtn ghost" onclick="openPicksModal()" title="Export picks">⤒</button>
+      <button class="hbtn primary" id="refreshBtn" onclick="triggerRefresh()" title="Fetch latest"><span id="refreshIco">↻</span></button>
+    </div>
+  </div>
   <div class="updated"><span id="updated">loading…</span><span id="buildNote" style="color:var(--pick);margin-left:8px"></span></div>
-  <button id="refreshBtn" onclick="triggerRefresh()" title="Fetch latest" style="position:absolute;top:16px;right:14px;width:34px;height:34px;background:rgba(167,139,250,.15);color:var(--pick);border:1px solid rgba(167,139,250,.4);border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;line-height:1"><span id="refreshIco">↻</span></button>
 </header>
 <div class="metrics" id="metrics"></div>
 <div id="nextstrip" class="nextstrip" onclick="document.querySelector('.tab[data-view=fixtures]').click()"></div>
@@ -341,13 +349,13 @@ function renderAll(){
     mePill,
     `<span class="pill">RPS <b>${rps3}</b>${rpsTrend}</span>`,
     (d.odds&&d.odds.credits_remaining!=null)?oddsRing(d.odds.credits_remaining):"",
-    np>0?`<span class="pill" style="color:var(--away);cursor:pointer" title="${np} upcoming matches still to pick" onclick="document.querySelector('.tab[data-view=fixtures]').click()">⚠️ ${np} left</span>`:"",
+    np>0?`<span class="pill" style="color:var(--away);cursor:pointer" title="${np} upcoming matches still to pick" onclick="document.querySelector('.tab[data-view=fixtures]').click()"><b style="color:var(--away)">${np}</b> picks left</span>`:"",
   ].filter(Boolean).join("");
   $("#foot").textContent="Lower RPS = more accurate · picks lock at kickoff (SGT) · saved on this device";
 
   const up=ALLFIX.filter(f=>!f.played).sort((a,b)=>(a.kickoff_sgt||"").localeCompare(b.kickoff_sgt||""));
   const done=ALLFIX.filter(f=>f.played&&f.actual).sort((a,b)=>(b.kickoff_sgt||"").localeCompare(a.kickoff_sgt||""));
-  $("#fixtures").innerHTML=up.length?renderGroup(up,pickCard,`<button class="expbtn" onclick="openPicksModal()" title="Export my picks">⤒</button>`)
+  $("#fixtures").innerHTML=up.length?renderGroup(up,pickCard)
     :`<div class="err">No upcoming fixtures with predictions.</div>`;
   $("#results").innerHTML=(done.length?scoreboard(t):"")+(done.length?renderGroup(done,resultCard):`<div class="err">No games scored yet.</div>`);
 }
