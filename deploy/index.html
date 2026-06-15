@@ -54,6 +54,14 @@
   .pstat{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex:none}
   @keyframes pop{0%{transform:scale(.3);opacity:0}55%{transform:scale(1.25)}100%{transform:scale(1);opacity:1}}
   .pstat.ok{background:var(--good);color:#0b1220;animation:pop .32s ease-out}
+  .pickwrap{flex:1;display:flex;flex-direction:column}
+  .hstepper{display:flex;align-items:center;justify-content:center;gap:14px;margin:2px 0 0}
+  .hbox{display:flex;align-items:stretch;height:36px;border-radius:9px;overflow:hidden;background:rgba(255,255,255,.05)}
+  .hbox .sbtn{width:38px}
+  .hbox .snum{display:flex;align-items:center;justify-content:center;min-width:34px;font-size:18px;padding:0}
+  .pcenter{color:var(--muted);font-size:12px;font-weight:600}
+  .validrow{text-align:center;font-size:11px;margin-top:8px;color:var(--muted)}
+  .vok{color:var(--good);font-weight:700} .vwarn{color:var(--away);font-weight:700}
   .res{display:flex;align-items:center;gap:7px;font-size:12px;margin-top:9px;color:var(--muted);flex-wrap:wrap}
   .rrow2{display:flex;align-items:center;gap:7px;margin-top:9px;font-size:12px;flex-wrap:wrap} .rrow2 .lbl{min-width:64px;font-weight:600} .rrow2 .pts{margin-left:auto}
   .tag{border-radius:6px;padding:2px 7px;font-size:11px;font-weight:700;white-space:nowrap}
@@ -216,6 +224,20 @@ function fmtCountdown(ms){
   return `${m}m`;
 }
 function hasPick(f){ const p=pickArr(f); return !!(p&&p[0]!=null&&p[1]!=null); }
+// live pick coach: does your pick agree with the model's result + a likely scoreline? (a nudge, not a verdict)
+function validationLine(f,a,b,locked){
+  if(a==null||b==null||locked||f.played) return "";
+  const probs=[f.p_home,f.p_draw,f.p_away];
+  if(probs.some(x=>x==null)) return "";
+  const modelOut=["home","draw","away"][probs.indexOf(Math.max(...probs))];
+  const pickOut=a>b?"home":a<b?"away":"draw";
+  const res=pickOut===modelOut?`<span class="vok">✓ result</span>`:`<span class="vwarn">⚠ vs model</span>`;
+  const tops=(f.top_scores||[]).map(t=>t[0]);
+  const sOK=tops.includes(`${a}-${b}`);
+  const score=sOK?`<span class="vok">✓ score</span>`
+    :`<span class="vwarn">⚠ score</span>${tops[0]?` <span style="color:var(--muted)">model likes ${tops[0]}</span>`:""}`;
+  return `<div class="validrow">${res} · ${score}</div>`;
+}
 function renderNextStrip(){
   const el=$("#nextstrip"); if(!el) return;
   const now=Date.now();
@@ -302,12 +324,12 @@ function pickCard(f){
   const xg=f.xg_home!=null?`xG ${f.xg_home} – ${f.xg_away} · `:"";
   const yp=pickArr(f), locked=isLocked(f);
   const a=yp&&yp[0]!=null?yp[0]:null, b=yp&&yp[1]!=null?yp[1]:null, both=a!=null&&b!=null;
-  const box=(side,val)=>`<div class="sbox">`+
-      `<button class="sbtn" ${locked?'disabled':''} onclick="bumpPick(${i},${side},1)">+</button>`+
+  const hbox=(side,val)=>`<div class="hbox">`+
+      `<button class="sbtn" ${locked?'disabled':''} onclick="bumpPick(${i},${side},-1)">−</button>`+
       `<div class="snum${val==null?' unset':''}">${val==null?'?':val}</div>`+
-      `<button class="sbtn" ${locked?'disabled':''} onclick="bumpPick(${i},${side},-1)">−</button></div>`;
-  const status=locked?`<span class="pstat lock">🔒</span>`:both?`<span class="pstat ok">✓</span>`:`<span class="pstat"></span>`;
-  const pickUI=`<div class="stepper">${box(0,a)}${status}${box(1,b)}</div>`;
+      `<button class="sbtn" ${locked?'disabled':''} onclick="bumpPick(${i},${side},1)">+</button></div>`;
+  const center=locked?`<span class="pstat lock">🔒</span>`:both?`<span class="pstat ok">✓</span>`:`<span class="pcenter">vs</span>`;
+  const pickUI=`<div class="pickwrap"><div class="hstepper">${hbox(0,a)}${center}${hbox(1,b)}</div>${validationLine(f,a,b,locked)}</div>`;
   return `<div class="card">
     <div class="frow">
       <div><div class="teams">${f.team1}<span class="v">v</span>${f.team2}</div>
@@ -336,7 +358,7 @@ function bumpPick(i,side,delta){
   const f=ALLFIX[i],k=keyOf(f),P=loadPicks();
   const cur=(P[k]||pickArr(f)||[null,null]).slice();
   let v=cur[side];
-  if(v==null){ if(delta>0)v=0; }
+  if(v==null){ if(delta>0){ v=0; if(cur[1-side]==null) cur[1-side]=0; } }  // start a pick -> seed both sides at 0
   else { v+=delta; if(v<0)v=null; else if(v>10)v=10; }
   cur[side]=v; P[k]=cur; savePicks(P); renderAll();
 }
