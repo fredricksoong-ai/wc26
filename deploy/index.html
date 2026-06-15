@@ -234,8 +234,8 @@ function validationLine(f,a,b,locked){
   const res=pickOut===modelOut?`<span class="vok">✓ result</span>`:`<span class="vwarn">⚠ vs model</span>`;
   const tops=(f.top_scores||[]).map(t=>t[0]);
   const sOK=tops.includes(`${a}-${b}`);
-  const score=sOK?`<span class="vok">✓ score</span>`
-    :`<span class="vwarn">⚠ score</span>${tops[0]?` <span style="color:var(--muted)">model likes ${tops[0]}</span>`:""}`;
+  const score=sOK?`<span class="vok">✓ scoreline</span>`
+    :`<span class="vwarn">⚠ scoreline</span>${tops[0]?` <span style="color:var(--muted)">model likes ${tops[0]}</span>`:""}`;
   return `<div class="validrow">${res} · ${score}</div>`;
 }
 function renderNextStrip(){
@@ -422,7 +422,7 @@ function marketLine(f){
 }
 function modelSays(f){
   if(!f.lb) return "";
-  const ORDER=["ensemble","poisson","dixon_coles","elo"]; // Elo last (no scoreline %)
+  const ORDER=["ensemble","poisson","dixon_coles","elo","market"]; // Elo + Market last (naive scoreline, no %)
   const cells=ORDER.filter(m=>f.lb[m]).map(m=>{ const v=f.lb[m];
     const idx={home:0,draw:1,away:2}[v.result];
     const r=v.result==="draw"?"draw":`${v.result==="home"?f.team1:f.team2} win`;
