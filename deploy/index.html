@@ -11,7 +11,7 @@
     --home:#3b82f6;--draw:#64748b;--away:#f59e0b;--good:#34d399;--bad:#f87171;--pick:#a78bfa;--you:#22d3ee;
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;padding:env(safe-area-inset-top) 0 40px}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;padding:env(safe-area-inset-top) 0 40px;touch-action:manipulation}
   header{padding:18px 16px 4px;position:relative} h1{font-size:19px;margin:0;padding-right:44px}
   .sub{color:var(--muted);font-size:12px;margin-top:4px}
   .updated{color:var(--muted);font-size:11px;margin-top:6px}
@@ -64,7 +64,7 @@
   .vok{color:var(--good);font-weight:700} .vwarn{color:var(--away);font-weight:700}
   .cardfoot{display:flex;align-items:center;gap:8px;margin-top:8px;min-height:16px}
   .snapbtn{flex:none;background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;padding:0;line-height:1} .vfill{flex:1;text-align:center}
-  .expbtn{flex:none;background:none;border:none;color:var(--pick);font-size:16px;font-weight:700;cursor:pointer;padding:0 0 3px}
+  .expbtn{flex:none;width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:rgba(167,139,250,.15);color:var(--pick);border:1px solid rgba(167,139,250,.4);border-radius:8px;font-size:15px;font-weight:700;cursor:pointer}
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
   .modalbox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;width:100%;max-width:460px;max-height:85vh;overflow:auto;display:flex;flex-direction:column}
   .modalhd{font-weight:700;color:var(--ink);margin-bottom:10px} .modalhd .mx{float:right;cursor:pointer;color:var(--muted)}
@@ -101,12 +101,13 @@
   .lbn{width:48px;text-align:right;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
   .orow{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line)} .orow:last-child{border:0}
   .obar{height:7px;border-radius:5px;background:var(--card2);overflow:hidden;margin-top:5px} .obar i{display:block;height:100%;background:var(--good)}
-  .dayhdr{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin:16px 4px 2px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .dayhdr{display:flex;align-items:center;justify-content:space-between;min-height:30px;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin:16px 2px 2px;padding-bottom:5px;border-bottom:1px solid var(--line)}
   .hidden{display:none} .err{padding:20px 16px;color:var(--away)}
   footer{color:var(--muted);font-size:11px;text-align:center;padding:18px 16px 0}
-  .nextstrip{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 14px;padding:8px 12px;background:var(--card2);border:1px solid var(--line);border-radius:10px;font-size:12px;color:var(--muted);cursor:pointer}
-  .nextstrip b{color:var(--ink)} .ns-next{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .ns-warn{color:var(--away);font-weight:700;white-space:nowrap} .ns-ok{color:var(--good);font-weight:700;white-space:nowrap}
+  .nextstrip{display:flex;align-items:center;gap:8px;margin:2px 14px;padding:8px 12px;background:var(--card2);border:1px solid var(--line);border-radius:10px;font-size:12px;color:var(--muted);cursor:pointer}
+  .nextstrip b{color:var(--ink)} .ns-next{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ns-cd{flex:none;white-space:nowrap;color:var(--ink);font-weight:700}
+  .ns-warn{flex:none;color:var(--away);font-weight:700;white-space:nowrap} .ns-ok{flex:none;color:var(--good);font-weight:700;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -289,7 +290,7 @@ function renderNextStrip(){
   const next=up[0], ms=Date.parse(next.kickoff_sgt+":00+08:00")-now;
   const unpicked=up.filter(f=>!hasPick(f)).length;
   const right=unpicked>0?`<span class="ns-warn">⚠️ ${unpicked} to pick</span>`:`<span class="ns-ok">✓ all picked</span>`;
-  el.innerHTML=`<span class="ns-next"><b>Next</b> ${next.team1} v ${next.team2} · locks in <b>${fmtCountdown(ms)}</b></span>${right}`;
+  el.innerHTML=`<span class="ns-next"><b>Next</b> ${next.team1} v ${next.team2}</span><span class="ns-cd">🔒 ${fmtCountdown(ms)}</span>${right}`;
 }
 // small credit gauge for the Odds API (ring fills with credits left, of the 500/mo cap)
 function oddsRing(c,cap=500){
@@ -325,7 +326,7 @@ function renderAll(){
 
   const up=ALLFIX.filter(f=>!f.played).sort((a,b)=>(a.kickoff_sgt||"").localeCompare(b.kickoff_sgt||""));
   const done=ALLFIX.filter(f=>f.played&&f.actual).sort((a,b)=>(b.kickoff_sgt||"").localeCompare(a.kickoff_sgt||""));
-  $("#fixtures").innerHTML=up.length?renderGroup(up,pickCard,`<button class="expbtn" onclick="openPicksModal()" title="Export my picks">⤓</button>`)
+  $("#fixtures").innerHTML=up.length?renderGroup(up,pickCard,`<button class="expbtn" onclick="openPicksModal()" title="Export my picks">⤒</button>`)
     :`<div class="err">No upcoming fixtures with predictions.</div>`;
   $("#results").innerHTML=(done.length?scoreboard(t):"")+(done.length?renderGroup(done,resultCard):`<div class="err">No games scored yet.</div>`);
 }
