@@ -387,8 +387,8 @@ function scoreboard(t){
 }
 
 let lbChart=null;
-const LB_COLORS={poisson:"#f472b6",dixon_coles:"#facc15",elo:"#34d399",ensemble:"#a78bfa",market:"#e5e7eb"};
-const LB_LABELS={poisson:"Poisson",dixon_coles:"Dixon–Coles",elo:"Elo",ensemble:"Ensemble",market:"Market"};
+const LB_COLORS={poisson:"#f472b6",dixon_coles:"#facc15",elo:"#60a5fa",ensemble:"#a78bfa",market:"#e5e7eb",you:"#22d3ee"};
+const LB_LABELS={poisson:"Poisson",dixon_coles:"Dixon–Coles",elo:"Elo",ensemble:"Ensemble",market:"Market",you:"You"};
 // edge vs the bookmakers: where the model (ensemble) most disagrees with the de-vigged market
 function marketLine(f){
   const mk=f.lb&&f.lb.market&&f.lb.market.probs; if(!mk) return "";
@@ -426,22 +426,20 @@ function renderLeague(d){
     if(resultOf(yp[0],yp[1])===resultOf(a[0],a[1]))yr++; if(yp[0]===a[0]&&yp[1]===a[1])ye++; }});
   // points (RP per correct result + EP per exact score) and RPS; rank by points then RPS
   const rows=M.map((m,i)=>{const s=lb.standings[m]; return {m,label:L[i],g:s.games||0,
-    pts:s.result_hits*RP+s.exact_hits*EP, rps:s.rps};})
+      pts:s.result_hits*RP+s.exact_hits*EP, rps:s.rps};})
+    .concat([{m:"you",label:"You",g:yn,pts:yr*RP+ye*EP,rps:null}])  // you ranked in the table too
     .filter(r=>r.g>0)                                   // Market only appears once it has priced games
     .sort((a,b)=>(b.pts-a.pts)||((a.rps??9)-(b.rps??9)));
   let html=`<div class="subline">Every rung makes its honest call on each game; scored on your pool rules (<b>${RP}</b> result + <b>${EP}</b> exact) plus <b>RPS</b> (probability quality, lower = better). Backfilled and live over ${ng} game${ng==1?'':'s'}.</div>`;
   html+=`<div style="position:relative;height:210px;margin:4px 0 16px"><canvas id="lbchart"></canvas></div>`;
   html+=`<div class="lbhdr"><span style="flex:1">model</span><span class="lbn">pts</span><span class="lbn">RPS</span></div>`;
-  html+=rows.map((r,i)=>`<div class="orow">
-      <div class="rank">${i+1}</div>
-      <div style="flex:1;min-width:0"><div class="rname"><span style="color:${LB_COLORS[r.m]}">●</span> ${r.label}</div></div>
-      <span class="lbn" style="color:var(--ink);font-weight:700">${r.pts}</span>
+  html+=rows.map((r,i)=>{const me=r.m==="you", c=me?"var(--you)":"var(--ink)";
+    return `<div class="orow">
+      <div class="rank" style="color:${me?'var(--you)':'inherit'}">${i+1}</div>
+      <div style="flex:1;min-width:0"><div class="rname" style="color:${c}"><span style="color:${LB_COLORS[r.m]||'var(--muted)'}">●</span> ${r.label}</div></div>
+      <span class="lbn" style="color:${c};font-weight:700">${r.pts}</span>
       <span class="lbn">${r.rps!=null?r.rps.toFixed(3):'–'}</span>
-    </div>`).join("");
-  html+=`<div class="orow" style="border-top:1px solid var(--line);margin-top:4px">
-      <div class="rank" style="color:var(--you)">★</div>
-      <div style="flex:1"><div class="rname" style="color:var(--you)">You</div></div>
-      <span class="lbn" style="color:var(--you);font-weight:700">${yr*RP+ye*EP}</span><span class="lbn" style="color:var(--muted)">—</span></div>`;
+    </div>`;}).join("");
   $("#league").innerHTML=html;
   if(window.Chart){
     if(lbChart)lbChart.destroy();
