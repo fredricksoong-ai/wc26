@@ -416,13 +416,13 @@ function copyPicks(){ const t=$("#pickdump"); t.select(); try{navigator.clipboar
 function closeImg(){ $("#imgmodal").classList.add("hidden"); }
 function snapCard(btn){
   const card=btn.closest(".card"); if(!card||!window.html2canvas) return;
-  const t=btn.textContent; btn.textContent="…";
-  html2canvas(card,{scale:3,backgroundColor:getComputedStyle(document.body).backgroundColor,
-    ignoreElements:el=>el.classList&&el.classList.contains("cardfoot")}).then(canvas=>{
+  btn.style.display="none";   // hide the 📷 itself so it's never in the snapshot
+  html2canvas(card,{scale:3,backgroundColor:getComputedStyle(document.body).backgroundColor}).then(canvas=>{
+      btn.style.display="";
       const url=canvas.toDataURL("image/png");
       $("#cardimg").src=url; $("#imgdl").href=url;
-      $("#imgmodal").classList.remove("hidden"); btn.textContent=t;
-    }).catch(e=>{ btn.textContent=t; console.error(e); });
+      $("#imgmodal").classList.remove("hidden");
+    }).catch(e=>{ btn.style.display=""; console.error(e); });
 }
 
 function resultCard(f){
