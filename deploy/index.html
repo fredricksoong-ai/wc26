@@ -288,9 +288,12 @@ function renderNextStrip(){
   if(!up.length){ el.style.display="none"; return; }
   el.style.display="flex";
   const next=up[0], ms=Date.parse(next.kickoff_sgt+":00+08:00")-now;
-  const unpicked=up.filter(f=>!hasPick(f)).length;
-  const right=unpicked>0?`<span class="ns-warn">⚠️ ${unpicked} to pick</span>`:`<span class="ns-ok">✓ all picked</span>`;
-  el.innerHTML=`<span class="ns-next"><b>Next</b> ${next.team1} v ${next.team2}</span><span class="ns-cd">🔒 ${fmtCountdown(ms)}</span>${right}`;
+  el.innerHTML=`<span class="ns-next"><b>Next</b> ${next.team1} v ${next.team2}</span><span class="ns-cd">🔒 ${fmtCountdown(ms)}</span>`;
+}
+// count of upcoming matches still without a complete pick (shown in the metric row)
+function unpickedCount(){
+  const now=Date.now();
+  return (ALLFIX||[]).filter(f=>!f.played&&f.kickoff_sgt&&Date.parse(f.kickoff_sgt+":00+08:00")>now&&!hasPick(f)).length;
 }
 // small credit gauge for the Odds API (ring fills with credits left, of the 500/mo cap)
 function oddsRing(c,cap=500){
@@ -317,10 +320,12 @@ function renderAll(){
   renderNextStrip();
   const rv=erps!=null?erps:(d.summary||{}).live_rps;
   const rps3=(rv!=null)?Number(rv).toFixed(3):"–";
+  const np=unpickedCount();
   $("#metrics").innerHTML=[
-    `<span class="pill">you <b class="y">${t.yP}</b> vs model <b class="p">${t.mP}</b> <span style="color:var(--muted)">/${t.mMax}</span></span>`,
+    `<span class="pill">you <b class="y">${t.yP}</b> vs model <b class="p">${t.mP}</b></span>`,
     `<span class="pill">RPS <b>${rps3}</b>${rpsTrend}</span>`,
     (d.odds&&d.odds.credits_remaining!=null)?oddsRing(d.odds.credits_remaining):"",
+    np>0?`<span class="pill" style="color:var(--away);cursor:pointer" title="${np} upcoming matches still to pick" onclick="document.querySelector('.tab[data-view=fixtures]').click()">⚠️ ${np} left</span>`:"",
   ].filter(Boolean).join("");
   $("#foot").textContent="Lower RPS = more accurate · picks lock at kickoff (SGT) · saved on this device";
 
