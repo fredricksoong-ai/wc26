@@ -62,6 +62,13 @@
   .pcenter{color:var(--muted);font-size:12px;font-weight:600}
   .validrow{text-align:center;font-size:11px;margin-top:8px;color:var(--muted)}
   .vok{color:var(--good);font-weight:700} .vwarn{color:var(--away);font-weight:700}
+  .sharerow{text-align:right;margin-top:8px} .snapbtn{background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;padding:3px}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
+  .modalbox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;width:100%;max-width:460px;max-height:80vh;display:flex;flex-direction:column}
+  .modalhd{font-weight:700;color:var(--ink);margin-bottom:10px} .modalhd .mx{float:right;cursor:pointer;color:var(--muted)}
+  #pickdump{flex:1;min-height:170px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px;font:12px/1.45 ui-monospace,monospace;resize:vertical}
+  .modalrow{display:flex;gap:8px;margin-top:10px} .mhint{font-size:11px;color:var(--muted);margin-top:8px}
+  .mbtn{background:rgba(167,139,250,.15);color:var(--pick);border:1px solid rgba(167,139,250,.4);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer}
   .res{display:flex;align-items:center;gap:7px;font-size:12px;margin-top:9px;color:var(--muted);flex-wrap:wrap}
   .rrow2{display:flex;align-items:center;gap:7px;margin-top:9px;font-size:12px;flex-wrap:wrap} .rrow2 .lbl{min-width:64px;font-weight:600} .rrow2 .pts{margin-left:auto}
   .tag{border-radius:6px;padding:2px 7px;font-size:11px;font-weight:700;white-space:nowrap}
@@ -124,7 +131,16 @@
   <div id="league" class="hidden"></div>
   <div id="explainer" class="hidden exp"></div>
 </main>
+<div id="pickmodal" class="modal hidden" onclick="if(event.target===this)closeModal()">
+  <div class="modalbox">
+    <div class="modalhd">Your picks <span class="mx" onclick="closeModal()">✕</span></div>
+    <textarea id="pickdump" spellcheck="false"></textarea>
+    <div class="modalrow"><button class="mbtn" onclick="copyPicks()">Copy</button><button class="mbtn" onclick="importPicks()">Import from box</button></div>
+    <div class="mhint">Copy to back up or share your picks. To restore on another device, paste a backup in and tap Import.</div>
+  </div>
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <footer id="foot"></footer>
 
 <script>
@@ -357,6 +373,7 @@ function pickCard(f){
     <div class="tops" style="margin-top:13px">${tops}</div>
     ${modelSays(f)}
     <div class="pickbox">${pickUI}</div>
+    <div class="sharerow"><button class="snapbtn" onclick="snapCard(this)">📷 Save as image</button></div>
   </div>`;
 }
 
@@ -375,6 +392,34 @@ function bumpPick(i,side,delta){
   if(v==null){ if(delta>0){ v=0; if(cur[1-side]==null) cur[1-side]=0; } }  // start a pick -> seed both sides at 0
   else { v+=delta; if(v<0)v=null; else if(v>10)v=10; }
   cur[side]=v; P[k]=cur; savePicks(P); renderAll();
+}
+// --- picks backup (localStorage is per-device) -------------------------------
+function openPicksModal(){
+  const P=loadPicks(), lines=[];
+  (ALLFIX||[]).forEach(f=>{const p=P[keyOf(f)]; if(p&&p[0]!=null&&p[1]!=null) lines.push(`${f.date} | ${f.team1} v ${f.team2} | ${p[0]}-${p[1]}`);});
+  $("#pickdump").value=lines.length?lines.join("\n"):"(no picks saved on this device yet)";
+  $("#pickmodal").classList.remove("hidden");
+}
+function closeModal(){ $("#pickmodal").classList.add("hidden"); }
+function copyPicks(){ const t=$("#pickdump"); t.select(); try{navigator.clipboard.writeText(t.value);}catch(e){try{document.execCommand("copy");}catch(_){}} }
+function importPicks(){
+  const P=loadPicks(); let n=0;
+  $("#pickdump").value.split("\n").forEach(line=>{
+    const parts=line.split("|").map(s=>s.trim()); if(parts.length<3) return;
+    const tm=parts[1].split(" v "), sc=parts[2].split("-");
+    if(tm.length===2 && sc.length===2){ const a=+sc[0], b=+sc[1];
+      if(Number.isInteger(a)&&Number.isInteger(b)){ P[`${parts[0]}|${tm[0].trim()}|${tm[1].trim()}`]=[a,b]; n++; } }
+  });
+  savePicks(P); renderAll(); closeModal(); alert(`Imported ${n} pick${n===1?'':'s'}.`);
+}
+// --- save a pick card as a high-res image ------------------------------------
+function snapCard(btn){
+  const card=btn.closest(".card"); if(!card||!window.html2canvas) return;
+  const t=btn.textContent; btn.textContent="saving…";
+  html2canvas(card,{scale:3,backgroundColor:getComputedStyle(document.body).backgroundColor,
+    ignoreElements:el=>el.classList&&el.classList.contains("sharerow")}).then(canvas=>{
+      const a=document.createElement("a"); a.download="wc26-pick.png"; a.href=canvas.toDataURL("image/png"); a.click(); btn.textContent=t;
+    }).catch(e=>{ btn.textContent=t; console.error(e); });
 }
 
 function resultCard(f){
@@ -590,6 +635,9 @@ function explainerHTML(){return `
   <p>Each team's last five results as <span class="fdot W">W</span> <span class="fdot D">D</span> <span class="fdot L">L</span> (oldest left, newest right; tap a square for the score). The model already weights recent games more heavily, so this is a peek at what it's reacting to.</p>
   <h3>Power ratings + movement</h3>
   <p>The Ratings tab ranks the tournament teams by Elo strength. The <span class="k">▲ / ▼</span> shows how much each rating has moved over the past year — who's trending up into the World Cup and who's sliding.</p>
+  <h3>Back up your picks</h3>
+  <p>Your picks are saved <span class="k">on this device only</span> (in the browser), so they don't follow you to another phone or browser. Use this to export them as text — copy it to back up or share, or paste a backup in to restore.</p>
+  <div style="margin:8px 0 4px"><button class="mbtn" onclick="openPicksModal()">⤓ Export / import my picks</button></div>
   <h3>Win it (tournament odds)</h3>
   <p>The model plays the <span class="k">rest of the tournament 20,000 times</span> — and counts how often each nation wins its group, reaches each round, and lifts the trophy. Crucially it <span class="k">banks games already played</span>: finished results are locked in, and only the games still to come are simulated, so the odds update as the tournament unfolds. One simulation is luck; 20,000 averages it out into a probability. That's why a clear favourite still only sits around 1-in-5 — even the best team must win seven knockout games where anything can happen.</p>`;}
 
