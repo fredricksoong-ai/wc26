@@ -325,17 +325,20 @@ def main() -> int:
                                          o_probs(em.outcome_probs, r.team1, r.team2, r.ground), W_DC)
                 # honest forecast: the most likely scoreline (mode of the DC grid)
                 # plus expected goals (the average). No pool-points optimisation.
-                # top 20 covers the full "logical" scoreline list (down to ~1%); the dashboard
-                # shows the first 6 as chips and uses the rest to price YOUR exact pick.
-                tops = [[f"{i}-{j}", round(p, 3)] for (i, j), p in scoring.top_scorelines(matrix, 20)]
+                tops = [[f"{i}-{j}", round(p, 3)] for (i, j), p in scoring.top_scorelines(matrix, 10)]
                 (mi, mj), mprob = scoring.top_scorelines(matrix, 1)[0]
                 xgh, xga = o_xg(dm, r.team1, r.team2, r.ground)
+                # full scoreline grid 0-0..7-7 (row-major, team1 goals x team2 goals) as a compact
+                # comma string — lets the dashboard price ANY exact pick the user makes, even a 7-1.
+                SG = 7
+                sg = ",".join(f"{float(matrix[i, j]):.4f}" for i in range(SG + 1) for j in range(SG + 1))
                 entry = {"p_home": round(probs["home"], 3), "p_draw": round(probs["draw"], 3),
                          "p_away": round(probs["away"], 3),
                          "model_pick": f"{mi}-{mj}", "model_pick_result": scoring._result(mi, mj),
                          "model_pick_prob": round(float(mprob), 3),
                          "xg_home": round(float(xgh), 2), "xg_away": round(float(xga), 2),
-                         "top_scores": tops, "lb": model_eval(r.team1, r.team2, r.ground),
+                         "top_scores": tops, "score_grid": sg, "sg_max": SG,
+                         "lb": model_eval(r.team1, r.team2, r.ground),
                          "updated_utc": _now(), "played": False, "scored": False}
                 ledger[k] = entry
             else:  # played — robust: scores the forecast if present, ALWAYS fills the league
