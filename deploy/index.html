@@ -136,10 +136,10 @@
 </main>
 <div id="pickmodal" class="modal hidden" onclick="if(event.target===this)closeModal()">
   <div class="modalbox">
-    <div class="modalhd">Your picks <span class="mx" onclick="closeModal()">✕</span></div>
+    <div class="modalhd">Export <span class="mx" onclick="closeModal()">✕</span></div>
     <textarea id="pickdump" spellcheck="false" readonly></textarea>
     <div class="modalrow"><button class="mbtn" onclick="copyPicks()">Copy</button></div>
-    <div class="mhint">Copy this to back up or share your picks.</div>
+    <div class="mhint">Copy this and paste it to Claude for analysis — it includes your picks, every result, and how each model & the market scored.</div>
   </div>
 </div>
 <div id="imgmodal" class="modal hidden" onclick="if(event.target===this)closeImg()">
@@ -295,6 +295,20 @@ function unpickedCount(){
   const now=Date.now();
   return (ALLFIX||[]).filter(f=>!f.played&&f.kickoff_sgt&&Date.parse(f.kickoff_sgt+":00+08:00")>now&&!hasPick(f)).length;
 }
+function ord(n){const s=["th","st","nd","rd"],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0]);}
+// YOUR league standing: points, rank among all contestants, and the gap up/down
+function youStanding(){
+  const lb=DATA&&DATA.leaderboard; if(!lb||!lb.games||!lb.games.length) return null;
+  let yr=0,ye=0;
+  lb.games.forEach(g=>{const yp=userPickFor(g.key); if(yp&&yp[0]!=null){const a=g.actual.split("-").map(Number);
+    if(resultOf(yp[0],yp[1])===resultOf(a[0],a[1]))yr++; if(yp[0]===a[0]&&yp[1]===a[1])ye++;}});
+  const pts=yr*RP+ye*EP;
+  const rows=lb.models.map(m=>{const s=lb.standings[m]||{}; return {m,g:s.games||0,pts:(s.result_hits||0)*RP+(s.exact_hits||0)*EP,rps:s.rps};})
+    .concat([{m:"you",g:lb.games.length,pts,rps:null}])
+    .filter(r=>r.g>0).sort((a,b)=>(b.pts-a.pts)||((a.rps??9)-(b.rps??9)));
+  const i=rows.findIndex(r=>r.m==="you");
+  return {pts, rank:i+1, ahead:rows[i+1]?pts-rows[i+1].pts:null, behind:rows[i-1]?rows[i-1].pts-pts:null};
+}
 // small credit gauge for the Odds API (ring fills with credits left, of the 500/mo cap)
 function oddsRing(c,cap=500){
   const frac=Math.max(0,Math.min(1,c/cap)), C=2*Math.PI*8, off=C*(1-frac);
@@ -320,9 +334,14 @@ function renderAll(){
   renderNextStrip();
   const rv=erps!=null?erps:(d.summary||{}).live_rps;
   const rps3=(rv!=null)?Number(rv).toFixed(3):"–";
-  const np=unpickedCount();
+  const np=unpickedCount(), ys=youStanding();
+  let gaps="";
+  if(ys){const p=[]; if(ys.ahead!=null)p.push(`+${ys.ahead}`); if(ys.behind!=null)p.push(`-${ys.behind}`);
+    if(p.length)gaps=` <span style="color:var(--muted)">(${p.join("/")})</span>`;}
+  const mePill=ys?`<span class="pill"><b class="y">${ys.pts}</b>pts <span style="color:var(--muted)">·</span> ${ord(ys.rank)}${gaps}</span>`
+                 :`<span class="pill">you <b class="y">${t.yP}</b>pts</span>`;
   $("#metrics").innerHTML=[
-    `<span class="pill">you <b class="y">${t.yP}</b> vs model <b class="p">${t.mP}</b></span>`,
+    mePill,
     `<span class="pill">RPS <b>${rps3}</b>${rpsTrend}</span>`,
     (d.odds&&d.odds.credits_remaining!=null)?oddsRing(d.odds.credits_remaining):"",
     np>0?`<span class="pill" style="color:var(--away);cursor:pointer" title="${np} upcoming matches still to pick" onclick="document.querySelector('.tab[data-view=fixtures]').click()">⚠️ ${np} left</span>`:"",
@@ -410,10 +429,30 @@ function bumpPick(i,side,delta){
   cur[side]=v; P[k]=cur; savePicks(P); renderAll();
 }
 // --- picks backup (localStorage is per-device) -------------------------------
+// rich, self-contained export for analysis: standing + every played game's actual
+// and how you + each model/market scored, plus upcoming picks and the table.
+function richExport(){
+  const d=DATA||{}, lb=d.leaderboard, out=[], ys=youStanding();
+  const order=["ensemble","poisson","dixon_coles","elo","market"];
+  out.push("WC2026 PREDICTOR EXPORT");
+  out.push(ys?`You ${ys.pts}pts · ${ord(ys.rank)} · ${lb&&lb.games?lb.games.length:0} games scored`:"No scored games yet");
+  if(lb&&lb.games&&lb.games.length){
+    out.push("","PLAYED (date match | actual | you | "+order.join(" | ")+"  ; R=result E=exact .=miss -=none)");
+    lb.games.forEach(g=>{
+      const a=g.actual.split("-").map(Number), yp=userPickFor(g.key);
+      const cell=(sc,scored)=>{ if(!sc) return "-"; const h=scored?(scored.exact_hit?"E":scored.result_hit?"R":"."):"?"; return `${sc} ${h}`; };
+      const youSc=yp&&yp[0]!=null?{result_hit:resultOf(yp[0],yp[1])===resultOf(a[0],a[1]),exact_hit:yp[0]===a[0]&&yp[1]===a[1]}:null;
+      const cells=order.map(m=>cell(((g.lb||{})[m]||{}).score,(g.scored||{})[m]));
+      out.push(`${g.date||""} ${g.label} | ${g.actual} | ${yp&&yp[0]!=null?cell(`${yp[0]}-${yp[1]}`,youSc):"-"} | ${cells.join(" | ")}`);
+    });
+  }
+  const upc=(ALLFIX||[]).filter(f=>!f.played).map(f=>{const p=pickArr(f); return (p&&p[0]!=null&&p[1]!=null)?`${f.date} ${f.team1} v ${f.team2} | ${p[0]}-${p[1]}`:null;}).filter(Boolean);
+  if(upc.length) out.push("","UPCOMING PICKS",...upc);
+  if(lb&&lb.standings){ const s=[]; lb.models.forEach((m,i)=>{const st=lb.standings[m]; if(st&&st.games)s.push(`${lb.labels[i]} ${st.result_hits*RP+st.exact_hits*EP}pts(rps ${st.rps})`);}); if(ys)s.push(`You ${ys.pts}pts`); out.push("","STANDINGS",s.join(" · ")); }
+  return out.join("\n");
+}
 function openPicksModal(){
-  const P=loadPicks(), lines=[];
-  (ALLFIX||[]).forEach(f=>{const p=P[keyOf(f)]; if(p&&p[0]!=null&&p[1]!=null) lines.push(`${f.date} | ${f.team1} v ${f.team2} | ${p[0]}-${p[1]}`);});
-  $("#pickdump").value=lines.length?lines.join("\n"):"(no picks saved on this device yet)";
+  $("#pickdump").value=richExport();
   $("#pickmodal").classList.remove("hidden");
 }
 function closeModal(){ $("#pickmodal").classList.add("hidden"); }
