@@ -24,8 +24,8 @@
   .calval{width:34px;text-align:right;color:var(--ink);font-weight:600;flex:none}
   .caln{width:34px;text-align:right;color:var(--muted);flex:none}
   .updated b{color:var(--ink)}
-  .metrics{display:flex;gap:8px;padding:10px 16px;flex-wrap:wrap}
-  .pill{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 11px;font-size:12px;color:var(--muted)}
+  .metrics{display:flex;gap:6px;padding:10px 14px;flex-wrap:wrap}
+  .pill{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 9px;font-size:11px;color:var(--muted)}
   .pill b{color:var(--ink)} .pill .y{color:var(--you)} .pill .p{color:var(--pick)}
   .tabs{display:flex;gap:6px;padding:8px 12px;position:sticky;top:0;background:var(--bg);z-index:5;overflow-x:auto}
   .tab{flex:1;min-width:74px;text-align:center;padding:9px 6px;border-radius:10px;background:var(--card2);border:1px solid var(--line);color:var(--muted);font-weight:600;font-size:13px;cursor:pointer;white-space:nowrap}
@@ -67,10 +67,9 @@
   .expbtn{flex:none;width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:rgba(167,139,250,.15);color:var(--pick);border:1px solid rgba(167,139,250,.4);border-radius:8px;font-size:15px;font-weight:700;cursor:pointer}
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
   .modalbox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;width:100%;max-width:460px;max-height:85vh;overflow:auto;display:flex;flex-direction:column}
-  .modalhd{font-weight:700;color:var(--ink);margin-bottom:10px} .modalhd .mx{float:right;cursor:pointer;color:var(--muted)}
+  .modalhd{display:flex;align-items:center;justify-content:space-between;font-weight:700;color:var(--ink);margin-bottom:10px} .hdbtns{display:flex;gap:16px;font-weight:400} .modalhd .mx{cursor:pointer;color:var(--muted);font-size:16px}
   #pickdump{flex:1;min-height:170px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px;font:12px/1.45 ui-monospace,monospace;resize:vertical}
-  .modalrow{display:flex;gap:8px;margin-top:10px} .mhint{font-size:11px;color:var(--muted);margin-top:8px}
-  .mbtn{background:rgba(167,139,250,.15);color:var(--pick);border:1px solid rgba(167,139,250,.4);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer}
+  .mhint{font-size:11px;color:var(--muted);margin-top:8px}
   .res{display:flex;align-items:center;gap:7px;font-size:12px;margin-top:9px;color:var(--muted);flex-wrap:wrap}
   .rrow2{display:flex;align-items:center;gap:7px;margin-top:9px;font-size:12px;flex-wrap:wrap} .rrow2 .lbl{min-width:64px;font-weight:600} .rrow2 .pts{margin-left:auto}
   .tag{border-radius:6px;padding:2px 7px;font-size:11px;font-weight:700;white-space:nowrap}
@@ -136,18 +135,16 @@
 </main>
 <div id="pickmodal" class="modal hidden" onclick="if(event.target===this)closeModal()">
   <div class="modalbox">
-    <div class="modalhd">Export <span class="mx" onclick="closeModal()">✕</span></div>
+    <div class="modalhd"><span>Export</span><span class="hdbtns"><span class="mx" id="copyIco" onclick="copyPicks(this)" title="Copy">⧉</span><span class="mx" onclick="closeModal()" title="Close">✕</span></span></div>
     <textarea id="pickdump" spellcheck="false" readonly></textarea>
-    <div class="modalrow"><button class="mbtn" onclick="copyPicks()">Copy</button></div>
-    <div class="mhint">Copy this and paste it to Claude for analysis — it includes your picks, every result, and how each model & the market scored.</div>
+    <div class="mhint">Tap ⧉ to copy, then paste to Claude for analysis — it includes your picks, every result, and how each model &amp; the market scored.</div>
   </div>
 </div>
 <div id="imgmodal" class="modal hidden" onclick="if(event.target===this)closeImg()">
   <div class="modalbox">
-    <div class="modalhd">Save / share <span class="mx" onclick="closeImg()">✕</span></div>
+    <div class="modalhd"><span>Save / share</span><span class="hdbtns"><span class="mx" onclick="shareImg()" title="Save / share"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M12 3l-4 4M12 3l4 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg></span><span class="mx" onclick="closeImg()" title="Close">✕</span></span></div>
     <img id="cardimg" alt="pick card" style="width:100%;border-radius:10px;display:block"/>
-    <div class="mhint">Long-press the image to save it to your photos, or use Download.</div>
-    <div class="modalrow"><a id="imgdl" class="mbtn" download="wc26-pick.png" style="text-decoration:none">Download</a></div>
+    <div class="mhint">Tap the share icon to save to Photos or send it — or long-press the image.</div>
   </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -457,16 +454,25 @@ function openPicksModal(){
   $("#pickmodal").classList.remove("hidden");
 }
 function closeModal(){ $("#pickmodal").classList.add("hidden"); }
-function copyPicks(){ const t=$("#pickdump"); t.select(); try{navigator.clipboard.writeText(t.value);}catch(e){try{document.execCommand("copy");}catch(_){}} }
+function copyPicks(el){ const t=$("#pickdump"); t.select(); try{navigator.clipboard.writeText(t.value);}catch(e){try{document.execCommand("copy");}catch(_){}}
+  if(el){const o=el.textContent; el.textContent="✓"; el.style.color="var(--good)"; setTimeout(()=>{el.textContent=o; el.style.color="";},1200);} }
 // --- render a pick card to an image, shown in a modal (long-press to save) ----
+let shareFile=null;
 function closeImg(){ $("#imgmodal").classList.add("hidden"); }
+function shareImg(){
+  if(shareFile&&navigator.canShare&&navigator.canShare({files:[shareFile]})){
+    navigator.share({files:[shareFile],title:"World Cup 2026 pick"}).catch(()=>{});
+  } else {
+    alert("Long-press the image to save it to your Photos.");
+  }
+}
 function snapCard(btn){
   const card=btn.closest(".card"); if(!card||!window.html2canvas) return;
   btn.style.display="none";   // hide the 📷 itself so it's never in the snapshot
   html2canvas(card,{scale:3,backgroundColor:getComputedStyle(document.body).backgroundColor}).then(canvas=>{
       btn.style.display="";
-      const url=canvas.toDataURL("image/png");
-      $("#cardimg").src=url; $("#imgdl").href=url;
+      $("#cardimg").src=canvas.toDataURL("image/png");
+      canvas.toBlob(b=>{ shareFile=b?new File([b],"wc26-pick.png",{type:"image/png"}):null; },"image/png");
       $("#imgmodal").classList.remove("hidden");
     }).catch(e=>{ btn.style.display=""; console.error(e); });
 }
