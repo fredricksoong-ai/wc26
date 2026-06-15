@@ -301,19 +301,22 @@ function unpickedCount(){
   return (ALLFIX||[]).filter(f=>!f.played&&f.kickoff_sgt&&Date.parse(f.kickoff_sgt+":00+08:00")>now&&!hasPick(f)).length;
 }
 function ord(n){const s=["th","st","nd","rd"],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0]);}
-// YOUR league standing: points, rank among all contestants, and the gap up/down
-function youStanding(){
+// the full league table (models + you), ranked by points then RPS
+function rankedTable(){
   const lb=DATA&&DATA.leaderboard; if(!lb||!lb.games||!lb.games.length) return null;
   let yr=0,ye=0;
   lb.games.forEach(g=>{const yp=userPickFor(g.key); if(yp&&yp[0]!=null){const a=g.actual.split("-").map(Number);
     if(resultOf(yp[0],yp[1])===resultOf(a[0],a[1]))yr++; if(yp[0]===a[0]&&yp[1]===a[1])ye++;}});
-  const pts=yr*RP+ye*EP;
-  const rows=lb.models.map(m=>{const s=lb.standings[m]||{}; return {m,g:s.games||0,pts:(s.result_hits||0)*RP+(s.exact_hits||0)*EP,rps:s.rps};})
-    .concat([{m:"you",g:lb.games.length,pts,rps:null}])
+  return lb.models.map(m=>{const s=lb.standings[m]||{}; return {m,g:s.games||0,pts:(s.result_hits||0)*RP+(s.exact_hits||0)*EP,rps:s.rps};})
+    .concat([{m:"you",g:lb.games.length,pts:yr*RP+ye*EP,rps:null}])
     .filter(r=>r.g>0).sort((a,b)=>(b.pts-a.pts)||((a.rps??9)-(b.rps??9)));
-  const i=rows.findIndex(r=>r.m==="you");
-  return {pts, rank:i+1, ahead:rows[i+1]?pts-rows[i+1].pts:null, behind:rows[i-1]?rows[i-1].pts-pts:null};
 }
+// standing of one contestant: points, rps, rank, and gaps up/down
+function standingOf(m){
+  const t=rankedTable(); if(!t)return null; const i=t.findIndex(r=>r.m===m); if(i<0)return null;
+  const r=t[i]; return {pts:r.pts, rps:r.rps, rank:i+1, ahead:t[i+1]?r.pts-t[i+1].pts:null, behind:t[i-1]?t[i-1].pts-r.pts:null};
+}
+function youStanding(){ return standingOf("you"); }
 // small credit gauge for the Odds API (ring fills with credits left, of the 500/mo cap)
 function oddsRing(c,cap=500){
   const frac=Math.max(0,Math.min(1,c/cap)), C=2*Math.PI*8, off=C*(1-frac);
@@ -339,17 +342,18 @@ function renderAll(){
   renderNextStrip();
   const rv=erps!=null?erps:(d.summary||{}).live_rps;
   const rps3=(rv!=null)?Number(rv).toFixed(3):"–";
-  const np=unpickedCount(), ys=youStanding();
+  const ys=youStanding(), es=standingOf("ensemble");
   let gaps="";
   if(ys){const p=[]; if(ys.ahead!=null)p.push(`+${ys.ahead}`); if(ys.behind!=null)p.push(`-${ys.behind}`);
     if(p.length)gaps=` <span style="color:var(--muted)">(${p.join("/")})</span>`;}
-  const mePill=ys?`<span class="pill"><b class="y">${ys.pts}</b>pts <span style="color:var(--muted)">·</span> ${ord(ys.rank)}${gaps}</span>`
+  const dot=`<span style="color:var(--muted)">·</span>`;
+  const mePill=ys?`<span class="pill"><b class="y">${ys.pts}</b>pts ${dot} ${ord(ys.rank)}${gaps}</span>`
                  :`<span class="pill">you <b class="y">${t.yP}</b>pts</span>`;
+  const ensPill=es?`<span class="pill">Ensemble <b class="p">${es.pts}</b>pts ${dot} ${ord(es.rank)} ${dot} RPS <b>${es.rps!=null?es.rps.toFixed(3):"–"}</b>${rpsTrend}</span>`
+                  :`<span class="pill">RPS <b>${rps3}</b>${rpsTrend}</span>`;
   $("#metrics").innerHTML=[
-    mePill,
-    `<span class="pill">RPS <b>${rps3}</b>${rpsTrend}</span>`,
+    mePill, ensPill,
     (d.odds&&d.odds.credits_remaining!=null)?oddsRing(d.odds.credits_remaining):"",
-    np>0?`<span class="pill" style="color:var(--away);cursor:pointer" title="${np} upcoming matches still to pick" onclick="document.querySelector('.tab[data-view=fixtures]').click()"><b style="color:var(--away)">${np}</b> picks left</span>`:"",
   ].filter(Boolean).join("");
   $("#foot").textContent="Lower RPS = more accurate · picks lock at kickoff (SGT) · saved on this device";
 
