@@ -343,11 +343,8 @@ function renderAll(){
   const rv=erps!=null?erps:(d.summary||{}).live_rps;
   const rps3=(rv!=null)?Number(rv).toFixed(3):"–";
   const ys=youStanding(), es=standingOf("ensemble");
-  let gaps="";
-  if(ys){const p=[]; if(ys.ahead!=null)p.push(`+${ys.ahead}`); if(ys.behind!=null)p.push(`-${ys.behind}`);
-    if(p.length)gaps=` <span style="color:var(--muted)">(${p.join("/")})</span>`;}
   const dot=`<span style="color:var(--muted)">·</span>`;
-  const mePill=ys?`<span class="pill"><b class="y">${ys.pts}</b>pts ${dot} ${ord(ys.rank)}${gaps}</span>`
+  const mePill=ys?`<span class="pill"><b class="y">${ys.pts}</b>pts ${dot} ${ord(ys.rank)}</span>`
                  :`<span class="pill">you <b class="y">${t.yP}</b>pts</span>`;
   const ensPill=es?`<span class="pill">Ensemble <b class="p">${es.pts}</b>pts ${dot} ${ord(es.rank)} ${dot} <b>${es.rps!=null?es.rps.toFixed(3):"–"}</b>${rpsTrend}</span>`:"";
   $("#metrics").innerHTML=[
