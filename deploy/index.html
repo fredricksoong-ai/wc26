@@ -202,6 +202,16 @@ function tallies(){
   return {yP,yMax,yN,yR,yE,mP,mMax,mN};
 }
 
+// small credit gauge for the Odds API (ring fills with credits left, of the 500/mo cap)
+function oddsRing(c,cap=500){
+  const frac=Math.max(0,Math.min(1,c/cap)), C=2*Math.PI*8, off=C*(1-frac);
+  const col=c>100?"var(--good)":c>30?"var(--away)":"var(--bad)";
+  return `<span class="pill" title="Odds API credits left this month (of ${cap})" style="display:inline-flex;align-items:center;gap:6px">`+
+    `<svg width="18" height="18" viewBox="0 0 20 20" style="flex:none">`+
+      `<circle cx="10" cy="10" r="8" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="2.6"/>`+
+      `<circle cx="10" cy="10" r="8" fill="none" stroke="${col}" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" transform="rotate(-90 10 10)"/>`+
+    `</svg>odds <b>${c}</b></span>`;
+}
 function renderAll(){
   const t=tallies(), d=DATA;
   const erps=(d.leaderboard&&d.leaderboard.standings&&d.leaderboard.standings.ensemble&&d.leaderboard.standings.ensemble.rps);
@@ -214,14 +224,15 @@ function renderAll(){
     else if(dlt>0.0005)  rpsTrend=` <span style="color:var(--bad)" title="getting worse — RPS rose ${dlt.toFixed(3)}">▼</span>`;
     else                 rpsTrend=` <span style="color:var(--muted)" title="steady">–</span>`;
   }
+  const rv=erps!=null?erps:(d.summary||{}).live_rps;
+  const rps3=(rv!=null)?Number(rv).toFixed(3):"–";
   $("#metrics").innerHTML=[
     `<span class="pill">you <b class="y">${t.yP}</b>/${t.yMax}</span>`,
     `<span class="pill">model <b class="p">${t.mP}</b>/${t.mMax}</span>`,
-    `<span class="pill">accuracy (RPS) <b>${erps??(d.summary||{}).live_rps??"–"}</b>${rpsTrend}</span>`,
-  ].join("");
-  let foot="Lower RPS = more accurate · picks lock at kickoff (SGT) · saved on this device";
-  if(d.odds&&d.odds.credits_remaining!=null) foot+=` · odds API: ${d.odds.credits_remaining} credits left`;
-  $("#foot").textContent=foot;
+    `<span class="pill">RPS <b>${rps3}</b>${rpsTrend}</span>`,
+    (d.odds&&d.odds.credits_remaining!=null)?oddsRing(d.odds.credits_remaining):"",
+  ].filter(Boolean).join("");
+  $("#foot").textContent="Lower RPS = more accurate · picks lock at kickoff (SGT) · saved on this device";
 
   const up=ALLFIX.filter(f=>!f.played).sort((a,b)=>(a.kickoff_sgt||"").localeCompare(b.kickoff_sgt||""));
   const done=ALLFIX.filter(f=>f.played&&f.actual).sort((a,b)=>(b.kickoff_sgt||"").localeCompare(a.kickoff_sgt||""));
