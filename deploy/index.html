@@ -60,11 +60,13 @@
   .hbox .sbtn{width:38px}
   .hbox .snum{display:flex;align-items:center;justify-content:center;min-width:34px;font-size:18px;padding:0}
   .pcenter{color:var(--muted);font-size:12px;font-weight:600}
-  .validrow{text-align:center;font-size:11px;margin-top:8px;color:var(--muted)}
+  .validrow{text-align:center;font-size:11px;color:var(--muted)}
   .vok{color:var(--good);font-weight:700} .vwarn{color:var(--away);font-weight:700}
-  .sharerow{text-align:right;margin-top:8px} .snapbtn{background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;padding:3px}
+  .cardfoot{display:flex;align-items:center;gap:8px;margin-top:8px;min-height:16px}
+  .snapbtn{flex:none;background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;padding:0;line-height:1} .vfill{flex:1;text-align:center}
+  .expbtn{flex:none;background:none;border:none;color:var(--pick);font-size:16px;font-weight:700;cursor:pointer;padding:0 0 3px}
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
-  .modalbox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;width:100%;max-width:460px;max-height:80vh;display:flex;flex-direction:column}
+  .modalbox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;width:100%;max-width:460px;max-height:85vh;overflow:auto;display:flex;flex-direction:column}
   .modalhd{font-weight:700;color:var(--ink);margin-bottom:10px} .modalhd .mx{float:right;cursor:pointer;color:var(--muted)}
   #pickdump{flex:1;min-height:170px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px;font:12px/1.45 ui-monospace,monospace;resize:vertical}
   .modalrow{display:flex;gap:8px;margin-top:10px} .mhint{font-size:11px;color:var(--muted);margin-top:8px}
@@ -99,7 +101,7 @@
   .lbn{width:48px;text-align:right;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
   .orow{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line)} .orow:last-child{border:0}
   .obar{height:7px;border-radius:5px;background:var(--card2);overflow:hidden;margin-top:5px} .obar i{display:block;height:100%;background:var(--good)}
-  .dayhdr{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin:16px 4px 2px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .dayhdr{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin:16px 4px 2px;padding-bottom:5px;border-bottom:1px solid var(--line)}
   .hidden{display:none} .err{padding:20px 16px;color:var(--away)}
   footer{color:var(--muted);font-size:11px;text-align:center;padding:18px 16px 0}
   .nextstrip{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 14px;padding:8px 12px;background:var(--card2);border:1px solid var(--line);border-radius:10px;font-size:12px;color:var(--muted);cursor:pointer}
@@ -134,9 +136,17 @@
 <div id="pickmodal" class="modal hidden" onclick="if(event.target===this)closeModal()">
   <div class="modalbox">
     <div class="modalhd">Your picks <span class="mx" onclick="closeModal()">✕</span></div>
-    <textarea id="pickdump" spellcheck="false"></textarea>
-    <div class="modalrow"><button class="mbtn" onclick="copyPicks()">Copy</button><button class="mbtn" onclick="importPicks()">Import from box</button></div>
-    <div class="mhint">Copy to back up or share your picks. To restore on another device, paste a backup in and tap Import.</div>
+    <textarea id="pickdump" spellcheck="false" readonly></textarea>
+    <div class="modalrow"><button class="mbtn" onclick="copyPicks()">Copy</button></div>
+    <div class="mhint">Copy this to back up or share your picks.</div>
+  </div>
+</div>
+<div id="imgmodal" class="modal hidden" onclick="if(event.target===this)closeImg()">
+  <div class="modalbox">
+    <div class="modalhd">Save / share <span class="mx" onclick="closeImg()">✕</span></div>
+    <img id="cardimg" alt="pick card" style="width:100%;border-radius:10px;display:block"/>
+    <div class="mhint">Long-press the image to save it to your photos, or use Download.</div>
+    <div class="modalrow"><a id="imgdl" class="mbtn" download="wc26-pick.png" style="text-decoration:none">Download</a></div>
   </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -315,7 +325,7 @@ function renderAll(){
 
   const up=ALLFIX.filter(f=>!f.played).sort((a,b)=>(a.kickoff_sgt||"").localeCompare(b.kickoff_sgt||""));
   const done=ALLFIX.filter(f=>f.played&&f.actual).sort((a,b)=>(b.kickoff_sgt||"").localeCompare(a.kickoff_sgt||""));
-  $("#fixtures").innerHTML=up.length?renderGroup(up,pickCard)
+  $("#fixtures").innerHTML=up.length?renderGroup(up,pickCard,`<button class="expbtn" onclick="openPicksModal()" title="Export my picks">⤓</button>`)
     :`<div class="err">No upcoming fixtures with predictions.</div>`;
   $("#results").innerHTML=(done.length?scoreboard(t):"")+(done.length?renderGroup(done,resultCard):`<div class="err">No games scored yet.</div>`);
 }
@@ -341,8 +351,8 @@ const dayKey=f=>(f.kickoff_sgt||f.date||"").slice(0,10);
 function dayLabel(k){ if(!k)return""; const [y,m,d]=k.split("-").map(Number);
   return new Date(Date.UTC(y,m-1,d)).toLocaleDateString("en-GB",{weekday:"long",day:"2-digit",month:"long",timeZone:"UTC"}); }
 function timeOnly(f){ const m=(f.kickoff_label||"").match(/·\s*(.+)$/); return m?m[1]:(f.kickoff_label||f.date||""); }
-function renderGroup(list,cardFn){ let html="",cur=null;
-  list.forEach(f=>{ const k=dayKey(f); if(k!==cur){cur=k; html+=`<div class="dayhdr">${dayLabel(k)}</div>`;} html+=cardFn(f); });
+function renderGroup(list,cardFn,extra){ let html="",cur=null,first=true;
+  list.forEach(f=>{ const k=dayKey(f); if(k!==cur){cur=k; const ex=(first&&extra)?extra:""; first=false; html+=`<div class="dayhdr">${dayLabel(k)}${ex}</div>`;} html+=cardFn(f); });
   return html; }
 
 function selOpts(sel){let s="";for(let i=0;i<=7;i++)s+=`<option value="${i}" ${sel===i?"selected":""}>${i}</option>`;return `<option value="" ${sel==null?"selected":""}>–</option>`+s;}
@@ -360,7 +370,7 @@ function pickCard(f){
       `<div class="snum${val==null?' unset':''}">${val==null?'?':val}</div>`+
       `<button class="sbtn" ${locked?'disabled':''} onclick="bumpPick(${i},${side},1)">+</button></div>`;
   const center=locked?`<span class="pstat lock">🔒</span>`:both?`<span class="pstat ok">✓</span>`:`<span class="pcenter">vs</span>`;
-  const pickUI=`<div class="pickwrap"><div class="hstepper">${hbox(0,a)}${center}${hbox(1,b)}</div>${validationLine(f,a,b,locked)}</div>`;
+  const pickUI=`<div class="pickwrap"><div class="hstepper">${hbox(0,a)}${center}${hbox(1,b)}</div></div>`;
   return `<div class="card">
     <div class="frow">
       <div><div class="teams">${f.team1}<span class="v">v</span>${f.team2}</div>
@@ -373,7 +383,7 @@ function pickCard(f){
     <div class="tops" style="margin-top:13px">${tops}</div>
     ${modelSays(f)}
     <div class="pickbox">${pickUI}</div>
-    <div class="sharerow"><button class="snapbtn" onclick="snapCard(this)">📷 Save as image</button></div>
+    <div class="cardfoot"><button class="snapbtn" onclick="snapCard(this)" title="Save as image">📷</button><div class="vfill">${validationLine(f,a,b,locked)}</div></div>
   </div>`;
 }
 
@@ -402,23 +412,16 @@ function openPicksModal(){
 }
 function closeModal(){ $("#pickmodal").classList.add("hidden"); }
 function copyPicks(){ const t=$("#pickdump"); t.select(); try{navigator.clipboard.writeText(t.value);}catch(e){try{document.execCommand("copy");}catch(_){}} }
-function importPicks(){
-  const P=loadPicks(); let n=0;
-  $("#pickdump").value.split("\n").forEach(line=>{
-    const parts=line.split("|").map(s=>s.trim()); if(parts.length<3) return;
-    const tm=parts[1].split(" v "), sc=parts[2].split("-");
-    if(tm.length===2 && sc.length===2){ const a=+sc[0], b=+sc[1];
-      if(Number.isInteger(a)&&Number.isInteger(b)){ P[`${parts[0]}|${tm[0].trim()}|${tm[1].trim()}`]=[a,b]; n++; } }
-  });
-  savePicks(P); renderAll(); closeModal(); alert(`Imported ${n} pick${n===1?'':'s'}.`);
-}
-// --- save a pick card as a high-res image ------------------------------------
+// --- render a pick card to an image, shown in a modal (long-press to save) ----
+function closeImg(){ $("#imgmodal").classList.add("hidden"); }
 function snapCard(btn){
   const card=btn.closest(".card"); if(!card||!window.html2canvas) return;
-  const t=btn.textContent; btn.textContent="saving…";
+  const t=btn.textContent; btn.textContent="…";
   html2canvas(card,{scale:3,backgroundColor:getComputedStyle(document.body).backgroundColor,
-    ignoreElements:el=>el.classList&&el.classList.contains("sharerow")}).then(canvas=>{
-      const a=document.createElement("a"); a.download="wc26-pick.png"; a.href=canvas.toDataURL("image/png"); a.click(); btn.textContent=t;
+    ignoreElements:el=>el.classList&&el.classList.contains("cardfoot")}).then(canvas=>{
+      const url=canvas.toDataURL("image/png");
+      $("#cardimg").src=url; $("#imgdl").href=url;
+      $("#imgmodal").classList.remove("hidden"); btn.textContent=t;
     }).catch(e=>{ btn.textContent=t; console.error(e); });
 }
 
@@ -635,9 +638,6 @@ function explainerHTML(){return `
   <p>Each team's last five results as <span class="fdot W">W</span> <span class="fdot D">D</span> <span class="fdot L">L</span> (oldest left, newest right; tap a square for the score). The model already weights recent games more heavily, so this is a peek at what it's reacting to.</p>
   <h3>Power ratings + movement</h3>
   <p>The Ratings tab ranks the tournament teams by Elo strength. The <span class="k">▲ / ▼</span> shows how much each rating has moved over the past year — who's trending up into the World Cup and who's sliding.</p>
-  <h3>Back up your picks</h3>
-  <p>Your picks are saved <span class="k">on this device only</span> (in the browser), so they don't follow you to another phone or browser. Use this to export them as text — copy it to back up or share, or paste a backup in to restore.</p>
-  <div style="margin:8px 0 4px"><button class="mbtn" onclick="openPicksModal()">⤓ Export / import my picks</button></div>
   <h3>Win it (tournament odds)</h3>
   <p>The model plays the <span class="k">rest of the tournament 20,000 times</span> — and counts how often each nation wins its group, reaches each round, and lifts the trophy. Crucially it <span class="k">banks games already played</span>: finished results are locked in, and only the games still to come are simulated, so the odds update as the tournament unfolds. One simulation is luck; 20,000 averages it out into a probability. That's why a clear favourite still only sits around 1-in-5 — even the best team must win seven knockout games where anything can happen.</p>`;}
 
