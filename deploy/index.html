@@ -434,6 +434,7 @@ function bumpPick(i,side,delta){
 function richExport(){
   const d=DATA||{}, lb=d.leaderboard, out=[], ys=youStanding();
   const order=["ensemble","poisson","dixon_coles","elo","market"];
+  out.push("Please review my World Cup 2026 prediction pool from the data below: how I (You) am doing vs the models and the market, what my pick patterns reveal, and where I and the models can improve. Legend — R: correct result, E: exact score, .: miss, -: no pick/data.","");
   out.push("WC2026 PREDICTOR EXPORT");
   out.push(ys?`You ${ys.pts}pts · ${ord(ys.rank)} · ${lb&&lb.games?lb.games.length:0} games scored`:"No scored games yet");
   if(lb&&lb.games&&lb.games.length){
