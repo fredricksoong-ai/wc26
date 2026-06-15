@@ -328,9 +328,9 @@ def main() -> int:
                 tops = [[f"{i}-{j}", round(p, 3)] for (i, j), p in scoring.top_scorelines(matrix, 10)]
                 (mi, mj), mprob = scoring.top_scorelines(matrix, 1)[0]
                 xgh, xga = o_xg(dm, r.team1, r.team2, r.ground)
-                # full scoreline grid 0-0..7-7 (row-major, team1 goals x team2 goals) as a compact
-                # comma string — lets the dashboard price ANY exact pick the user makes, even a 7-1.
-                SG = 7
+                # full scoreline grid 0-0..10-10 (row-major, team1 goals x team2 goals) as a compact
+                # comma string — lets the dashboard price ANY exact pick the stepper allows.
+                SG = 10
                 sg = ",".join(f"{float(matrix[i, j]):.4f}" for i in range(SG + 1) for j in range(SG + 1))
                 entry = {"p_home": round(probs["home"], 3), "p_draw": round(probs["draw"], 3),
                          "p_away": round(probs["away"], 3),
