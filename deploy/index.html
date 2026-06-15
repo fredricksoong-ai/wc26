@@ -87,6 +87,9 @@
   .dayhdr{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin:16px 4px 2px;padding-bottom:5px;border-bottom:1px solid var(--line)}
   .hidden{display:none} .err{padding:20px 16px;color:var(--away)}
   footer{color:var(--muted);font-size:11px;text-align:center;padding:18px 16px 0}
+  .nextstrip{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 0 2px;padding:8px 12px;background:var(--card2);border:1px solid var(--line);border-radius:10px;font-size:12px;color:var(--muted);cursor:pointer}
+  .nextstrip b{color:var(--ink)} .ns-next{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ns-warn{color:var(--away);font-weight:700;white-space:nowrap} .ns-ok{color:var(--good);font-weight:700;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -96,6 +99,7 @@
   <button id="refreshBtn" onclick="triggerRefresh()" title="Fetch latest" style="position:absolute;top:16px;right:14px;width:34px;height:34px;background:rgba(167,139,250,.15);color:var(--pick);border:1px solid rgba(167,139,250,.4);border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;line-height:1"><span id="refreshIco">↻</span></button>
 </header>
 <div class="metrics" id="metrics"></div>
+<div id="nextstrip" class="nextstrip" onclick="document.querySelector('.tab[data-view=fixtures]').click()"></div>
 <div class="tabs">
   <div class="tab active" data-view="fixtures">Picks</div>
   <div class="tab" data-view="results">Results</div>
@@ -189,6 +193,7 @@ function init(d){
       <div style="text-align:right"><div class="relo">${r.elo}</div><div style="margin-top:3px">${chev(r.delta)}</div></div>
     </div>`).join("");
   renderAll();
+  if(!window._nsTimer) window._nsTimer=setInterval(renderNextStrip,30000);  // tick the countdown
 }
 
 function tallies(){
@@ -202,6 +207,27 @@ function tallies(){
   return {yP,yMax,yN,yR,yE,mP,mMax,mN};
 }
 
+// next-kickoff strip: soonest unlocked match + how many upcoming are still unpicked
+function fmtCountdown(ms){
+  if(ms<=0) return "now";
+  const m=Math.floor(ms/60000), h=Math.floor(m/60), d=Math.floor(h/24);
+  if(d>=1) return `${d}d ${h%24}h`;
+  if(h>=1) return `${h}h ${m%60}m`;
+  return `${m}m`;
+}
+function hasPick(f){ const p=pickArr(f); return !!(p&&p[0]!=null&&p[1]!=null); }
+function renderNextStrip(){
+  const el=$("#nextstrip"); if(!el) return;
+  const now=Date.now();
+  const up=(ALLFIX||[]).filter(f=>!f.played&&f.kickoff_sgt&&Date.parse(f.kickoff_sgt+":00+08:00")>now)
+                       .sort((a,b)=>a.kickoff_sgt.localeCompare(b.kickoff_sgt));
+  if(!up.length){ el.style.display="none"; return; }
+  el.style.display="flex";
+  const next=up[0], ms=Date.parse(next.kickoff_sgt+":00+08:00")-now;
+  const unpicked=up.filter(f=>!hasPick(f)).length;
+  const right=unpicked>0?`<span class="ns-warn">⚠️ ${unpicked} to pick</span>`:`<span class="ns-ok">✓ all picked</span>`;
+  el.innerHTML=`<span class="ns-next"><b>Next</b> ${next.team1} v ${next.team2} · locks in <b>${fmtCountdown(ms)}</b></span>${right}`;
+}
 // small credit gauge for the Odds API (ring fills with credits left, of the 500/mo cap)
 function oddsRing(c,cap=500){
   const frac=Math.max(0,Math.min(1,c/cap)), C=2*Math.PI*8, off=C*(1-frac);
@@ -224,6 +250,7 @@ function renderAll(){
     else if(dlt>0.0005)  rpsTrend=` <span style="color:var(--bad)" title="getting worse — RPS rose ${dlt.toFixed(3)}">▼</span>`;
     else                 rpsTrend=` <span style="color:var(--muted)" title="steady">–</span>`;
   }
+  renderNextStrip();
   const rv=erps!=null?erps:(d.summary||{}).live_rps;
   const rps3=(rv!=null)?Number(rv).toFixed(3):"–";
   $("#metrics").innerHTML=[
