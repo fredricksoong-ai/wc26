@@ -325,7 +325,9 @@ def main() -> int:
                                          o_probs(em.outcome_probs, r.team1, r.team2, r.ground), W_DC)
                 # honest forecast: the most likely scoreline (mode of the DC grid)
                 # plus expected goals (the average). No pool-points optimisation.
-                tops = [[f"{i}-{j}", round(p, 3)] for (i, j), p in scoring.top_scorelines(matrix, 10)]
+                # top 20 covers the full "logical" scoreline list (down to ~1%); the dashboard
+                # shows the first 6 as chips and uses the rest to price YOUR exact pick.
+                tops = [[f"{i}-{j}", round(p, 3)] for (i, j), p in scoring.top_scorelines(matrix, 20)]
                 (mi, mj), mprob = scoring.top_scorelines(matrix, 1)[0]
                 xgh, xga = o_xg(dm, r.team1, r.team2, r.ground)
                 entry = {"p_home": round(probs["home"], 3), "p_draw": round(probs["draw"], 3),

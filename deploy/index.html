@@ -232,10 +232,13 @@ function validationLine(f,a,b,locked){
   const modelOut=["home","draw","away"][probs.indexOf(Math.max(...probs))];
   const pickOut=a>b?"home":a<b?"away":"draw";
   const res=pickOut===modelOut?`<span class="vok">✓ result</span>`:`<span class="vwarn">⚠ vs model</span>`;
-  const tops=(f.top_scores||[]).map(t=>t[0]);
-  const sOK=tops.includes(`${a}-${b}`);
-  const score=sOK?`<span class="vok">✓ scoreline</span>`
-    :`<span class="vwarn">⚠ scoreline</span>${tops[0]?` <span style="color:var(--muted)">model likes ${tops[0]}</span>`:""}`;
+  // likelihood of YOUR exact scoreline (looked up in the model's distribution); ≥5% = a plausible call
+  const hit=(f.top_scores||[]).find(t=>t[0]===`${a}-${b}`);
+  const p=hit?hit[1]:null, top1=(f.top_scores&&f.top_scores[0])?f.top_scores[0][0]:"";
+  const pctStr=p!=null?`${pc(p)}%`:"<1%";
+  const score=(p!=null&&p>=0.05)
+    ?`<span class="vok">✓ scoreline</span> <span style="color:var(--muted)">${pctStr}</span>`
+    :`<span class="vwarn">⚠ scoreline</span> <span style="color:var(--muted)">${pctStr}${top1?` · model likes ${top1}`:""}</span>`;
   return `<div class="validrow">${res} · ${score}</div>`;
 }
 function renderNextStrip(){
@@ -341,7 +344,6 @@ function pickCard(f){
     <div class="formends"><span>${formStrip(f.team1)}</span><span>${formStrip(f.team2)}</span></div>
     <div class="tops" style="margin-top:13px">${tops}</div>
     ${modelSays(f)}
-    ${marketLine(f)}
     <div class="pickbox">${pickUI}</div>
   </div>`;
 }
@@ -423,11 +425,15 @@ function marketLine(f){
 function modelSays(f){
   if(!f.lb) return "";
   const ORDER=["ensemble","poisson","dixon_coles","elo","market"]; // Elo + Market last (naive scoreline, no %)
+  const ens=(f.lb.ensemble&&f.lb.ensemble.probs)||null;          // baseline for the per-row delta
   const cells=ORDER.filter(m=>f.lb[m]).map(m=>{ const v=f.lb[m];
     const idx={home:0,draw:1,away:2}[v.result];
     const r=v.result==="draw"?"draw":`${v.result==="home"?f.team1:f.team2} win`;
     const rcol=v.result==="home"?"var(--home)":v.result==="away"?"var(--away)":"var(--draw)";
-    const pct=(v.probs&&v.probs[idx]!=null)?` <b>${pc(v.probs[idx])}%</b>`:"";
+    const pv=(v.probs&&v.probs[idx]!=null)?v.probs[idx]:null;
+    let delta="";
+    if(ens&&m!=="ensemble"&&pv!=null&&ens[idx]!=null){const d=Math.round((pv-ens[idx])*100); delta=` <span style="color:var(--muted)">(${d>=0?'+':''}${d}%)</span>`;}
+    const pct=(pv!=null)?` <b>${pc(pv)}%</b>${delta}`:"";
     const spt=(v.sp!=null)?`${pc(v.sp)}%`:"";
     return `<span style="color:${LB_COLORS[m]||'#888'}">●</span>
       <span style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${LB_LABELS[m]||m}</span>
