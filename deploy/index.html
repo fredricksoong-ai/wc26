@@ -349,8 +349,7 @@ function renderAll(){
   const dot=`<span style="color:var(--muted)">·</span>`;
   const mePill=ys?`<span class="pill"><b class="y">${ys.pts}</b>pts ${dot} ${ord(ys.rank)}${gaps}</span>`
                  :`<span class="pill">you <b class="y">${t.yP}</b>pts</span>`;
-  const ensPill=es?`<span class="pill">Ensemble <b class="p">${es.pts}</b>pts ${dot} ${ord(es.rank)} ${dot} RPS <b>${es.rps!=null?es.rps.toFixed(3):"–"}</b>${rpsTrend}</span>`
-                  :`<span class="pill">RPS <b>${rps3}</b>${rpsTrend}</span>`;
+  const ensPill=es?`<span class="pill">Ensemble <b class="p">${es.pts}</b>pts ${dot} ${ord(es.rank)} ${dot} <b>${es.rps!=null?es.rps.toFixed(3):"–"}</b>${rpsTrend}</span>`:"";
   $("#metrics").innerHTML=[
     mePill, ensPill,
     (d.odds&&d.odds.credits_remaining!=null)?oddsRing(d.odds.credits_remaining):"",
