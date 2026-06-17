@@ -13,7 +13,7 @@
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;padding:env(safe-area-inset-top) 0 40px;touch-action:manipulation}
   header{padding:14px 14px 4px}
-  h1{font-size:16px;margin:0;flex:none;white-space:nowrap}
+  h1{font-size:16px;margin:0;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .hbtns{display:flex;align-items:center;gap:8px;flex:none}
   .hbtn{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;line-height:1}
   .hbtn.primary{background:rgba(167,139,250,.15);color:var(--pick);border:1px solid rgba(167,139,250,.4)} .hbtn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
@@ -122,8 +122,9 @@
   .upd{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:16px}
   .hright{flex:none;display:flex;align-items:center;gap:8px}
   .hcd{flex:none;font-size:12px;font-weight:700;color:var(--ink);white-space:nowrap;cursor:pointer}
-  main{padding-bottom:82px}
-  .bottombar{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-around;gap:8px;padding:6px 26px;padding-bottom:calc(6px + env(safe-area-inset-bottom));background:rgba(12,12,22,.32);backdrop-filter:blur(9px) saturate(140%);-webkit-backdrop-filter:blur(9px) saturate(140%);border-top:1px solid rgba(255,255,255,.06);z-index:40}
+  main{padding-bottom:92px}
+  .bottombar{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:flex-end;justify-content:space-around;gap:8px;padding:30px 26px 8px;padding-bottom:calc(8px + env(safe-area-inset-bottom));background:linear-gradient(to top, rgba(7,7,13,.94) 0%, rgba(7,7,13,.78) 38%, rgba(7,7,13,.30) 72%, rgba(7,7,13,0) 100%);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:0;z-index:40;pointer-events:none}
+  .bottombar .bbtn{pointer-events:auto;box-shadow:0 2px 10px rgba(0,0,0,.35)}
   .bbtn{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);color:var(--ink);font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:0;font-family:inherit;-webkit-tap-highlight-color:transparent}
   .bbtn:active{transform:scale(.92)} .bbtn svg{display:block}
   .bbtn-mid{width:50px;height:50px;background:rgba(167,139,250,.22);border-color:rgba(167,139,250,.5);color:var(--pick)}
@@ -147,13 +148,13 @@
 <body>
 <header>
   <div class="hrow">
-    <h1>WC '26 Predictor</h1>
-    <span class="upd" id="updated">loading…</span>
+    <h1>⚽️ WC '26 Predictor ⚽️</h1>
     <span class="hright">
       <span id="oddsslot"></span>
       <span id="nextcd" class="hcd" onclick="selectView('fixtures')" title="Until the next kickoff"></span>
     </span>
   </div>
+  <div class="updated"><span id="updated">loading…</span></div>
 </header>
 <div class="metrics" id="metrics"></div>
 <main>
@@ -174,9 +175,9 @@
 </div>
 <div id="sheetTabs" class="bsheet bsheet-r hidden"></div>
 <nav class="bottombar">
-  <button class="bbtn" id="bbDots" onclick="toggleSheet('actions',event)" aria-label="Actions" title="Actions">⋯</button>
+  <button class="bbtn" id="bbDots" onclick="toggleSheet('actions',event)" aria-label="Actions" title="Actions"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><circle cx="5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="19" cy="12" r="1.9"/></svg></button>
   <button class="bbtn bbtn-mid" id="bbMid" onclick="midAction()" aria-label="Next card" title="Next card"></button>
-  <button class="bbtn" id="bbBurger" onclick="toggleSheet('tabs',event)" aria-label="Tabs" title="Tabs">☰</button>
+  <button class="bbtn" id="bbBurger" onclick="toggleSheet('tabs',event)" aria-label="Tabs" title="Tabs"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
 </nav>
 <div id="pickmodal" class="modal hidden" onclick="if(event.target===this)closeModal()">
   <div class="modalbox">
@@ -313,12 +314,16 @@ function closeSheets(){ document.getElementById("sheetActions").classList.add("h
 document.addEventListener("click",e=>{ if(!e.target.closest(".bsheet,.bottombar"))closeSheets(); });
 function barAction(a,e){ if(e)e.stopPropagation(); closeSheets();
   if(a==="refresh")triggerRefresh(); else if(a==="export")openPicksModal(); else if(a==="sync")syncXG(); }
+let _navIdx=-1, _navView=null;
 function nextCard(){
   const cont=document.getElementById(activeView==="results"?"results":"fixtures");
   const cards=[...cont.querySelectorAll(".card")]; if(!cards.length)return;
-  const off=104;
-  let target=cards.find(c=>c.getBoundingClientRect().top>off+6)||cards[0];
-  window.scrollTo({top:window.scrollY+target.getBoundingClientRect().top-off,behavior:"smooth"});
+  if(activeView!==_navView){ _navView=activeView; _navIdx=-1; }   // fresh view -> first tap = first card
+  _navIdx=(_navIdx+1)%cards.length;
+  const target=cards[_navIdx], r=target.getBoundingClientRect(), vh=window.innerHeight;
+  // centre the card in the viewport (clamped near the top for cards taller than the screen)
+  const y=window.scrollY+r.top-Math.max(72,(vh-r.height)/2);
+  window.scrollTo({top:Math.max(0,y),behavior:"smooth"});
   target.classList.remove("flashcard"); void target.offsetWidth; target.classList.add("flashcard");
   setTimeout(()=>target.classList.remove("flashcard"),1400);
 }
@@ -362,8 +367,7 @@ fetch("predictions.json",{cache:"no-store"}).then(r=>r.json()).then(d=>{DATA=d;i
 function init(d){
   RP=(d.scoring||{}).result_pts??2; EP=(d.scoring||{}).exact_pts??3; BONUS=EP-RP;
   ALLFIX=(d.fixtures||[]).filter(f=>f.resolved);
-  $("#updated").textContent=fmtUpdatedCtx(d.generated_utc);
-  $("#updated").title=`Last updated ${toSGT(d.generated_utc)}`;
+  $("#updated").innerHTML=`Last updated: <b>${toSGT(d.generated_utc)}</b>`;
   renderTabSheet(); updateMidButton();
   $("#explainer").innerHTML=explainerHTML();
   renderOdds();
