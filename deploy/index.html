@@ -99,6 +99,19 @@
   .rgrid{display:grid;grid-template-columns:minmax(0,1.5fr) .9fr .8fr 22px 22px 30px;gap:8px 6px;align-items:center;font-size:12px;margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
   .rgrid .gh{color:#6b7a90;font-size:10.5px;text-align:center} .rgrid .gl{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .rgrid .gc{text-align:center;font-variant-numeric:tabular-nums} .rgrid .gp{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+  .lb-take{font-size:11px;color:var(--ink);background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:9px;padding:8px 10px;margin:6px 0 12px;line-height:1.55}
+  .lb-take .m,.lbgrid .m{color:var(--muted)}
+  .lbgrid{display:grid;grid-template-columns:18px minmax(0,1fr) 22px 22px 22px 32px 42px;gap:9px 6px;align-items:center;font-size:12px;margin-bottom:8px}
+  .lbgrid .gh{color:#6b7a90;font-size:10.5px;text-align:center} .lbgrid .gl{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .lbgrid .gc{text-align:center;font-variant-numeric:tabular-nums} .lbgrid .gp{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+  .lbgrid .rank{text-align:center;color:var(--muted)}
+  .xg-hdr{display:flex;justify-content:space-between;font-size:10.5px;color:#6b7a90;padding:10px 2px 2px}
+  .xgrow2{display:grid;grid-template-columns:84px 1fr 48px;gap:8px;align-items:center;padding:3px 0;font-size:12px}
+  .xg-team{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .xg-bar{position:relative;height:13px}
+  .xg-mid{position:absolute;left:50%;top:-1px;bottom:-1px;width:1px;background:var(--line)}
+  .xg-fill{position:absolute;top:2px;height:9px;border-radius:3px;min-width:2px}
+  .xg-val{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
   .stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
   .stat .l{font-size:11px;color:var(--muted)} .stat .n{font-size:22px;font-weight:700;margin-top:2px}
   .subline{padding:0 4px 8px;color:var(--muted);font-size:12px}
@@ -363,6 +376,7 @@ function nextCard(){
 }
 // hand-maintained: one line per shipped change, newest first
 const CHANGELOG=[
+  ["17 Jun","League: P/R/E table + best-forecaster; xG page slimmed to one bar per team"],
   ["17 Jun","Richer result cards — expected/upset, model odds, points per row"],
   ["17 Jun","Richer Results header — you vs the model vs the market, your record & calls"],
   ["17 Jun","Country flags + 3-letter codes across every screen"],
@@ -859,20 +873,20 @@ function renderXG(){
     const xgd=Math.round((o.xf-o.xa)*100)/100, gd=o.gf-o.ga;
     return {t,gp:o.gp,gf:o.gf,ga:o.ga,xf,xa,xgd,gd,luck:Math.round((gd-xgd)*100)/100};
   });
-  if(!rows.length){ $("#xg").innerHTML=`<div class="err">Add each game's xG on the Results cards (then tap Sync xG) to build this table.</div>`; return; }
-  rows.sort((a,b)=> xgMode==="luck" ? b.luck-a.luck : b.xgd-a.xgd);
-  const sgn=v=>(v>0?'+':'')+v.toFixed(2), sgnd=v=>(v>0?'+':'')+v;
-  const lc=v=>v>0.2?'var(--good)':v<-0.2?'var(--bad)':'var(--muted)';
+  if(!rows.length){ $("#xg").innerHTML=`<div class="err">Add each game's xG on the Results cards, then ⋯ → Sync xG.</div>`; return; }
+  const metric=r=> xgMode==="luck" ? r.luck : r.xgd;
+  rows.sort((a,b)=>metric(b)-metric(a));
+  const maxAbs=Math.max(0.1,...rows.map(r=>Math.abs(metric(r))));
   const toggle=`<div class="oddsel" style="margin-top:8px"><span class="opt ${xgMode==='xg'?'on':''}" onclick="xgMode='xg';renderXG()">By xG</span><span class="opt ${xgMode==='luck'?'on':''}" onclick="xgMode='luck';renderXG()">By luck</span></div>`;
-  const head=`<tr style="color:var(--muted);font-size:11px;text-align:right"><th style="text-align:left;font-weight:600;padding-bottom:4px">Team</th><th>GP</th><th>Goals</th><th>xG</th><th>+/− vs xG</th></tr>`;
-  const body=rows.map(r=>`<tr style="font-size:12px;text-align:right;border-top:1px solid var(--line)">
-    <td style="text-align:left;font-weight:600;color:var(--ink);padding:6px 0;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.t}">${flagImg(r.t,true)}${code3(r.t)}</td>
-    <td style="color:var(--muted)">${r.gp}</td>
-    <td style="font-variant-numeric:tabular-nums">${r.gf}–${r.ga} <span style="color:var(--muted)">(${sgnd(r.gd)})</span></td>
-    <td style="font-variant-numeric:tabular-nums">${r.xf.toFixed(2)}–${r.xa.toFixed(2)} <span style="color:var(--muted)">(${sgn(r.xgd)})</span></td>
-    <td style="font-weight:700;font-variant-numeric:tabular-nums;color:${lc(r.luck)}">${sgn(r.luck)}</td>
-  </tr>`).join("");
-  $("#xg").innerHTML=`<div class="subline">Measured xG vs actual goals, ${rows.length} teams that have played. <b>+/− vs xG</b> = goal difference minus xG difference: <span style="color:var(--good)">positive</span> = scoring more than the chances earned (clinical or fortunate, likely to regress), <span style="color:var(--bad)">negative</span> = creating more than the score shows (wasteful or unlucky). These synced xG numbers are what feed the model's Elo.</div>${toggle}<table style="width:100%;border-collapse:collapse;margin-top:6px">${head}${body}</table>`;
+  const lbl=xgMode==="luck"?"over / under xG":"net xG";
+  const hdr=`<div class="xg-hdr"><span>${rows.length} teams played · tap a result to edit xG</span><span>${lbl}</span></div>`;
+  const bars=rows.map(r=>{ const v=metric(r), up=v>=0, w=Math.min(50,Math.abs(v)/maxAbs*50), c=v>0.05?'var(--good)':v<-0.05?'var(--bad)':'var(--muted)';
+    return `<div class="xgrow2">
+      <span class="xg-team" title="${r.t}">${flagImg(r.t,true)}${code3(r.t)}</span>
+      <div class="xg-bar"><span class="xg-mid"></span><span class="xg-fill" style="${up?'left:50%':'right:50%'};width:${w.toFixed(1)}%;background:${c}"></span></div>
+      <span class="xg-val" style="color:${c}">${v>0?'+':''}${v.toFixed(2)}</span>
+    </div>`; }).join("");
+  $("#xg").innerHTML=toggle+hdr+`<div>${bars}</div>`;
 }
 function renderLeague(d){
   const lb=d.leaderboard;
@@ -883,21 +897,26 @@ function renderLeague(d){
   lb.games.forEach(g=>{ const yp=userPickFor(g.key); if(yp&&yp[0]!=null){ yn++; const a=g.actual.split("-").map(Number);
     if(resultOf(yp[0],yp[1])===resultOf(a[0],a[1]))yr++; if(yp[0]===a[0]&&yp[1]===a[1])ye++; }});
   // points (exact EP supersedes result RP; non-additive) and RPS; rank by points then RPS
-  const rows=M.map((m,i)=>{const s=lb.standings[m]; return {m,label:L[i],g:s.games||0,
+  const rows=M.map((m,i)=>{const s=lb.standings[m]; return {m,label:L[i],g:s.games||0,r:s.result_hits||0,e:s.exact_hits||0,
       pts:s.result_hits*RP+s.exact_hits*BONUS, rps:s.rps};})
-    .concat([{m:"you",label:"You",g:yn,pts:yr*RP+ye*BONUS,rps:null}])  // you ranked in the table too
+    .concat([{m:"you",label:"You",g:yn,r:yr,e:ye,pts:yr*RP+ye*BONUS,rps:null}])  // you ranked in the table too
     .filter(r=>r.g>0)                                   // Market only appears once it has priced games
     .sort((a,b)=>(b.pts-a.pts)||((a.rps??9)-(b.rps??9)));
   let html=`<div class="oddsel"><span class="opt ${lbMode==='points'?'on':''}" onclick="lbMode='points';renderLeague(DATA)">Points</span><span class="opt ${lbMode==='rps'?'on':''}" onclick="lbMode='rps';renderLeague(DATA)">RPS</span></div>`;
   html+=`<div style="position:relative;height:210px;margin:4px 0 16px"><canvas id="lbchart"></canvas></div>`;
-  html+=`<div class="lbhdr"><span style="flex:1">model</span><span class="lbn">pts</span><span class="lbn">RPS</span></div>`;
-  html+=rows.map((r,i)=>{const me=r.m==="you", c=me?"var(--you)":"var(--ink)";
-    return `<div class="orow">
-      <div class="rank" style="color:${me?'var(--you)':'inherit'}">${i+1}</div>
-      <div style="flex:1;min-width:0"><div class="rname" style="color:${c}"><span style="color:${LB_COLORS[r.m]||'var(--muted)'}">●</span> ${r.label}</div></div>
-      <span class="lbn" style="color:${c};font-weight:700">${r.pts}</span>
-      <span class="lbn">${r.rps!=null?r.rps.toFixed(3):'–'}</span>
-    </div>`;}).join("");
+  // takeaway: who leads on points vs who forecasts sharpest (lowest RPS) — they're rarely the same
+  const wr=rows.filter(r=>r.rps!=null), bestR=wr.length?wr.reduce((a,b)=>a.rps<=b.rps?a:b):null;
+  const youR=rows.find(r=>r.m==="you"), youRank=youR?rows.indexOf(youR)+1:null, gap=youR?rows[0].pts-youR.pts:0;
+  const col=m=>LB_COLORS[m]||"var(--muted)";
+  html+=`<div class="lb-take">Most points <b style="color:${col(rows[0].m)}">${rows[0].label}</b>${bestR?` · sharpest <b style="color:${col(bestR.m)}">${bestR.label}</b> <span class="m">rps ${bestR.rps.toFixed(3)}</span>`:""}${youR?` · you <b style="color:var(--you)">${ord(youRank)}</b>${gap>0?`<span class="m">, ${gap} off</span>`:""}`:""}</div>`;
+  html+=`<div class="lbgrid"><span></span><span></span><span class="gh">P</span><span class="gh">R</span><span class="gh">E</span><span class="gh" style="text-align:right">pts</span><span class="gh" style="text-align:right">rps</span>`;
+  html+=rows.map((r,i)=>{const me=r.m==="you", c=me?"var(--you)":"var(--ink)", best=bestR&&r.m===bestR.m;
+    return `<span class="rank" style="color:${me?'var(--you)':'var(--muted)'}">${i+1}</span>
+      <span class="gl" style="color:${c}${me?';background:rgba(34,211,238,.12);border-radius:5px;padding:2px 6px':''}"><span style="color:${col(r.m)}">●</span> ${r.label}</span>
+      <span class="gc m">${r.g}</span><span class="gc">${r.r}</span><span class="gc">${r.e}</span>
+      <span class="gp" style="color:${c}">${r.pts}</span>
+      <span class="gp" style="color:${best?'var(--good)':'var(--muted)'};font-weight:${best?700:400}">${r.rps!=null?r.rps.toFixed(3):'–'}</span>`;}).join("");
+  html+=`</div>`;
   $("#league").innerHTML=html;
   if(window.Chart){
     if(lbChart)lbChart.destroy();
