@@ -849,13 +849,14 @@ function modelSays(f){
     const rcol=v.result==="home"?"var(--home)":v.result==="away"?"var(--away)":"var(--draw)";
     const pv=(v.probs&&v.probs[idx]!=null)?v.probs[idx]:null;
     const spt=(v.sp!=null)?pc(v.sp)+'%':'–';
-    let delta="–";   // ensemble is the baseline -> dash keeps the column aligned
-    if(ens&&m!=="ensemble"&&pv!=null&&ens[idx]!=null){const d=Math.round((pv-ens[idx])*100); delta=`${d>=0?'+':''}${d}`;}
+    let delta="–", dcol="var(--muted)";   // ensemble is the baseline -> dash keeps the column aligned
+    if(ens&&m!=="ensemble"&&pv!=null&&ens[idx]!=null){const d=Math.round((pv-ens[idx])*100);
+      delta=`${d>=0?'+':''}${d}`; dcol=d>0?'var(--good)':d<0?'var(--bad)':'var(--muted)';}  // green = more bullish than Ensemble, red = less
     return `<span class="gl"><span style="color:${LB_COLORS[m]||'#888'}">●</span> ${LB_LABELS[m]||m}</span>
       <span class="gc"><b style="color:var(--ink)">${v.score}</b></span>
       <span class="gc m">${spt}</span>
       <span class="gp" style="color:${rcol}">${team}${pv!=null?` <b style="color:var(--ink)">${pc(pv)}%</b>`:''}</span>
-      <span class="gp m" style="font-weight:400">${delta}</span>`;
+      <span class="gp" style="color:${dcol};font-weight:600">${delta}</span>`;
   }).join("");
   return `<div style="color:var(--home);font-weight:700;font-size:13px;margin-top:12px;margin-bottom:6px">What each model says</div>
     <div class="msgrid">${head}${rows}</div>`;
