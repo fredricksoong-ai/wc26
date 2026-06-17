@@ -105,13 +105,17 @@
   .lbgrid .gh{color:#6b7a90;font-size:10.5px;text-align:center} .lbgrid .gl{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .lbgrid .gc{text-align:center;font-variant-numeric:tabular-nums} .lbgrid .gp{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
   .lbgrid .rank{text-align:center;color:var(--muted)}
-  .xg-hdr{display:flex;justify-content:space-between;font-size:10.5px;color:#6b7a90;padding:10px 2px 2px}
-  .xgrow2{display:grid;grid-template-columns:84px 1fr 48px;gap:8px;align-items:center;padding:3px 0;font-size:12px}
+  .xgrow2{display:grid;grid-template-columns:60px 42px 62px 1fr 44px;gap:7px;align-items:center;padding:3px 0;font-size:12px}
+  .xg-head{color:#6b7a90;font-size:10.5px;padding-top:10px}
   .xg-team{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .xg-d{color:var(--muted);font-size:11px;font-variant-numeric:tabular-nums;white-space:nowrap}
   .xg-bar{position:relative;height:13px}
   .xg-mid{position:absolute;left:50%;top:-1px;bottom:-1px;width:1px;background:var(--line)}
   .xg-fill{position:absolute;top:2px;height:9px;border-radius:3px;min-width:2px}
   .xg-val{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+  .msgrid{display:grid;grid-template-columns:minmax(0,1.4fr) .7fr .7fr auto 32px;gap:8px 8px;align-items:center;font-size:12px}
+  .msgrid .gh{color:#6b7a90;font-size:10.5px} .msgrid .gl{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .msgrid .gc{text-align:center;font-variant-numeric:tabular-nums} .msgrid .gp{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap} .msgrid .m{color:var(--muted)}
   .stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
   .stat .l{font-size:11px;color:var(--muted)} .stat .n{font-size:22px;font-weight:700;margin-top:2px}
   .subline{padding:0 4px 8px;color:var(--muted);font-size:12px}
@@ -838,23 +842,23 @@ function modelSays(f){
   if(!f.lb) return "";
   const ORDER=["ensemble","poisson","dixon_coles","elo","market"]; // Elo + Market last (naive scoreline, no %)
   const ens=(f.lb.ensemble&&f.lb.ensemble.probs)||null;          // baseline for the per-row delta
-  const cells=ORDER.filter(m=>f.lb[m]).map(m=>{ const v=f.lb[m];
+  const head=`<span></span><span class="gh" style="text-align:center">pick</span><span class="gh" style="text-align:center">odds</span><span class="gh" style="text-align:right">call</span><span class="gh" style="text-align:right">vs ens</span>`;
+  const rows=ORDER.filter(m=>f.lb[m]).map(m=>{ const v=f.lb[m];
     const idx={home:0,draw:1,away:2}[v.result];
-    const r=v.result==="draw"?"draw":`${code3(v.result==="home"?f.team1:f.team2)} win`;
+    const team=v.result==="draw"?"Draw":code3(v.result==="home"?f.team1:f.team2);
     const rcol=v.result==="home"?"var(--home)":v.result==="away"?"var(--away)":"var(--draw)";
     const pv=(v.probs&&v.probs[idx]!=null)?v.probs[idx]:null;
-    let delta="";
-    if(ens&&m!=="ensemble"&&pv!=null&&ens[idx]!=null){const d=Math.round((pv-ens[idx])*100); delta=` <span style="color:var(--muted)">(${d>=0?'+':''}${d}%)</span>`;}
-    const pct=(pv!=null)?` <b>${pc(pv)}%</b>${delta}`:"";
-    const spt=(v.sp!=null)?`${pc(v.sp)}%`:"";
-    return `<span style="color:${LB_COLORS[m]||'#888'}">●</span>
-      <span style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${LB_LABELS[m]||m}</span>
-      <b style="color:var(--ink);text-align:right">${v.score}</b>
-      <span style="color:var(--muted);text-align:right">${spt}</span>
-      <span style="color:${rcol};font-size:11px;text-align:right;white-space:nowrap">${r}${pct}</span>`;
+    const spt=(v.sp!=null)?pc(v.sp)+'%':'–';
+    let delta="–";   // ensemble is the baseline -> dash keeps the column aligned
+    if(ens&&m!=="ensemble"&&pv!=null&&ens[idx]!=null){const d=Math.round((pv-ens[idx])*100); delta=`${d>=0?'+':''}${d}`;}
+    return `<span class="gl"><span style="color:${LB_COLORS[m]||'#888'}">●</span> ${LB_LABELS[m]||m}</span>
+      <span class="gc"><b style="color:var(--ink)">${v.score}</b></span>
+      <span class="gc m">${spt}</span>
+      <span class="gp" style="color:${rcol}">${team}${pv!=null?` <b style="color:var(--ink)">${pc(pv)}%</b>`:''}</span>
+      <span class="gp m" style="font-weight:400">${delta}</span>`;
   }).join("");
-  return `<div style="color:var(--home);font-weight:700;font-size:13px;margin-top:10px">What each model says</div>
-    <div style="display:grid;grid-template-columns:14px minmax(0,1fr) auto auto auto;gap:6px 8px;align-items:center;font-size:12px;margin-top:6px">${cells}</div>`;
+  return `<div style="color:var(--home);font-weight:700;font-size:13px;margin-top:12px;margin-bottom:6px">What each model says</div>
+    <div class="msgrid">${head}${rows}</div>`;
 }
 // xG table: measured xG vs actual goals per team, surfacing over/under-performance.
 // Pulls measured xG from xgFor() (your synced numbers, localStorage-first) so it
@@ -878,11 +882,13 @@ function renderXG(){
   rows.sort((a,b)=>metric(b)-metric(a));
   const maxAbs=Math.max(0.1,...rows.map(r=>Math.abs(metric(r))));
   const toggle=`<div class="oddsel" style="margin-top:8px"><span class="opt ${xgMode==='xg'?'on':''}" onclick="xgMode='xg';renderXG()">By xG</span><span class="opt ${xgMode==='luck'?'on':''}" onclick="xgMode='luck';renderXG()">By luck</span></div>`;
-  const lbl=xgMode==="luck"?"over / under xG":"net xG";
-  const hdr=`<div class="xg-hdr"><span>${rows.length} teams played · tap a result to edit xG</span><span>${lbl}</span></div>`;
+  const lbl=xgMode==="luck"?"vs xG":"net xG";
+  const hdr=`<div class="xgrow2 xg-head"><span>team</span><span>goals</span><span>xG</span><span></span><span style="text-align:right">${lbl}</span></div>`;
   const bars=rows.map(r=>{ const v=metric(r), up=v>=0, w=Math.min(50,Math.abs(v)/maxAbs*50), c=v>0.05?'var(--good)':v<-0.05?'var(--bad)':'var(--muted)';
     return `<div class="xgrow2">
       <span class="xg-team" title="${r.t}">${flagImg(r.t,true)}${code3(r.t)}</span>
+      <span class="xg-d">${r.gf}–${r.ga}</span>
+      <span class="xg-d">${r.xf.toFixed(1)}–${r.xa.toFixed(1)}</span>
       <div class="xg-bar"><span class="xg-mid"></span><span class="xg-fill" style="${up?'left:50%':'right:50%'};width:${w.toFixed(1)}%;background:${c}"></span></div>
       <span class="xg-val" style="color:${c}">${v>0?'+':''}${v.toFixed(2)}</span>
     </div>`; }).join("");
