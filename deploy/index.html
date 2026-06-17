@@ -28,7 +28,7 @@
   .calval{width:34px;text-align:right;color:var(--ink);font-weight:600;flex:none}
   .caln{width:34px;text-align:right;color:var(--muted);flex:none}
   .updated b{color:var(--ink)}
-  .metrics{display:flex;gap:6px;padding:10px 14px;flex-wrap:wrap}
+  .metrics{display:flex;gap:6px;padding:10px 14px 2px;flex-wrap:wrap}
   .pill{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 9px;font-size:11px;color:var(--muted)}
   .pill b{color:var(--ink)} .pill .y{color:var(--you)} .pill .p{color:var(--pick)}
   .tabs{display:flex;gap:6px;padding:8px 12px;position:sticky;top:0;background:var(--bg);z-index:5;overflow-x:auto}
@@ -112,6 +112,9 @@
   .orow{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line)} .orow:last-child{border:0}
   .obar{height:7px;border-radius:5px;background:var(--card2);overflow:hidden;margin-top:5px} .obar i{display:block;height:100%;background:var(--good)}
   .dayhdr{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin:16px 2px 2px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  #fixtures>.dayhdr:first-child,#results>.dayhdr:first-child{margin-top:4px}
+  .flag{height:13px;width:auto;border-radius:2px;vertical-align:-1px;margin-right:6px;box-shadow:0 0 0 .5px rgba(0,0,0,.35)}
+  .flag.sm{height:11px;margin-right:4px}
   .hidden{display:none} .err{padding:20px 16px;color:var(--away)}
   footer{color:var(--muted);font-size:11px;text-align:center;padding:18px 16px 0}
   .nextstrip{display:flex;align-items:flex-start;gap:8px;margin:2px 14px;padding:8px 12px;background:var(--card2);border:1px solid var(--line);border-radius:10px;font-size:12px;color:var(--muted);cursor:pointer}
@@ -122,12 +125,12 @@
   .upd{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:16px}
   .hright{flex:none;display:flex;align-items:center;gap:8px}
   .hcd{flex:none;font-size:12px;font-weight:700;color:var(--ink);white-space:nowrap;cursor:pointer}
-  main{padding-bottom:92px}
-  .bottombar{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:flex-end;justify-content:space-around;gap:8px;padding:30px 26px 8px;padding-bottom:calc(8px + env(safe-area-inset-bottom));background:linear-gradient(to top, rgba(7,7,13,.94) 0%, rgba(7,7,13,.78) 38%, rgba(7,7,13,.30) 72%, rgba(7,7,13,0) 100%);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:0;z-index:40;pointer-events:none}
-  .bottombar .bbtn{pointer-events:auto;box-shadow:0 2px 10px rgba(0,0,0,.35)}
-  .bbtn{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);color:var(--ink);font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:0;font-family:inherit;-webkit-tap-highlight-color:transparent}
+  main{padding-bottom:78px}
+  .bottombar{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:flex-end;justify-content:space-around;gap:8px;padding:0 26px 8px;padding-bottom:calc(8px + env(safe-area-inset-bottom));background:none;border:0;z-index:40;pointer-events:none}
+  .bottombar .bbtn{pointer-events:auto}
+  .bbtn{width:44px;height:44px;border-radius:50%;background:rgba(20,20,32,.5);backdrop-filter:blur(12px) saturate(150%);-webkit-backdrop-filter:blur(12px) saturate(150%);border:1px solid rgba(255,255,255,.16);color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:0;font-family:inherit;box-shadow:0 3px 14px rgba(0,0,0,.45);-webkit-tap-highlight-color:transparent}
   .bbtn:active{transform:scale(.92)} .bbtn svg{display:block}
-  .bbtn-mid{width:50px;height:50px;background:rgba(167,139,250,.22);border-color:rgba(167,139,250,.5);color:var(--pick)}
+  .bbtn-mid{width:50px;height:50px;background:rgba(167,139,250,.5);border-color:rgba(167,139,250,.62);color:#fff}
   .bbtn.busy{animation:bpulse 1s ease-in-out infinite;border-color:var(--pick);color:var(--pick)}
   @keyframes bpulse{0%,100%{opacity:1}50%{opacity:.4}}
   .flashcard{animation:cardflash 1.3s ease-out}
@@ -236,6 +239,10 @@ function userPickFor(key){ const P=loadPicks(); if(P[key]&&P[key][0]!=null)retur
   if(f&&f.your_pick){const[a,b]=f.your_pick.split("-");return[+a,+b];} return null; }
 function isLocked(f){ if(f.played)return true; if(!f.kickoff_sgt)return false; return Date.now()>=Date.parse(f.kickoff_sgt+":00+08:00"); }
 const resultOf=(h,a)=>h>a?"home":h<a?"away":"draw";
+// team -> [FIFA 3-letter code, flag iso for flagcdn]. Flags load from flagcdn.com.
+const FLAGS={Algeria:["ALG","dz"],Argentina:["ARG","ar"],Australia:["AUS","au"],Austria:["AUT","at"],Belgium:["BEL","be"],"Bosnia and Herzegovina":["BIH","ba"],Brazil:["BRA","br"],Canada:["CAN","ca"],"Cape Verde":["CPV","cv"],Colombia:["COL","co"],Croatia:["CRO","hr"],"Curaçao":["CUW","cw"],"Czech Republic":["CZE","cz"],Czechia:["CZE","cz"],"DR Congo":["COD","cd"],Ecuador:["ECU","ec"],Egypt:["EGY","eg"],England:["ENG","gb-eng"],France:["FRA","fr"],Germany:["GER","de"],Ghana:["GHA","gh"],Haiti:["HAI","ht"],Iran:["IRN","ir"],Iraq:["IRQ","iq"],"Ivory Coast":["CIV","ci"],"Côte d'Ivoire":["CIV","ci"],Japan:["JPN","jp"],Jordan:["JOR","jo"],Mexico:["MEX","mx"],Morocco:["MAR","ma"],Netherlands:["NED","nl"],"New Zealand":["NZL","nz"],Norway:["NOR","no"],Panama:["PAN","pa"],Paraguay:["PAR","py"],Portugal:["POR","pt"],Qatar:["QAT","qa"],"Saudi Arabia":["KSA","sa"],Scotland:["SCO","gb-sct"],Senegal:["SEN","sn"],"South Africa":["RSA","za"],"South Korea":["KOR","kr"],"Korea Republic":["KOR","kr"],Spain:["ESP","es"],Sweden:["SWE","se"],Switzerland:["SUI","ch"],Tunisia:["TUN","tn"],Turkey:["TUR","tr"],"Türkiye":["TUR","tr"],"United States":["USA","us"],USA:["USA","us"],Uruguay:["URU","uy"],Uzbekistan:["UZB","uz"]};
+function flagImg(t,sm){const m=FLAGS[t];return m?`<img class="flag${sm?' sm':''}" src="https://flagcdn.com/${m[1]}.svg" alt="" loading="lazy">`:"";}
+function code3(t){const m=FLAGS[t];return m?m[0]:t;}
 function scorePick(p,act){ if(!p||p[0]==null||p[1]==null||!act)return null;
   const rh=resultOf(p[0],p[1])===resultOf(act[0],act[1]); const eh=p[0]===act[0]&&p[1]===act[1];
   return {pts:(eh?EP:(rh?RP:0)), rh, eh}; }
@@ -314,16 +321,17 @@ function closeSheets(){ document.getElementById("sheetActions").classList.add("h
 document.addEventListener("click",e=>{ if(!e.target.closest(".bsheet,.bottombar"))closeSheets(); });
 function barAction(a,e){ if(e)e.stopPropagation(); closeSheets();
   if(a==="refresh")triggerRefresh(); else if(a==="export")openPicksModal(); else if(a==="sync")syncXG(); }
-let _navIdx=-1, _navView=null;
+const NAV_TOP=14;          // where the chosen card snaps to (px from the top)
 function nextCard(){
   const cont=document.getElementById(activeView==="results"?"results":"fixtures");
   const cards=[...cont.querySelectorAll(".card")]; if(!cards.length)return;
-  if(activeView!==_navView){ _navView=activeView; _navIdx=-1; }   // fresh view -> first tap = first card
-  _navIdx=(_navIdx+1)%cards.length;
-  const target=cards[_navIdx], r=target.getBoundingClientRect(), vh=window.innerHeight;
-  // centre the card in the viewport (clamped near the top for cards taller than the screen)
-  const y=window.scrollY+r.top-Math.max(72,(vh-r.height)/2);
-  window.scrollTo({top:Math.max(0,y),behavior:"smooth"});
+  // position-aware: the "current" card is the last one already at/above the snap line;
+  // the next tap goes to the one after it. Reads live scroll, so it's never stale.
+  const line=NAV_TOP+56;
+  let cur=-1;
+  cards.forEach((c,k)=>{ if(c.getBoundingClientRect().top<=line) cur=k; });
+  const target=cards[(cur+1)%cards.length];
+  window.scrollTo({top:Math.max(0,window.scrollY+target.getBoundingClientRect().top-NAV_TOP),behavior:"smooth"});
   target.classList.remove("flashcard"); void target.offsetWidth; target.classList.add("flashcard");
   setTimeout(()=>target.classList.remove("flashcard"),1400);
 }
@@ -378,7 +386,7 @@ function init(d){
   $("#ratings").innerHTML=`<div class="subline">How the model rates the ${show.length} teams — Elo strength, movement vs a year ago (▲▼), and recent form (oldest → newest).</div>`+
     show.map((r,i)=>`<div class="rrow">
       <div class="rank">${i+1}</div>
-      <div style="flex:1;min-width:0"><div class="rname">${r.team}</div><div style="margin-top:4px">${formStrip(r.team)}</div></div>
+      <div style="flex:1;min-width:0"><div class="rname">${flagImg(r.team)}${r.team}</div><div style="margin-top:4px">${formStrip(r.team)}</div></div>
       <div style="text-align:right"><div class="relo">${r.elo}</div><div style="margin-top:3px">${chev(r.delta)}</div></div>
     </div>`).join("");
   renderAll();
@@ -551,7 +559,7 @@ function pickCard(f){
   const pickUI=`<div class="pickwrap"><div class="hstepper">${hbox(0,a)}${center}${hbox(1,b)}</div></div>`;
   return `<div class="card">
     <div class="frow">
-      <div><div class="teams">${f.team1}<span class="v">v</span>${f.team2}</div>
+      <div><div class="teams">${flagImg(f.team1)}${f.team1}<span class="v">v</span>${flagImg(f.team2)}${f.team2}</div>
         <div class="meta">${xg}${timeOnly(f)} · ${f.group||f.round||""}${f.host?` · <span style="color:${f.host===f.team2?'var(--away)':'var(--home)'}">🏠 ${f.host}</span>`:""}</div></div>
       <div style="text-align:right;flex-shrink:0"><div style="color:${rcol};font-weight:700;font-size:13px">${cf.kind==="draw"?"Draw":cf.who+" win"}</div><div style="font-size:11px"><span class="rc-${cf.lvl}">${cf.lvl==="toss"?"toss-up":cf.lvl}</span> <span style="color:var(--muted)">· ${pc(cf.p)}%</span></div></div>
     </div>
@@ -662,7 +670,7 @@ function resultCard(f){
   const i=ALLFIX.indexOf(f);
   return `<div class="card">
     <div class="frow">
-      <div><div class="teams">${f.team1}<span class="v">v</span>${f.team2}</div>
+      <div><div class="teams">${flagImg(f.team1)}${f.team1}<span class="v">v</span>${flagImg(f.team2)}${f.team2}</div>
         <div class="meta">${timeOnly(f)} · ${f.group||f.round||""} · ${winner?winner+" won":"draw"}</div></div>
       <div class="score">${f.actual[0]}–${f.actual[1]}${apct}</div>
     </div>
@@ -770,7 +778,7 @@ function renderXG(){
   const toggle=`<div class="oddsel" style="margin-top:8px"><span class="opt ${xgMode==='xg'?'on':''}" onclick="xgMode='xg';renderXG()">By xG</span><span class="opt ${xgMode==='luck'?'on':''}" onclick="xgMode='luck';renderXG()">By luck</span></div>`;
   const head=`<tr style="color:var(--muted);font-size:11px;text-align:right"><th style="text-align:left;font-weight:600;padding-bottom:4px">Team</th><th>GP</th><th>Goals</th><th>xG</th><th>+/− vs xG</th></tr>`;
   const body=rows.map(r=>`<tr style="font-size:12px;text-align:right;border-top:1px solid var(--line)">
-    <td style="text-align:left;font-weight:600;color:var(--ink);padding:6px 0;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.t}</td>
+    <td style="text-align:left;font-weight:600;color:var(--ink);padding:6px 0;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.t}">${flagImg(r.t,true)}${code3(r.t)}</td>
     <td style="color:var(--muted)">${r.gp}</td>
     <td style="font-variant-numeric:tabular-nums">${r.gf}–${r.ga} <span style="color:var(--muted)">(${sgnd(r.gd)})</span></td>
     <td style="font-variant-numeric:tabular-nums">${r.xf.toFixed(2)}–${r.xa.toFixed(2)} <span style="color:var(--muted)">(${sgn(r.xgd)})</span></td>
@@ -862,7 +870,7 @@ function renderOdds(){
   html+=live.map((r,i)=>`<div class="orow">
       <div class="rank">${i+1}</div>
       <div style="flex:1;min-width:0">
-        <div class="rname">${r.team}</div>
+        <div class="rname">${flagImg(r.team)}${r.team}</div>
         <div class="obar"><i style="width:${Math.max(2,Math.round(r.champion/mx*100))}%"></i></div>
         <div style="font-size:10.5px;color:var(--muted);margin-top:4px">final ${pc(r.Final)}% · semis ${pc(r.SF)}% · last 8 ${pc(r.QF)}% · last 32 ${pc(r.advance)}%</div>
       </div>
