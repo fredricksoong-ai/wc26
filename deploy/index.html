@@ -132,6 +132,8 @@
   .bbtn{width:44px;height:44px;border-radius:50%;background:rgba(20,20,32,.5);backdrop-filter:blur(12px) saturate(150%);-webkit-backdrop-filter:blur(12px) saturate(150%);border:1px solid rgba(255,255,255,.16);color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:0;font-family:inherit;box-shadow:0 3px 14px rgba(0,0,0,.45);-webkit-tap-highlight-color:transparent}
   .bbtn:active{transform:scale(.92)} .bbtn svg{display:block}
   .bbtn-mid{width:50px;height:50px;background:rgba(167,139,250,.5);border-color:rgba(167,139,250,.62);color:#fff}
+  .bbhit{position:fixed;bottom:0;height:74px;width:34%;z-index:39;pointer-events:auto;-webkit-tap-highlight-color:transparent}
+  .bbhit-l{left:0} .bbhit-r{right:0}
   .bbtn.busy{animation:bpulse 1s ease-in-out infinite;border-color:var(--pick);color:var(--pick)}
   @keyframes bpulse{0%,100%{opacity:1}50%{opacity:.4}}
   .flashcard{animation:cardflash 1.3s ease-out}
@@ -178,6 +180,8 @@
   <div class="brow" onclick="barAction('sync',event)"><span class="bic">⇪</span>Sync xG</div>
 </div>
 <div id="sheetTabs" class="bsheet bsheet-r hidden"></div>
+<div class="bbhit bbhit-l" onclick="toggleSheet('actions',event)" aria-hidden="true"></div>
+<div class="bbhit bbhit-r" onclick="toggleSheet('tabs',event)" aria-hidden="true"></div>
 <nav class="bottombar">
   <button class="bbtn" id="bbDots" onclick="toggleSheet('actions',event)" aria-label="Actions" title="Actions"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><circle cx="5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="19" cy="12" r="1.9"/></svg></button>
   <button class="bbtn bbtn-mid" id="bbMid" onclick="midAction()" aria-label="Next card" title="Next card"></button>
@@ -320,7 +324,14 @@ function toggleSheet(which,e){
   other.classList.add("hidden"); tgt.classList.toggle("hidden");
 }
 function closeSheets(){ document.getElementById("sheetActions").classList.add("hidden"); document.getElementById("sheetTabs").classList.add("hidden"); }
-document.addEventListener("click",e=>{ if(!e.target.closest(".bsheet,.bottombar"))closeSheets(); });
+document.addEventListener("click",e=>{ if(!e.target.closest(".bsheet,.bottombar,.bbhit"))closeSheets(); });
+// kill double-tap-to-zoom (iOS ignores touch-action here) without harming taps on controls
+let _lastTap=0;
+document.addEventListener("touchend",e=>{
+  const t=e.timeStamp;
+  if(t-_lastTap<=320 && !e.target.closest("button,input,a,.bbtn,.bbhit,.opt,.sbtn,.chip,.brow,.tabrow,.snapbtn,.mx")) e.preventDefault();
+  _lastTap=t;
+},{passive:false});
 function barAction(a,e){ if(e)e.stopPropagation(); closeSheets();
   if(a==="refresh")triggerRefresh(); else if(a==="export")openPicksModal(); else if(a==="sync")syncXG(); }
 const NAV_TOP=16;          // where the chosen card snaps (px from top)
