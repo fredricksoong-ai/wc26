@@ -532,7 +532,7 @@ function scoreboard(t){
   <div class="subline">You called the <b>correct result in ${t.yR} of ${t.yN}</b> games, and the <b>exact scoreline in ${t.yE}</b>. (Result = ${RP} pts, scoreline = ${EP} pts.)</div>`;
 }
 
-let lbChart=null;
+let lbChart=null, lbMode="points";
 const LB_COLORS={poisson:"#f472b6",dixon_coles:"#facc15",elo:"#60a5fa",ensemble:"#a78bfa",market:"#e5e7eb",you:"#22d3ee"};
 const LB_LABELS={poisson:"Poisson",dixon_coles:"Dixon–Coles",elo:"Elo",ensemble:"Ensemble",market:"Market",you:"You"};
 // edge vs the bookmakers: where the model (ensemble) most disagrees with the de-vigged market
@@ -581,6 +581,7 @@ function renderLeague(d){
     .filter(r=>r.g>0)                                   // Market only appears once it has priced games
     .sort((a,b)=>(b.pts-a.pts)||((a.rps??9)-(b.rps??9)));
   let html=`<div class="subline">Every rung makes its honest call on each game; scored on your pool rules (<b>${RP}</b> result + <b>${EP}</b> exact) plus <b>RPS</b> (probability quality, lower = better). Backfilled and live over ${ng} game${ng==1?'':'s'}.</div>`;
+  html+=`<div class="oddsel"><span class="opt ${lbMode==='points'?'on':''}" onclick="lbMode='points';renderLeague(DATA)">Points</span><span class="opt ${lbMode==='rps'?'on':''}" onclick="lbMode='rps';renderLeague(DATA)">RPS</span></div>`;
   html+=`<div style="position:relative;height:210px;margin:4px 0 16px"><canvas id="lbchart"></canvas></div>`;
   html+=`<div class="lbhdr"><span style="flex:1">model</span><span class="lbn">pts</span><span class="lbn">RPS</span></div>`;
   html+=rows.map((r,i)=>{const me=r.m==="you", c=me?"var(--you)":"var(--ink)";
@@ -593,29 +594,39 @@ function renderLeague(d){
   $("#league").innerHTML=html;
   if(window.Chart){
     if(lbChart)lbChart.destroy();
-    // cumulative pool-points race: each game adds 0/2/3/5 so the lines diverge and
-    // show who's pulling ahead (RPS still lives in the table). You is tracked too.
-    const cum={}, run={}, started={}; M.forEach(m=>{cum[m]=[];run[m]=0;started[m]=false;});
-    let yrun=0; const youCum=[];
-    lb.games.forEach(g=>{
-      const a=g.actual.split("-").map(Number);
-      M.forEach(m=>{
-        const sc=(g.scored||{})[m];
-        if(sc){ started[m]=true; run[m]+=(sc.result_hit?RP:0)+(sc.exact_hit?EP:0); cum[m].push(run[m]); }
-        else { cum[m].push(started[m]?run[m]:null); }   // null before a model's first game (e.g. Market)
+    let dsets, title, yScale;
+    if(lbMode==="rps"){
+      // rolling RPS (last 5) per model — stays legible/divergent unlike the converging lifetime average
+      const RW=5, cum={}, win={}; M.forEach(m=>{cum[m]=[];win[m]=[];});
+      lb.games.forEach(g=>{ M.forEach(m=>{ const sc=(g.scored||{})[m];
+        if(sc&&sc.rps!=null){ win[m].push(sc.rps); if(win[m].length>RW)win[m].shift(); cum[m].push(+(win[m].reduce((a,b)=>a+b,0)/win[m].length).toFixed(4)); }
+        else cum[m].push(null); }); });
+      dsets=M.filter(m=>cum[m].some(v=>v!=null)).map(m=>({label:LB_LABELS[m]||m,data:cum[m],borderColor:LB_COLORS[m],backgroundColor:LB_COLORS[m],borderWidth:2,tension:.25,pointRadius:2,spanGaps:false}));
+      title="rolling RPS, last 5 — lower is better";
+      yScale={ticks:{color:"#6b7a90"},grid:{color:"#1f2c44"}};   // auto range (not from 0) so gaps are visible
+    } else {
+      // cumulative pool-points race: each game adds 0/2/3/5 so the lines diverge; You tracked too
+      const cum={}, run={}, started={}; M.forEach(m=>{cum[m]=[];run[m]=0;started[m]=false;});
+      let yrun=0; const youCum=[];
+      lb.games.forEach(g=>{
+        const a=g.actual.split("-").map(Number);
+        M.forEach(m=>{ const sc=(g.scored||{})[m];
+          if(sc){ started[m]=true; run[m]+=(sc.result_hit?RP:0)+(sc.exact_hit?EP:0); cum[m].push(run[m]); }
+          else cum[m].push(started[m]?run[m]:null); });
+        const yp=userPickFor(g.key);
+        if(yp&&yp[0]!=null){ if(resultOf(yp[0],yp[1])===resultOf(a[0],a[1]))yrun+=RP; if(yp[0]===a[0]&&yp[1]===a[1])yrun+=EP; }
+        youCum.push(yrun);
       });
-      const yp=userPickFor(g.key);
-      if(yp&&yp[0]!=null){ if(resultOf(yp[0],yp[1])===resultOf(a[0],a[1]))yrun+=RP; if(yp[0]===a[0]&&yp[1]===a[1])yrun+=EP; }
-      youCum.push(yrun);
-    });
-    const present=M.filter(m=>started[m]);
-    const dsets=present.map(m=>({label:LB_LABELS[m]||m,data:cum[m],borderColor:LB_COLORS[m],backgroundColor:LB_COLORS[m],borderWidth:2,tension:.2,pointRadius:2,spanGaps:false}));
-    dsets.push({label:"You",data:youCum,borderColor:"#22d3ee",backgroundColor:"#22d3ee",borderWidth:2,borderDash:[5,4],tension:.2,pointRadius:2});
+      dsets=M.filter(m=>started[m]).map(m=>({label:LB_LABELS[m]||m,data:cum[m],borderColor:LB_COLORS[m],backgroundColor:LB_COLORS[m],borderWidth:2,tension:.2,pointRadius:2,spanGaps:false}));
+      dsets.push({label:"You",data:youCum,borderColor:"#22d3ee",backgroundColor:"#22d3ee",borderWidth:2,borderDash:[5,4],tension:.2,pointRadius:2});
+      title="running pool points — higher is better";
+      yScale={beginAtZero:true,ticks:{color:"#6b7a90",precision:0},grid:{color:"#1f2c44"}};
+    }
     lbChart=new Chart(document.getElementById("lbchart"),{type:"line",
       data:{labels:lb.games.map((g,i)=>i+1),datasets:dsets},
       options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
-        plugins:{legend:{labels:{color:"#90a0b8",boxWidth:10,font:{size:11}}},title:{display:true,text:"running pool points — higher is better",color:"#6b7a90",font:{size:11}}},
-        scales:{x:{ticks:{color:"#6b7a90",maxTicksLimit:8},grid:{color:"#1f2c44"}},y:{beginAtZero:true,ticks:{color:"#6b7a90",precision:0},grid:{color:"#1f2c44"}}}}});
+        plugins:{legend:{labels:{color:"#90a0b8",boxWidth:10,font:{size:11}}},title:{display:true,text:title,color:"#6b7a90",font:{size:11}}},
+        scales:{x:{ticks:{color:"#6b7a90",maxTicksLimit:8},grid:{color:"#1f2c44"}},y:yScale}}});
   }
 }
 
