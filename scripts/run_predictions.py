@@ -36,6 +36,7 @@ RAW = os.path.join(PROJ, "data", "raw")
 DEPLOY = os.path.join(PROJ, "deploy")
 PICKS = os.path.join(DEPLOY, "picks.json")          # model picks, frozen ledger
 MY_PICKS = os.path.join(DEPLOY, "my_picks.json")     # YOUR pool entries (you edit)
+XG_FILE = os.path.join(DEPLOY, "xg.json")            # measured match xG, synced from dashboard
 OUT = os.path.join(DEPLOY, "predictions.json")
 
 W_DC, RECENT_YEARS, MIN_MATCHES, XI = 0.6, 8, 10, 0.001
@@ -296,6 +297,9 @@ def main() -> int:
 
     ledger = json.load(open(PICKS)) if os.path.exists(PICKS) else {}
     my_picks = json.load(open(MY_PICKS)) if os.path.exists(MY_PICKS) else {}
+    # measured match xG you sync from the dashboard (committed deploy/xg.json).
+    # Phase A: surfaced for display only; Phase B will feed it into the strength update.
+    xg_meas = json.load(open(XG_FILE)) if os.path.exists(XG_FILE) else {}
 
     fixtures_out = []
     fpath = os.path.join(RAW, "worldcup2026.json")
@@ -373,6 +377,11 @@ def main() -> int:
                                              RESULT_PTS, EXACT_PTS)
                     out.update(your_earned=ysc["points"], your_result_hit=ysc["result_hit"],
                                your_exact_hit=ysc["exact_hit"])
+
+            # measured match xG (synced from the dashboard) — display only for now
+            mx = xg_meas.get(k)
+            if isinstance(mx, list) and len(mx) == 2:
+                out["xg_meas_home"], out["xg_meas_away"] = mx[0], mx[1]
             fixtures_out.append(out)
     else:
         print("  WARN no worldcup2026.json — run scripts/update_data.py first.")

@@ -75,6 +75,14 @@
   .mhint{font-size:11px;color:var(--muted);margin-top:8px}
   .res{display:flex;align-items:center;gap:7px;font-size:12px;margin-top:9px;color:var(--muted);flex-wrap:wrap}
   .rrow2{display:flex;align-items:center;gap:7px;margin-top:9px;font-size:12px;flex-wrap:wrap} .rrow2 .lbl{min-width:64px;font-weight:600} .rrow2 .pts{margin-left:auto}
+  .xgrow{margin-top:8px;gap:6px 8px;padding-top:8px;border-top:1px dashed var(--line)}
+  .xgins{display:inline-flex;align-items:center;gap:4px;margin-left:auto}
+  .xgin{width:46px;padding:4px 6px;border:1px solid var(--line);border-radius:7px;background:rgba(255,255,255,.04);color:var(--ink);font-size:13px;text-align:center;font-weight:700;font-family:inherit}
+  .xgin:focus{outline:none;border-color:var(--pick)}
+  .xgverdict{flex-basis:100%;font-size:11px}
+  .syncbar{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(167,139,250,.05)}
+  .syncbar .sb-note{flex:1;font-size:12px;color:var(--muted);line-height:1.35}
+  .xgsync{width:auto;padding:0 12px;gap:5px;white-space:nowrap;font-size:13px}
   .tag{border-radius:6px;padding:2px 7px;font-size:11px;font-weight:700;white-space:nowrap}
   .tag.ok{background:rgba(52,211,153,.15);color:var(--good)} .tag.no{background:rgba(248,113,113,.13);color:var(--bad)}
   .pts{margin-left:auto;font-weight:700;color:var(--good)} .pts.zero{color:var(--muted)}
@@ -161,12 +169,35 @@
 
 <script>
 const $=s=>document.querySelector(s), pc=x=>Math.round((x||0)*100);
-const LSKEY="wc26picks";
+const LSKEY="wc26picks", XGKEY="wc26xg";
 let DATA=null, RP=2, EP=3, ALLFIX=[];
 
 const loadPicks=()=>{try{return JSON.parse(localStorage.getItem(LSKEY))||{}}catch(e){return{}}};
 const savePicks=o=>localStorage.setItem(LSKEY,JSON.stringify(o));
 const keyOf=f=>`${f.date}|${f.team1}|${f.team2}`;
+// measured match xG you type in from FotMob, per game, on this device until synced.
+const loadXG=()=>{try{return JSON.parse(localStorage.getItem(XGKEY))||{}}catch(e){return{}}};
+const saveXG=o=>localStorage.setItem(XGKEY,JSON.stringify(o));
+function xgFor(f){ const X=loadXG(), k=keyOf(f); if(X[k])return X[k];
+  if(f.xg_meas_home!=null)return[f.xg_meas_home,f.xg_meas_away]; return null; }
+function setXG(key,side,val,i){
+  const X=loadXG(), cur=(X[key]?X[key].slice():[null,null]);
+  let v=parseFloat(val); if(val===""||isNaN(v))v=null; else v=Math.max(0,Math.min(10,Math.round(v*100)/100));
+  cur[side]=v;
+  if(cur[0]==null&&cur[1]==null)delete X[key]; else X[key]=cur;
+  saveXG(X);
+  const el=document.getElementById("xgv-"+i); if(el)el.innerHTML=xgVerdict(X[key], +el.dataset.gh, +el.dataset.ga);
+}
+// reads measured xG against the actual scoreline: did the result flatter someone?
+function xgVerdict(ax,gh,ga){
+  if(!ax||ax[0]==null||ax[1]==null)return `<span style="color:var(--muted)">add match xG to teach the model</span>`;
+  const xd=ax[0]-ax[1], xs=Math.sign(xd), gs=Math.sign(gh-ga), tag=`xG ${ax[0]}–${ax[1]}`;
+  if(gs===0) return Math.abs(xd)>=0.7
+    ? `<span style="color:var(--muted)">drew, but ${tag} leaned one way</span>`
+    : `<span style="color:var(--good)">fair draw · ${tag}</span>`;
+  if(xs===gs) return `<span style="color:var(--good)">deserved · ${tag}</span>`;
+  return `<span style="color:var(--bad)">flattering result · ${tag}</span>`;
+}
 function seedArr(f){ if(f.your_pick){const[a,b]=f.your_pick.split("-");return[+a,+b]} return null; }
 function pickArr(f){ const P=loadPicks(); if(P[keyOf(f)])return P[keyOf(f)]; return seedArr(f); }
 function userPickFor(key){ const P=loadPicks(); if(P[key]&&P[key][0]!=null)return P[key];
@@ -359,7 +390,7 @@ function renderAll(){
   const done=ALLFIX.filter(f=>f.played&&f.actual).sort((a,b)=>(b.kickoff_sgt||"").localeCompare(a.kickoff_sgt||""));
   $("#fixtures").innerHTML=up.length?renderGroup(up,pickCard)
     :`<div class="err">No upcoming fixtures with predictions.</div>`;
-  $("#results").innerHTML=(done.length?scoreboard(t):"")+(done.length?renderGroup(done,resultCard):`<div class="err">No games scored yet.</div>`);
+  $("#results").innerHTML=(done.length?syncBar()+scoreboard(t):"")+(done.length?renderGroup(done,resultCard):`<div class="err">No games scored yet.</div>`);
 }
 
 // the model's call = the most likely scoreline (top of its frozen distribution).
@@ -513,6 +544,7 @@ function resultCard(f){
     const mc=modelCall(f), ms=mc?scorePick(mc.split("-").map(Number),f.actual):null;
     modelRows=ms?row("Model (Ensemble)","var(--pick)",mc,ensSp(mc),ms.rh,ms.eh,ms.pts):"";
   }
+  const i=ALLFIX.indexOf(f);
   return `<div class="card">
     <div class="frow">
       <div><div class="teams">${f.team1}<span class="v">v</span>${f.team2}</div>
@@ -521,7 +553,43 @@ function resultCard(f){
     </div>
     ${youRow}
     ${modelRows}
+    ${xgEditRow(f,i)}
   </div>`;
+}
+
+// per-game measured-xG entry: predicted (model) shown for reference, two decimal inputs
+// for what FotMob recorded, and a one-line read on whether the result was deserved.
+function xgEditRow(f,i){
+  const xk=keyOf(f), ax=xgFor(f);
+  const pred=f.xg_home!=null?`<span style="color:var(--muted);font-weight:400">model ${f.xg_home}–${f.xg_away}</span>`:"";
+  const v0=ax&&ax[0]!=null?ax[0]:"", v1=ax&&ax[1]!=null?ax[1]:"";
+  const inp=(side,val)=>`<input class="xgin" type="text" inputmode="decimal" value="${val}" placeholder="–" onchange="setXG('${xk}',${side},this.value,${i})">`;
+  return `<div class="rrow2 xgrow">
+    <span class="lbl" style="min-width:auto;color:var(--home)">Match xG</span>${pred}
+    <span class="xgins">${inp(0,v0)}<span style="color:var(--muted)">–</span>${inp(1,v1)}</span>
+    <span id="xgv-${i}" data-gh="${f.actual[0]}" data-ga="${f.actual[1]}" class="xgverdict">${xgVerdict(ax,f.actual[0],f.actual[1])}</span>
+  </div>`;
+}
+function syncBar(){
+  return `<div class="syncbar">
+    <span class="sb-note" id="xgSyncNote">Type each game's xG from FotMob below, then sync so the model can learn from it.</span>
+    <button class="hbtn primary xgsync" id="xgSyncBtn" onclick="syncXG()" title="Sync xG to the model">⇪ Sync xG</button>
+  </div>`;
+}
+async function syncXG(){
+  const b=document.getElementById("xgSyncBtn"), note=document.getElementById("xgSyncNote");
+  if(!b||b.disabled)return;
+  const X=loadXG(), n=Object.keys(X).length;
+  if(!n){ if(note)note.textContent="No xG entered yet — add some below first."; return; }
+  const prev=b.textContent; b.disabled=true; b.textContent="Syncing…";
+  if(note)note.textContent=`Syncing ${n} game${n>1?'s':''}…`;
+  const done=(txt,nt)=>{ b.textContent=txt; if(note&&nt)note.textContent=nt; setTimeout(()=>{b.textContent=prev;b.disabled=false;},4500); };
+  try{
+    const r=await fetch("/sync-xg",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({xg:X})});
+    const j=await r.json().catch(()=>({}));
+    if(r.ok&&j.ok) done("Synced ✓",`Synced ${n} game${n>1?'s':''}. The model rebuilds shortly — hit ↻ or wait for the next run.`);
+    else done("Failed","Sync failed: "+((j&&j.error)||("HTTP "+r.status)));
+  }catch(e){ done("Failed","Sync failed: "+e); }
 }
 
 function scoreboard(t){
