@@ -95,6 +95,10 @@
   .rrec{display:flex;gap:14px;font-size:12px;color:var(--ink);padding:0 2px 10px;border-bottom:1px solid var(--line);flex-wrap:wrap}
   .rrec .m{color:var(--muted)} .rrec b{font-weight:700}
   .rbw{display:flex;gap:8px 18px;font-size:11px;margin-top:10px;flex-wrap:wrap;color:var(--muted)}
+  .etag{border-radius:20px;padding:1px 7px;margin-left:5px;font-weight:600;font-size:10.5px;white-space:nowrap}
+  .rgrid{display:grid;grid-template-columns:minmax(0,1.5fr) .9fr .8fr 22px 22px 30px;gap:8px 6px;align-items:center;font-size:12px;margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+  .rgrid .gh{color:#6b7a90;font-size:10.5px;text-align:center} .rgrid .gl{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rgrid .gc{text-align:center;font-variant-numeric:tabular-nums} .rgrid .gp{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
   .stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
   .stat .l{font-size:11px;color:var(--muted)} .stat .n{font-size:22px;font-weight:700;margin-top:2px}
   .subline{padding:0 4px 8px;color:var(--muted);font-size:12px}
@@ -359,6 +363,7 @@ function nextCard(){
 }
 // hand-maintained: one line per shipped change, newest first
 const CHANGELOG=[
+  ["17 Jun","Richer result cards — expected/upset, model odds, points per row"],
   ["17 Jun","Richer Results header — you vs the model vs the market, your record & calls"],
   ["17 Jun","Country flags + 3-letter codes across every screen"],
   ["17 Jun","New bottom bar — actions, next-card jump, and tabs tucked away"],
@@ -681,35 +686,56 @@ function resultCard(f){
   const winner=f.actual[0]>f.actual[1]?f.team1:f.actual[0]<f.actual[1]?f.team2:null;
   const akey=`${f.actual[0]}-${f.actual[1]}`, ahit=(f.top_scores||[]).find(t=>t[0]===akey);
   const apct=ahit?` <span style="font-size:11px;color:var(--muted);font-weight:600">${pc(ahit[1])}%</span>`:"";
-  // render a scoreline + its probability. `sp` is the probability THIS row's source
-  // gave that exact score (each model's own; ensemble's for Your Pick). null -> no % shown.
-  const spTag=sp=>sp!=null?` <span style="color:var(--muted);font-weight:400;font-size:11px">${pc(sp)}%</span>`:"";
   const ensSp=sc=>{const h=(f.top_scores||[]).find(t=>t[0]===sc);return h?h[1]:null;};
-  const row=(label,col,score,sp,rh,eh,pts)=>`<div class="rrow2" style="flex-wrap:nowrap;gap:6px"><span class="lbl" style="color:${col};min-width:108px;flex-shrink:0">${label}</span><span style="flex:none;width:74px;margin-left:auto;text-align:right;color:${col};font-weight:700">${score}${spTag(sp)}</span><span class="tag ${rh?'ok':'no'}">${rh?'✓':'✗'} result</span><span class="tag ${eh?'ok':'no'}">${eh?'✓':'✗'} scoreline</span></div>`;
-  const youRow=ys?row("Your Pick","var(--you)",ytxt,ensSp(ytxt),ys.rh,ys.eh,ys.pts):`<div class="rrow2"><span class="lbl" style="color:var(--you);min-width:116px">Your Pick</span><span style="color:var(--muted)">no pick</span></div>`;
-  // the ensemble (the adviser), then the other rungs, from the league data
+  const i=ALLFIX.indexOf(f);
+
+  // pre-match result probabilities -> bar with a tick on the actual outcome, + expected/upset tag
+  const hasP=f.p_home!=null&&f.p_draw!=null&&f.p_away!=null;
+  const ao=resultOf(f.actual[0],f.actual[1]);
+  let probBar="", etag="";
+  if(hasP){
+    const fav=(f.p_home>=f.p_draw&&f.p_home>=f.p_away)?"home":(f.p_away>=f.p_draw?"away":"draw");
+    const exp=ao===fav;
+    etag=`<span class="etag" style="color:${exp?'var(--good)':'var(--bad)'};border:1px solid ${exp?'rgba(52,211,153,.4)':'rgba(248,113,113,.45)'}">${exp?'as expected':'upset'}</span>`;
+    const seg=(k,p,c)=>`<div style="width:${pc(p)}%;background:${c};${ao===k?'':'opacity:.45'}"></div>`;
+    const lg=(k,lbl,p,c)=>`<span style="color:${c}">${lbl} <b style="color:var(--ink)">${pc(p)}%</b>${ao===k?' ✓':''}</span>`;
+    probBar=`<div style="display:flex;height:8px;border-radius:5px;overflow:hidden;margin-top:11px">${seg("home",f.p_home,"var(--home)")}${seg("draw",f.p_draw,"var(--draw)")}${seg("away",f.p_away,"var(--away)")}</div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;margin-top:5px;color:var(--muted)">${lg("home",code3(f.team1),f.p_home,"var(--home)")}${lg("draw","Draw",f.p_draw,"var(--draw)")}${lg("away",code3(f.team2),f.p_away,"var(--away)")}</div>`;
+  }
+
+  // comparison grid: You + every model — pick, the % it gave that score, result/scoreline, points
+  const grow=(label,col,score,sp,rh,eh,pts,you)=>`
+    <span class="gl" style="color:${col}${you?';background:rgba(34,211,238,.12);border-radius:5px;padding:2px 6px':''}">${label}</span>
+    <span class="gc"${you?' style="color:var(--you);font-weight:600"':''}>${score}</span>
+    <span class="gc" style="color:var(--muted)">${sp!=null?pc(sp)+'%':'–'}</span>
+    <span class="gc" style="color:${rh?'var(--good)':'var(--bad)'}">${rh?'✓':'✗'}</span>
+    <span class="gc" style="color:${eh?'var(--good)':'var(--bad)'}">${eh?'✓':'✗'}</span>
+    <span class="gp" style="color:${pts>0?'var(--good)':'var(--muted)'}">${pts>0?'+'+pts:'0'}</span>`;
+  const head=`<span></span><span class="gh">pick</span><span class="gh">odds</span><span class="gh">R</span><span class="gh">S</span><span class="gh" style="text-align:right">pts</span>`;
+  const youRow=ys?grow("You","var(--you)",ytxt,ensSp(ytxt),ys.rh,ys.eh,ys.pts,true)
+    :`<span class="gl" style="color:var(--you)">You</span><span class="gc" style="grid-column:2/7;text-align:left;color:var(--muted)">no pick</span>`;
   let modelRows="";
   if(f.lb_scored){
     modelRows=["ensemble","poisson","dixon_coles","elo","market"].filter(m=>f.lb_scored[m]).map(m=>{
       const v=f.lb[m]||{}, s=f.lb_scored[m];
-      const label=m==="ensemble"?"Model (Ensemble)":LB_LABELS[m];
+      const label=m==="ensemble"?"Ensemble":LB_LABELS[m];
       const col=m==="ensemble"?"var(--pick)":(LB_COLORS[m]||"var(--muted)");
-      const sp=(m==="elo"||m==="market")?null:(v.sp!=null?v.sp:ensSp(v.score)); // Elo/Market: naive score, no % ; else own, else ensemble's (legacy)
-      return row(label,col,v.score||"—",sp,s.result_hit,s.exact_hit,(s.exact_hit?EP:(s.result_hit?RP:0)));
+      const sp=(m==="elo"||m==="market")?null:(v.sp!=null?v.sp:ensSp(v.score));
+      return grow(label,col,v.score||"—",sp,s.result_hit,s.exact_hit,(s.exact_hit?EP:(s.result_hit?RP:0)),false);
     }).join("");
   } else {
     const mc=modelCall(f), ms=mc?scorePick(mc.split("-").map(Number),f.actual):null;
-    modelRows=ms?row("Model (Ensemble)","var(--pick)",mc,ensSp(mc),ms.rh,ms.eh,ms.pts):"";
+    modelRows=ms?grow("Ensemble","var(--pick)",mc,ensSp(mc),ms.rh,ms.eh,ms.pts,false):"";
   }
-  const i=ALLFIX.indexOf(f);
+
   return `<div class="card">
     <div class="frow">
       <div><div class="teams">${flagImg(f.team1)}${code3(f.team1)}<span class="v">v</span>${code3(f.team2)}${flagImg(f.team2,false,true)}</div>
-        <div class="meta">${timeOnly(f)} · ${f.group||f.round||""} · ${winner?code3(winner)+" won":"draw"}</div></div>
+        <div class="meta">${timeOnly(f)} · ${f.group||f.round||""} · ${winner?code3(winner)+" won":"draw"}${etag}</div></div>
       <div class="score">${f.actual[0]}–${f.actual[1]}${apct}</div>
     </div>
-    ${youRow}
-    ${modelRows}
+    ${probBar}
+    <div class="rgrid">${head}${youRow}${modelRows}</div>
     ${xgEditRow(f,i)}
   </div>`;
 }
