@@ -106,10 +106,10 @@
   .dayhdr{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin:16px 2px 2px;padding-bottom:5px;border-bottom:1px solid var(--line)}
   .hidden{display:none} .err{padding:20px 16px;color:var(--away)}
   footer{color:var(--muted);font-size:11px;text-align:center;padding:18px 16px 0}
-  .nextstrip{display:flex;align-items:center;gap:8px;margin:2px 14px;padding:8px 12px;background:var(--card2);border:1px solid var(--line);border-radius:10px;font-size:12px;color:var(--muted);cursor:pointer}
-  .nextstrip b{color:var(--ink)} .ns-next{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .nextstrip{display:flex;align-items:flex-start;gap:8px;margin:2px 14px;padding:8px 12px;background:var(--card2);border:1px solid var(--line);border-radius:10px;font-size:12px;color:var(--muted);cursor:pointer}
+  .nextstrip b{color:var(--ink)} .ns-lbl{flex:none}
+  .ns-matches{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px} .ns-m{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .ns-cd{flex:none;white-space:nowrap;color:var(--ink);font-weight:700}
-  .ns-warn{flex:none;color:var(--away);font-weight:700;white-space:nowrap} .ns-ok{flex:none;color:var(--good);font-weight:700;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -292,8 +292,10 @@ function renderNextStrip(){
                        .sort((a,b)=>a.kickoff_sgt.localeCompare(b.kickoff_sgt));
   if(!up.length){ el.style.display="none"; return; }
   el.style.display="flex";
-  const next=up[0], ms=Date.parse(next.kickoff_sgt+":00+08:00")-now;
-  el.innerHTML=`<span class="ns-next"><b>Next</b> ${next.team1} v ${next.team2}</span><span class="ns-cd">🔒 ${fmtCountdown(ms)}</span>`;
+  const t0=up[0].kickoff_sgt, ms=Date.parse(t0+":00+08:00")-now;
+  const same=up.filter(f=>f.kickoff_sgt===t0);   // all games kicking off at that same time
+  const matches=same.map(f=>`<span class="ns-m">${f.team1} v ${f.team2}</span>`).join("");
+  el.innerHTML=`<span class="ns-lbl"><b>Next</b></span><span class="ns-matches">${matches}</span><span class="ns-cd">🔒 ${fmtCountdown(ms)}</span>`;
 }
 // count of upcoming matches still without a complete pick (shown in the metric row)
 function unpickedCount(){
