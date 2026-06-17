@@ -137,6 +137,7 @@
   <div class="tab active" data-view="fixtures">Picks</div>
   <div class="tab" data-view="results">Results</div>
   <div class="tab" data-view="league">League</div>
+  <div class="tab" data-view="xg">xG</div>
   <div class="tab" data-view="odds">Winner</div>
   <div class="tab" data-view="ratings">Ratings</div>
   <div class="tab" data-view="explainer">Explainer</div>
@@ -147,6 +148,7 @@
   <div id="ratings" class="hidden ratings"></div>
   <div id="odds" class="hidden"></div>
   <div id="league" class="hidden"></div>
+  <div id="xg" class="hidden"></div>
   <div id="explainer" class="hidden exp"></div>
 </main>
 <div id="pickmodal" class="modal hidden" onclick="if(event.target===this)closeModal()">
@@ -256,6 +258,7 @@ function init(d){
   $("#explainer").innerHTML=explainerHTML();
   renderOdds();
   renderLeague(d);
+  renderXG();
   const wcr=(d.ratings||[]).filter(r=>(d.form||{})[r.team]);
   const show=wcr.length?wcr:(d.ratings||[]).slice(0,40);
   $("#ratings").innerHTML=`<div class="subline">How the model rates the ${show.length} teams — Elo strength, movement vs a year ago (▲▼), and recent form (oldest → newest).</div>`+
@@ -635,6 +638,38 @@ function modelSays(f){
   return `<div style="color:var(--home);font-weight:700;font-size:13px;margin-top:10px">What each model says</div>
     <div style="display:grid;grid-template-columns:14px minmax(0,1fr) auto auto auto;gap:6px 8px;align-items:center;font-size:12px;margin-top:6px">${cells}</div>`;
 }
+// xG table: measured xG vs actual goals per team, surfacing over/under-performance.
+// Pulls measured xG from xgFor() (your synced numbers, localStorage-first) so it
+// populates even before a rebuild carries xg_meas into predictions.json.
+let xgMode="xg";
+function renderXG(){
+  const teams={};
+  (ALLFIX||[]).filter(f=>f.played&&f.actual).forEach(f=>{
+    const xg=xgFor(f); if(!xg||xg[0]==null||xg[1]==null)return;
+    const add=(t,gf,ga,xf,xa)=>{const o=teams[t]||(teams[t]={gp:0,gf:0,ga:0,xf:0,xa:0});o.gp++;o.gf+=gf;o.ga+=ga;o.xf+=xf;o.xa+=xa;};
+    add(f.team1,f.actual[0],f.actual[1],xg[0],xg[1]);
+    add(f.team2,f.actual[1],f.actual[0],xg[1],xg[0]);
+  });
+  const rows=Object.entries(teams).map(([t,o])=>{
+    const xf=Math.round(o.xf*100)/100, xa=Math.round(o.xa*100)/100;
+    const xgd=Math.round((o.xf-o.xa)*100)/100, gd=o.gf-o.ga;
+    return {t,gp:o.gp,gf:o.gf,ga:o.ga,xf,xa,xgd,gd,luck:Math.round((gd-xgd)*100)/100};
+  });
+  if(!rows.length){ $("#xg").innerHTML=`<div class="err">Add each game's xG on the Results cards (then tap Sync xG) to build this table.</div>`; return; }
+  rows.sort((a,b)=> xgMode==="luck" ? b.luck-a.luck : b.xgd-a.xgd);
+  const sgn=v=>(v>0?'+':'')+v.toFixed(2), sgnd=v=>(v>0?'+':'')+v;
+  const lc=v=>v>0.2?'var(--good)':v<-0.2?'var(--bad)':'var(--muted)';
+  const toggle=`<div class="oddsel" style="margin-top:8px"><span class="opt ${xgMode==='xg'?'on':''}" onclick="xgMode='xg';renderXG()">By xG</span><span class="opt ${xgMode==='luck'?'on':''}" onclick="xgMode='luck';renderXG()">By luck</span></div>`;
+  const head=`<tr style="color:var(--muted);font-size:11px;text-align:right"><th style="text-align:left;font-weight:600;padding-bottom:4px">Team</th><th>GP</th><th>Goals</th><th>xG</th><th>+/− vs xG</th></tr>`;
+  const body=rows.map(r=>`<tr style="font-size:12px;text-align:right;border-top:1px solid var(--line)">
+    <td style="text-align:left;font-weight:600;color:var(--ink);padding:6px 0;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.t}</td>
+    <td style="color:var(--muted)">${r.gp}</td>
+    <td style="font-variant-numeric:tabular-nums">${r.gf}–${r.ga} <span style="color:var(--muted)">(${sgnd(r.gd)})</span></td>
+    <td style="font-variant-numeric:tabular-nums">${r.xf.toFixed(2)}–${r.xa.toFixed(2)} <span style="color:var(--muted)">(${sgn(r.xgd)})</span></td>
+    <td style="font-weight:700;font-variant-numeric:tabular-nums;color:${lc(r.luck)}">${sgn(r.luck)}</td>
+  </tr>`).join("");
+  $("#xg").innerHTML=`<div class="subline">Measured xG vs actual goals, ${rows.length} teams that have played. <b>+/− vs xG</b> = goal difference minus xG difference: <span style="color:var(--good)">positive</span> = scoring more than the chances earned (clinical or fortunate, likely to regress), <span style="color:var(--bad)">negative</span> = creating more than the score shows (wasteful or unlucky). These synced xG numbers are what feed the model's Elo.</div>${toggle}<table style="width:100%;border-collapse:collapse;margin-top:6px">${head}${body}</table>`;
+}
 function renderLeague(d){
   const lb=d.leaderboard;
   if(!lb||!lb.games||!lb.games.length){ $("#league").innerHTML=`<div class="err">The model league fills in as games are played.</div>`; return; }
@@ -785,7 +820,7 @@ function explainerHTML(){return `
 
 document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
   document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active")); t.classList.add("active");
-  const v=t.dataset.view; ["fixtures","results","ratings","odds","league","explainer"].forEach(id=>$("#"+id).classList.toggle("hidden", id!==v));
+  const v=t.dataset.view; ["fixtures","results","ratings","odds","league","xg","explainer"].forEach(id=>$("#"+id).classList.toggle("hidden", id!==v));
 }));
 </script>
 </body>
