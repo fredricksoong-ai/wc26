@@ -115,6 +115,7 @@
   #fixtures>.dayhdr:first-child,#results>.dayhdr:first-child{margin-top:4px}
   .flag{height:13px;width:auto;border-radius:2px;vertical-align:-1px;margin-right:6px;box-shadow:0 0 0 .5px rgba(0,0,0,.35)}
   .flag.sm{height:11px;margin-right:4px}
+  .flag.r{margin-right:0;margin-left:6px}
   .hidden{display:none} .err{padding:20px 16px;color:var(--away)}
   footer{color:var(--muted);font-size:11px;text-align:center;padding:18px 16px 0}
   .nextstrip{display:flex;align-items:flex-start;gap:8px;margin:2px 14px;padding:8px 12px;background:var(--card2);border:1px solid var(--line);border-radius:10px;font-size:12px;color:var(--muted);cursor:pointer}
@@ -241,7 +242,7 @@ function isLocked(f){ if(f.played)return true; if(!f.kickoff_sgt)return false; r
 const resultOf=(h,a)=>h>a?"home":h<a?"away":"draw";
 // team -> [FIFA 3-letter code, flag iso for flagcdn]. Flags load from flagcdn.com.
 const FLAGS={Algeria:["ALG","dz"],Argentina:["ARG","ar"],Australia:["AUS","au"],Austria:["AUT","at"],Belgium:["BEL","be"],"Bosnia and Herzegovina":["BIH","ba"],Brazil:["BRA","br"],Canada:["CAN","ca"],"Cape Verde":["CPV","cv"],Colombia:["COL","co"],Croatia:["CRO","hr"],"Curaçao":["CUW","cw"],"Czech Republic":["CZE","cz"],Czechia:["CZE","cz"],"DR Congo":["COD","cd"],Ecuador:["ECU","ec"],Egypt:["EGY","eg"],England:["ENG","gb-eng"],France:["FRA","fr"],Germany:["GER","de"],Ghana:["GHA","gh"],Haiti:["HAI","ht"],Iran:["IRN","ir"],Iraq:["IRQ","iq"],"Ivory Coast":["CIV","ci"],"Côte d'Ivoire":["CIV","ci"],Japan:["JPN","jp"],Jordan:["JOR","jo"],Mexico:["MEX","mx"],Morocco:["MAR","ma"],Netherlands:["NED","nl"],"New Zealand":["NZL","nz"],Norway:["NOR","no"],Panama:["PAN","pa"],Paraguay:["PAR","py"],Portugal:["POR","pt"],Qatar:["QAT","qa"],"Saudi Arabia":["KSA","sa"],Scotland:["SCO","gb-sct"],Senegal:["SEN","sn"],"South Africa":["RSA","za"],"South Korea":["KOR","kr"],"Korea Republic":["KOR","kr"],Spain:["ESP","es"],Sweden:["SWE","se"],Switzerland:["SUI","ch"],Tunisia:["TUN","tn"],Turkey:["TUR","tr"],"Türkiye":["TUR","tr"],"United States":["USA","us"],USA:["USA","us"],Uruguay:["URU","uy"],Uzbekistan:["UZB","uz"]};
-function flagImg(t,sm){const m=FLAGS[t];return m?`<img class="flag${sm?' sm':''}" src="https://flagcdn.com/${m[1]}.svg" alt="" loading="lazy">`:"";}
+function flagImg(t,sm,right){const m=FLAGS[t];return m?`<img class="flag${sm?' sm':''}${right?' r':''}" src="https://flagcdn.com/${m[1]}.svg" alt="" loading="lazy">`:"";}
 function code3(t){const m=FLAGS[t];return m?m[0]:t;}
 function teamTag(t,sm){return flagImg(t,sm)+code3(t);}   // flag + 3-letter code, used everywhere a team shows
 function scorePick(p,act){ if(!p||p[0]==null||p[1]==null||!act)return null;
@@ -322,23 +323,18 @@ function closeSheets(){ document.getElementById("sheetActions").classList.add("h
 document.addEventListener("click",e=>{ if(!e.target.closest(".bsheet,.bottombar"))closeSheets(); });
 function barAction(a,e){ if(e)e.stopPropagation(); closeSheets();
   if(a==="refresh")triggerRefresh(); else if(a==="export")openPicksModal(); else if(a==="sync")syncXG(); }
-const NAV_TOP=14;          // top padding when a tall card has to top-align
+const NAV_TOP=16;          // where the chosen card snaps (px from top)
 let _nav={view:null,idx:-1,t:0};
 function nextCard(){
   const cont=document.getElementById(activeView==="results"?"results":"fixtures");
   const cards=[...cont.querySelectorAll(".card")]; if(!cards.length)return;
-  const now=Date.now();
-  let cur;
-  if(_nav.view===activeView && now-_nav.t<550){
-    cur=_nav.idx;                 // rapid re-tap (still animating): advance from where we just sent you
-  }else{
-    cur=-1;                       // otherwise read live scroll: the last card at/above the attention line
-    const line=80; cards.forEach((c,k)=>{ if(c.getBoundingClientRect().top<=line) cur=k; });
-  }
-  const idx=(cur+1)%cards.length, target=cards[idx], r=target.getBoundingClientRect(), vh=window.innerHeight;
-  // centre the card; cards taller than the screen top-align (centring would hide their header)
-  const y=Math.max(0, window.scrollY+r.top-Math.max(NAV_TOP,(vh-r.height)/2));
-  window.scrollTo({top:y,behavior:"smooth"});
+  let base;
+  if(_nav.view===activeView && Date.now()-_nav.t<650) base=_nav.idx;           // settling from our last jump -> trust the index
+  else if(window.scrollY<40) base=-1;                                          // at the very top -> first card
+  else { base=-1; const line=NAV_TOP+60; cards.forEach((c,k)=>{ if(c.getBoundingClientRect().top<=line) base=k; }); }  // else read live scroll
+  const idx=(base+1)%cards.length, target=cards[idx];
+  // consistent top-align so the position detection above stays stable tap-to-tap
+  window.scrollTo({top:Math.max(0,window.scrollY+target.getBoundingClientRect().top-NAV_TOP),behavior:"smooth"});
   _nav={view:activeView,idx,t:Date.now()};
   target.classList.remove("flashcard"); void target.offsetWidth; target.classList.add("flashcard");
   setTimeout(()=>target.classList.remove("flashcard"),1400);
@@ -557,6 +553,24 @@ function pickCard(f){
   const rcol=cf.kind==="draw"?"var(--draw)":(cf.who===f.team1?"var(--home)":"var(--away)");
   const tops=(f.top_scores||[]).slice(0,6).map(t=>`<span class="chip ${t[0]===mc?'best':''}">${t[0]} · ${pc(t[1])}%</span>`).join("");
   const xg=f.xg_home!=null?`xG ${f.xg_home} – ${f.xg_away} · `:"";
+  return `<div class="card">
+    <div class="frow">
+      <div><div class="teams">${flagImg(f.team1)}${code3(f.team1)}<span class="v">v</span>${code3(f.team2)}${flagImg(f.team2,false,true)}</div>
+        <div class="meta">${xg}${timeOnly(f)} · ${f.group||f.round||""}${f.host?` · <span style="color:${f.host===f.team2?'var(--away)':'var(--home)'}">🏠 ${code3(f.host)}</span>`:""}</div></div>
+      <div style="text-align:right;flex-shrink:0"><div style="color:${rcol};font-weight:700;font-size:13px">${cf.kind==="draw"?"Draw":code3(cf.who)+" win"}</div><div style="font-size:11px"><span class="rc-${cf.lvl}">${cf.lvl==="toss"?"toss-up":cf.lvl}</span> <span style="color:var(--muted)">· ${pc(cf.p)}%</span></div></div>
+    </div>
+    <div class="bar"><i class="h" style="width:${pc(f.p_home)}%"></i><i class="d" style="width:${pc(f.p_draw)}%"></i><i class="a" style="width:${pc(f.p_away)}%"></i></div>
+    <div class="legend"><span style="color:var(--home)"><b>${pc(f.p_home)}%</b></span><span>Draw <b>${pc(f.p_draw)}%</b></span><span style="color:var(--away)"><b>${pc(f.p_away)}%</b></span></div>
+    <div class="formends"><span>${formStrip(f.team1)}</span><span>${formStrip(f.team2)}</span></div>
+    <div class="tops" style="margin-top:13px">${tops}</div>
+    ${modelSays(f)}
+    <div class="pickbox" id="pk-${i}">${pickUIFor(f,i)}</div>
+    <div class="cardfoot"><button class="snapbtn" onclick="snapCard(this)" title="Save as image">📷</button><div class="vfill" id="vf-${i}">${validationLine(f,pickArr(f)?pickArr(f)[0]:null,pickArr(f)?pickArr(f)[1]:null,isLocked(f))}</div></div>
+  </div>`;
+}
+
+// just the stepper — re-rendered on its own so a tap never rebuilds the card (and never re-fetches the flags)
+function pickUIFor(f,i){
   const yp=pickArr(f), locked=isLocked(f);
   const a=yp&&yp[0]!=null?yp[0]:null, b=yp&&yp[1]!=null?yp[1]:null, both=a!=null&&b!=null;
   const hbox=(side,val)=>`<div class="hbox">`+
@@ -564,28 +578,20 @@ function pickCard(f){
       `<div class="snum${val==null?' unset':''}">${val==null?'?':val}</div>`+
       `<button class="sbtn" ${locked?'disabled':''} onclick="bumpPick(${i},${side},1)">+</button></div>`;
   const center=locked?`<span class="pstat lock">🔒</span>`:both?`<span class="pstat ok">✓</span>`:`<span class="pcenter">vs</span>`;
-  const pickUI=`<div class="pickwrap"><div class="hstepper">${hbox(0,a)}${center}${hbox(1,b)}</div></div>`;
-  return `<div class="card">
-    <div class="frow">
-      <div><div class="teams">${flagImg(f.team1)}${code3(f.team1)}<span class="v">v</span>${flagImg(f.team2)}${code3(f.team2)}</div>
-        <div class="meta">${xg}${timeOnly(f)} · ${f.group||f.round||""}${f.host?` · <span style="color:${f.host===f.team2?'var(--away)':'var(--home)'}">🏠 ${code3(f.host)}</span>`:""}</div></div>
-      <div style="text-align:right;flex-shrink:0"><div style="color:${rcol};font-weight:700;font-size:13px">${cf.kind==="draw"?"Draw":code3(cf.who)+" win"}</div><div style="font-size:11px"><span class="rc-${cf.lvl}">${cf.lvl==="toss"?"toss-up":cf.lvl}</span> <span style="color:var(--muted)">· ${pc(cf.p)}%</span></div></div>
-    </div>
-    <div class="bar"><i class="h" style="width:${pc(f.p_home)}%"></i><i class="d" style="width:${pc(f.p_draw)}%"></i><i class="a" style="width:${pc(f.p_away)}%"></i></div>
-    <div class="legend"><span style="color:var(--home)">${teamTag(f.team1,true)} <b>${pc(f.p_home)}%</b></span><span>Draw <b>${pc(f.p_draw)}%</b></span><span style="color:var(--away)">${teamTag(f.team2,true)} <b>${pc(f.p_away)}%</b></span></div>
-    <div class="formends"><span>${formStrip(f.team1)}</span><span>${formStrip(f.team2)}</span></div>
-    <div class="tops" style="margin-top:13px">${tops}</div>
-    ${modelSays(f)}
-    <div class="pickbox">${pickUI}</div>
-    <div class="cardfoot"><button class="snapbtn" onclick="snapCard(this)" title="Save as image">📷</button><div class="vfill">${validationLine(f,a,b,locked)}</div></div>
-  </div>`;
+  return `<div class="pickwrap"><div class="hstepper">${hbox(0,a)}${center}${hbox(1,b)}</div></div>`;
+}
+// surgical refresh after a pick change: only the stepper + coach line, never the whole list
+function refreshPick(i){
+  const f=ALLFIX[i], yp=pickArr(f);
+  const pk=document.getElementById("pk-"+i); if(pk)pk.innerHTML=pickUIFor(f,i);
+  const vf=document.getElementById("vf-"+i); if(vf)vf.innerHTML=validationLine(f,yp?yp[0]:null,yp?yp[1]:null,isLocked(f));
 }
 
 function setPick(i,side,val){
   const f=ALLFIX[i],k=keyOf(f),P=loadPicks();
   const cur=P[k]||pickArr(f)||[null,null];
   cur[side]=val===""?null:+val;
-  P[k]=cur; savePicks(P); renderAll();
+  P[k]=cur; savePicks(P); refreshPick(i);
 }
 // FotMob-style stepper: + from ? -> 0, - below 0 -> back to ? (clears), cap at 10
 function bumpPick(i,side,delta){
@@ -595,7 +601,7 @@ function bumpPick(i,side,delta){
   let v=cur[side];
   if(v==null){ if(delta>0){ v=0; if(cur[1-side]==null) cur[1-side]=0; } }  // start a pick -> seed both sides at 0
   else { v+=delta; if(v<0)v=null; else if(v>10)v=10; }
-  cur[side]=v; P[k]=cur; savePicks(P); renderAll();
+  cur[side]=v; P[k]=cur; savePicks(P); refreshPick(i);
 }
 // --- picks backup (localStorage is per-device) -------------------------------
 // rich, self-contained export for analysis: standing + every played game's actual
@@ -678,7 +684,7 @@ function resultCard(f){
   const i=ALLFIX.indexOf(f);
   return `<div class="card">
     <div class="frow">
-      <div><div class="teams">${flagImg(f.team1)}${code3(f.team1)}<span class="v">v</span>${flagImg(f.team2)}${code3(f.team2)}</div>
+      <div><div class="teams">${flagImg(f.team1)}${code3(f.team1)}<span class="v">v</span>${code3(f.team2)}${flagImg(f.team2,false,true)}</div>
         <div class="meta">${timeOnly(f)} · ${f.group||f.round||""} · ${winner?code3(winner)+" won":"draw"}</div></div>
       <div class="score">${f.actual[0]}–${f.actual[1]}${apct}</div>
     </div>
