@@ -542,7 +542,7 @@ function renderAll(){
   const done=ALLFIX.filter(f=>f.played&&f.actual).sort((a,b)=>(b.kickoff_sgt||"").localeCompare(a.kickoff_sgt||""));
   $("#fixtures").innerHTML=up.length?renderGroup(up,pickCard)
     :`<div class="err">No upcoming fixtures with predictions.</div>`;
-  $("#results").innerHTML=(done.length?syncBar()+scoreboard(t):"")+(done.length?renderGroup(done,resultCard):`<div class="err">No games scored yet.</div>`);
+  $("#results").innerHTML=(done.length?scoreboard(t):"")+(done.length?renderGroup(done,resultCard):`<div class="err">No games scored yet.</div>`);
 }
 
 // the model's call = the most likely scoreline (top of its frozen distribution).
