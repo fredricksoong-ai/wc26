@@ -1,0 +1,21 @@
+name: xG validation (manual)
+
+# One-off kill-switch: does xG out-predict goals on past World Cups?
+# Runs on StatsBomb open data (free, no key). Trigger from the Actions tab,
+# then read the log. Does NOT touch the site or commit anything.
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        run: pip install statsbombpy pandas numpy scipy
+      - name: Run xG validation
+        run: python scripts/xg_validate.py
