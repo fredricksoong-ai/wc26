@@ -1,9 +1,10 @@
 """Pool scoring — turn model probabilities into competition picks and points.
 
 Your pool: predict the result (winner or draw) AND the exact score.
-Default points (edit to match your league):
-    RESULT_PTS = 1   # for calling the winner/draw correctly
-    EXACT_PTS  = 3   # additional, for nailing the exact scoreline
+Points (NOT additive — the exact total supersedes the result point):
+    RESULT_PTS = 2   # correct result (winner/draw), wrong scoreline
+    EXACT_PTS  = 3   # exact scoreline — the TOTAL for that game (not 2+3)
+A correct result earns 2; nailing the exact score earns 3 in total, not on top.
 
 The model gives two ingredients:
     * a scoreline-probability matrix  P(i, j)   — from Dixon–Coles
@@ -18,8 +19,8 @@ from __future__ import annotations
 
 import numpy as np
 
-RESULT_PTS = 2   # pool: points for the correct result (winner/draw)
-EXACT_PTS = 3    # pool: additional points for the exact scoreline
+RESULT_PTS = 2   # pool: correct result (winner/draw), wrong scoreline
+EXACT_PTS = 3    # pool: exact scoreline — TOTAL for the game (supersedes, not additive)
 
 
 def _result(i: int, j: int) -> str:
@@ -36,14 +37,15 @@ def recommend_pick(matrix: np.ndarray, outcome_probs: dict,
                    result_pts: float = RESULT_PTS, exact_pts: float = EXACT_PTS):
     """Return the expected-points-optimal scoreline pick.
 
-    Expected points for submitting score (i, j):
-        exact_pts * P(score = i,j)   +   result_pts * P(result implied by i,j)
+    Scoring is non-additive (exact total supersedes the result point), so the
+    expected points for submitting score (i, j) are:
+        result_pts * P(result implied by i,j)  +  (exact_pts - result_pts) * P(score = i,j)
     P(score) comes from the DC matrix; P(result) from the (better) ensemble.
     """
     best = None
     for i in range(matrix.shape[0]):
         for j in range(matrix.shape[1]):
-            ep = exact_pts * matrix[i, j] + result_pts * outcome_probs[_result(i, j)]
+            ep = result_pts * outcome_probs[_result(i, j)] + (exact_pts - result_pts) * matrix[i, j]
             if best is None or ep > best[1]:
                 best = ((i, j), ep)
     (pi, pj), ep = best
@@ -54,13 +56,15 @@ def score_pick(pick_score, actual_score,
                result_pts: float = RESULT_PTS, exact_pts: float = EXACT_PTS) -> dict:
     """Award pool points for one frozen pick vs the actual result.
 
-    Additive: correct result earns result_pts; an exact-score match earns exact_pts
-    on top. Returns the breakdown so the dashboard can show ✓/✗.
+    Non-additive: an exact-score match earns exact_pts as the TOTAL; a correct
+    result with the wrong score earns result_pts; otherwise zero. (Exact is always
+    also a correct result, so it supersedes rather than stacks.) Returns the
+    breakdown so the dashboard can show ✓/✗.
     """
     pi, pj = int(pick_score[0]), int(pick_score[1])
     ai, aj = int(actual_score[0]), int(actual_score[1])
     result_hit = _result(pi, pj) == _result(ai, aj)
     exact_hit = (pi == ai) and (pj == aj)
-    pts = (result_pts if result_hit else 0) + (exact_pts if exact_hit else 0)
+    pts = exact_pts if exact_hit else (result_pts if result_hit else 0)
     return {"points": pts, "result_hit": result_hit, "exact_hit": exact_hit,
-            "max_points": result_pts + exact_pts}
+            "max_points": exact_pts}

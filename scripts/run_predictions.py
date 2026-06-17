@@ -448,7 +448,7 @@ def main() -> int:
         "live_rps": round(sum(f["rps"] for f in rps_games) / len(rps_games), 4) if rps_games else None,
         "your_scored": len(your),
         "your_points": sum(f["your_earned"] for f in your),
-        "your_max": (RESULT_PTS + EXACT_PTS) * len(your),
+        "your_max": EXACT_PTS * len(your),
         "your_result_hits": sum(1 for f in your if f["your_result_hit"]),
         "your_exact_hits": sum(1 for f in your if f["your_exact_hit"]),
     }
