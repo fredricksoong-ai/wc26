@@ -392,6 +392,9 @@ const CHANGELOG=[
   ["16 Jun","Next banner stacks simultaneous kickoffs · League Points/RPS toggle"],
   ["15 Jun","Save a pick card as an image · richer export for analysis"],
   ["14 Jun","One-tap refresh · odds-credit ring · host advantage + calibration"],
+  ["13 Jun","Market added to the league — does the model beat the bookies?"],
+  ["12 Jun","Results & League tabs · pool scoring · Monte-Carlo title odds"],
+  ["11 Jun","First build — Poisson · Dixon–Coles · Elo ensemble + live dashboard"],
 ];
 function renderChangelog(){
   $("#changelog").innerHTML=`<div class="subline">What's changed recently — newest first.</div>`+
@@ -532,27 +535,24 @@ function oddsRing(c,cap=500){
       `<circle cx="10" cy="10" r="8" fill="none" stroke="${col}" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" transform="rotate(-90 10 10)"/>`+
     `</svg><b>${c}</b></span>`;
 }
+// RPS trend arrow for a model, from its cumulative-RPS series (lower = better)
+function rpsTrendFor(model){
+  const cr=DATA&&DATA.leaderboard&&DATA.leaderboard.cum_rps&&DATA.leaderboard.cum_rps[model];
+  if(!cr||cr.length<2)return "";
+  const d=cr[cr.length-1]-cr[cr.length-2];
+  if(d<-0.0005)return ` <span style="color:var(--good)" title="improving">▲</span>`;
+  if(d>0.0005)return ` <span style="color:var(--bad)" title="getting worse">▼</span>`;
+  return ` <span style="color:var(--muted)" title="steady">–</span>`;
+}
 function renderAll(){
   const t=tallies(), d=DATA;
-  const erps=(d.leaderboard&&d.leaderboard.standings&&d.leaderboard.standings.ensemble&&d.leaderboard.standings.ensemble.rps);
-  // trend: compare the latest running RPS to the previous game (lower = better)
-  const cr=d.leaderboard&&d.leaderboard.cum_rps&&d.leaderboard.cum_rps.ensemble;
-  let rpsTrend="";
-  if(cr&&cr.length>=2){
-    const dlt=cr[cr.length-1]-cr[cr.length-2];
-    if(dlt<-0.0005)      rpsTrend=` <span style="color:var(--good)" title="improving — RPS fell ${Math.abs(dlt).toFixed(3)}">▲</span>`;
-    else if(dlt>0.0005)  rpsTrend=` <span style="color:var(--bad)" title="getting worse — RPS rose ${dlt.toFixed(3)}">▼</span>`;
-    else                 rpsTrend=` <span style="color:var(--muted)" title="steady">–</span>`;
-  }
   renderHeaderCountdown();
-  const rv=erps!=null?erps:(d.summary||{}).live_rps;
-  const rps3=(rv!=null)?Number(rv).toFixed(3):"–";
-  const ys=youStanding(), es=standingOf("ensemble");
+  // header pills: colour IS the identity (cyan You, purple Ensemble, white Market) — no labels
+  const ys=youStanding(), es=standingOf("ensemble"), mk=standingOf("market");
   const dot=`<span style="color:var(--muted)">·</span>`;
-  const mePill=ys?`<span class="pill"><b class="y">${ys.pts}</b>pts ${dot} ${ord(ys.rank)}</span>`
-                 :`<span class="pill">you <b class="y">${t.yP}</b>pts</span>`;
-  const ensPill=es?`<span class="pill">Ensemble <b class="p">${es.pts}</b>pts ${dot} ${ord(es.rank)} ${dot} <b>${es.rps!=null?es.rps.toFixed(3):"–"}</b>${rpsTrend}</span>`:"";
-  $("#metrics").innerHTML=[mePill, ensPill].filter(Boolean).join("");
+  const pill=(st,bc,trend)=> st?`<span class="pill"><b style="color:${bc}">${st.pts}</b>pts ${dot} ${ord(st.rank)}${st.rps!=null?` ${dot} <b>${st.rps.toFixed(3)}</b>${trend}`:""}</span>`:"";
+  const mePill=ys?pill(ys,"#22d3ee",""):`<span class="pill"><b style="color:#22d3ee">${t.yP}</b>pts</span>`;
+  $("#metrics").innerHTML=[mePill, pill(es,"#a78bfa",rpsTrendFor("ensemble")), pill(mk,"#e5e7eb",rpsTrendFor("market"))].filter(Boolean).join("");
   $("#oddsslot").innerHTML=(d.odds&&d.odds.credits_remaining!=null)?oddsRing(d.odds.credits_remaining):"";
   $("#foot").textContent="Lower RPS = more accurate · picks lock at kickoff (SGT) · saved on this device";
 
@@ -790,20 +790,11 @@ async function syncXG(){
   }catch(e){ fin("Sync failed: "+e,5000); }
 }
 
-// You vs the model vs the bookmakers on the same games, then your record + standout calls
+// Results header: your record + standout calls (the You/Ensemble/Market comparison
+// lives in the header pills now, on every page, so the tiles were dropped here).
 function scoreboard(t){
-  const tile=(lbl,fg,bg,bd,st,rps)=> st?`<div class="rtile" style="background:${bg};border:1px solid ${bd}">
-      <div class="rt-l" style="color:${fg}">${lbl}</div>
-      <div class="rt-n">${st.pts}<span class="rt-u">pts</span></div>
-      <div class="rt-s">${ord(st.rank)}${rps&&st.rps!=null?` · rps ${st.rps.toFixed(3)}`:""}</div>
-    </div>`:"";
-  const ys=standingOf("you"), es=standingOf("ensemble"), mk=standingOf("market");
   const hit=t.yN?Math.round(t.yR/t.yN*100):0;
-  const tiles=[tile("You","#22d3ee","rgba(34,211,238,.10)","rgba(34,211,238,.30)",ys,false),
-               tile("Ensemble","#a78bfa","rgba(167,139,250,.10)","rgba(167,139,250,.30)",es,true),
-               tile("Market","#e5e7eb","rgba(229,231,235,.07)","rgba(229,231,235,.22)",mk,true)].filter(Boolean).join("");
-  return `${tiles?`<div class="rtiles">${tiles}</div>`:""}
-  <div class="rrec">
+  return `<div class="rrec" style="margin-top:4px">
     <span><b>${t.yR}</b><span class="m">/${t.yN} results</span></span>
     <span><b>${t.yE}</b><span class="m"> exact</span></span>
     <span><b>${hit}%</b><span class="m"> hit rate</span></span>
