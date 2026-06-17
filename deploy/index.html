@@ -118,30 +118,37 @@
   .nextstrip b{color:var(--ink)} .ns-lbl{flex:none}
   .ns-matches{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px} .ns-m{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .ns-cd{flex:none;white-space:nowrap;color:var(--ink);font-weight:700}
+  .hrow{display:flex;align-items:baseline;gap:8px}
+  .upd{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  main{padding-bottom:96px}
+  .bottombar{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-around;gap:8px;padding:9px 18px;padding-bottom:calc(9px + env(safe-area-inset-bottom));background:rgba(16,16,30,.72);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);z-index:40}
+  .bbtn{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);color:var(--ink);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;font-family:inherit;-webkit-tap-highlight-color:transparent}
+  .bbtn:active{transform:scale(.94)}
+  .bbtn-mid{width:58px;height:58px;background:rgba(167,139,250,.16);border-color:rgba(167,139,250,.42);color:var(--pick);font-size:26px}
+  .bbtn.busy{animation:bpulse 1s ease-in-out infinite;border-color:var(--pick);color:var(--pick)}
+  @keyframes bpulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .bsheet{position:fixed;bottom:84px;z-index:45;background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:6px;max-height:60vh;overflow:auto;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+  .bsheet-l{left:14px;width:204px} .bsheet-r{right:14px;width:182px}
+  .brow{display:flex;align-items:center;gap:10px;padding:11px 10px;border-radius:9px;font-size:14px;cursor:pointer;color:var(--ink)}
+  .brow:active{background:rgba(255,255,255,.06)} .brow .bic{width:20px;text-align:center;color:var(--pick);font-size:16px}
+  .tabrow{padding:11px 10px;border-radius:9px;font-size:14px;cursor:pointer;color:var(--ink)}
+  .tabrow.on{background:rgba(167,139,250,.16);color:var(--pick);font-weight:600}
+  .bbtoast{position:fixed;left:50%;transform:translateX(-50%);bottom:88px;z-index:48;background:#26264a;border:1px solid var(--line);color:var(--ink);font-size:12px;padding:8px 14px;border-radius:10px;opacity:0;transition:opacity .25s;pointer-events:none;max-width:80%;text-align:center}
+  .bbtoast.show{opacity:1}
+  .clrow{display:flex;gap:12px;padding:9px 2px;border-bottom:1px solid var(--line)}
+  .cldate{font-size:11px;color:var(--pick);width:52px;flex:none;padding-top:2px;font-weight:600}
+  .cltext{font-size:13px;color:var(--ink);line-height:1.4}
 </style>
 </head>
 <body>
 <header>
   <div class="hrow">
-    <h1>⚽ World Cup 2026 Predictor ⚽</h1>
-    <div class="hbtns">
-      <button class="hbtn ghost" onclick="openPicksModal()" title="Export picks">⤒</button>
-      <button class="hbtn primary" id="refreshBtn" onclick="triggerRefresh()" title="Fetch latest"><span id="refreshIco">↻</span></button>
-    </div>
+    <h1>WC '26 Predictor</h1>
+    <span class="upd" id="updated">loading…</span>
   </div>
-  <div class="updated"><span id="updated">loading…</span><span id="buildNote" style="color:var(--pick);margin-left:8px"></span></div>
 </header>
 <div class="metrics" id="metrics"></div>
-<div id="nextstrip" class="nextstrip" onclick="document.querySelector('.tab[data-view=fixtures]').click()"></div>
-<div class="tabs">
-  <div class="tab active" data-view="fixtures">Picks</div>
-  <div class="tab" data-view="results">Results</div>
-  <div class="tab" data-view="league">League</div>
-  <div class="tab" data-view="xg">xG</div>
-  <div class="tab" data-view="odds">Winner</div>
-  <div class="tab" data-view="ratings">Ratings</div>
-  <div class="tab" data-view="explainer">Explainer</div>
-</div>
+<div id="nextstrip" class="nextstrip" onclick="selectView('fixtures')"></div>
 <main>
   <div id="fixtures"></div>
   <div id="results" class="hidden"></div>
@@ -149,8 +156,21 @@
   <div id="odds" class="hidden"></div>
   <div id="league" class="hidden"></div>
   <div id="xg" class="hidden"></div>
+  <div id="changelog" class="hidden"></div>
   <div id="explainer" class="hidden exp"></div>
 </main>
+<div id="bbtoast" class="bbtoast"></div>
+<div id="sheetActions" class="bsheet bsheet-l hidden">
+  <div class="brow" onclick="barAction('refresh',event)"><span class="bic">↻</span>Refresh</div>
+  <div class="brow" onclick="barAction('export',event)"><span class="bic">⤒</span>Export picks</div>
+  <div class="brow" onclick="barAction('sync',event)"><span class="bic">⇪</span>Sync xG</div>
+</div>
+<div id="sheetTabs" class="bsheet bsheet-r hidden"></div>
+<nav class="bottombar">
+  <button class="bbtn" id="bbDots" onclick="toggleSheet('actions',event)" aria-label="Actions" title="Actions">⋯</button>
+  <button class="bbtn bbtn-mid" id="bbNext" onclick="nextCard()" aria-label="Next card" title="Next card">⌄</button>
+  <button class="bbtn" id="bbBurger" onclick="toggleSheet('tabs',event)" aria-label="Tabs" title="Tabs">☰</button>
+</nav>
 <div id="pickmodal" class="modal hidden" onclick="if(event.target===this)closeModal()">
   <div class="modalbox">
     <div class="modalhd"><span>Export</span><span class="hdbtns"><span class="mx" id="copyIco" onclick="copyPicks(this)" title="Copy">⧉</span><span class="mx" onclick="closeModal()" title="Close">✕</span></span></div>
@@ -212,40 +232,109 @@ function scorePick(p,act){ if(!p||p[0]==null||p[1]==null||!act)return null;
   const rh=resultOf(p[0],p[1])===resultOf(act[0],act[1]); const eh=p[0]===act[0]&&p[1]===act[1];
   return {pts:(eh?EP:(rh?RP:0)), rh, eh}; }
 
+// --- bottom-bar status: a single toast + a pulse on the ⋯ button -------------
+let toastT=null;
+function toast(msg,ms){
+  const el=document.getElementById("bbtoast"); if(!el)return;
+  el.textContent=msg; el.classList.add("show");
+  clearTimeout(toastT);
+  if(ms>0) toastT=setTimeout(()=>el.classList.remove("show"),ms);
+}
+const bbBusy=on=>document.getElementById("bbDots").classList.toggle("busy",on);
+
 let refreshPoll=null;
 async function triggerRefresh(){
-  const b=document.getElementById("refreshBtn"); if(!b||b.disabled)return;
-  const ico=document.getElementById("refreshIco");
+  const dots=document.getElementById("bbDots");
+  if(dots.classList.contains("busy"))return;
   const prev=(DATA&&DATA.generated_utc)||"";
-  const note=document.getElementById("buildNote");
-  b.disabled=true; b.style.color="var(--pick)"; ico.textContent="↻"; ico.classList.add("spin"); b.title="Triggering…";
-  if(note)note.textContent="Triggering…";
-  const stop=()=>{clearInterval(refreshPoll); ico.classList.remove("spin");};
-  const reset=()=>{stop(); ico.textContent="↻"; b.style.color="var(--pick)"; b.title="Fetch latest"; b.disabled=false; if(note)note.textContent="";};
-  const fail=msg=>{stop(); ico.textContent="✕"; b.style.color="var(--bad)"; b.title="Failed — "+msg; b.disabled=false; if(note)note.textContent="Refresh failed"; setTimeout(reset,6000);};
+  bbBusy(true); toast("Triggering…",0);
+  const stop=()=>{clearInterval(refreshPoll); bbBusy(false);};
+  const fail=msg=>{stop(); toast("Refresh failed: "+msg,5000); console.error("refresh failed",msg);};
   try{
     const r=await fetch("/refresh",{method:"POST"});
     const j=await r.json().catch(()=>({}));
-    if(!(r.ok&&j.ok)){ fail((j&&j.error)||("HTTP "+r.status)); console.error("refresh failed",r.status,j); return; }
-    // dispatch accepted — now wait for the rebuilt predictions.json to land
-    b.title="Building… waiting for fresh data";
+    if(!(r.ok&&j.ok)){ fail((j&&j.error)||("HTTP "+r.status)); return; }
     let tries=0; const max=20, every=12000;       // ~4 min
     clearInterval(refreshPoll);
     refreshPoll=setInterval(async()=>{
-      tries++;
-      if(note)note.textContent=`Building (${tries}/${max})...`;
+      tries++; toast(`Building ${tries}/${max}…`,0);
       try{
         const d=await (await fetch("predictions.json",{cache:"no-store"})).json();
         if(d.generated_utc && d.generated_utc!==prev){
-          stop(); ico.textContent="✓"; b.style.color="var(--good)"; b.title="Updated";
-          if(note)note.textContent="Updated ✓ refreshing…";
-          setTimeout(()=>location.reload(),900);
-          return;
+          stop(); toast("Updated ✓",0); setTimeout(()=>location.reload(),900); return;
         }
       }catch(e){}
-      if(tries>=max){ stop(); ico.textContent="↻"; b.style.color="var(--pick)"; b.title="Still building — tap reload shortly"; b.disabled=false; if(note)note.textContent="Still building — reload shortly"; }
+      if(tries>=max){ stop(); toast("Still building — reload shortly",6000); }
     },every);
-  }catch(e){ fail(String(e)); console.error(e); }
+  }catch(e){ fail(String(e)); }
+}
+
+// --- bottom-bar navigation ---------------------------------------------------
+let activeView="fixtures";
+const VIEWS=["fixtures","results","ratings","odds","league","xg","changelog","explainer"];
+// sheet order is thumb-first: Picks nearest the bar (bottom), Change Log at the top
+const VIEW_ORDER=[["changelog","Change Log"],["explainer","Explainer"],["ratings","Ratings"],["odds","Winner"],["xg","xG"],["league","League"],["results","Results"],["fixtures","Picks"]];
+function selectView(v){
+  activeView=v;
+  VIEWS.forEach(id=>$("#"+id).classList.toggle("hidden", id!==v));
+  document.getElementById("bbNext").style.display=(v==="fixtures"||v==="results")?"flex":"none";
+  if(v==="changelog")renderChangelog();
+  renderTabSheet(); closeSheets();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function renderTabSheet(){
+  document.getElementById("sheetTabs").innerHTML=VIEW_ORDER
+    .map(([id,lbl])=>`<div class="tabrow ${activeView===id?'on':''}" onclick="selectView('${id}')">${lbl}</div>`).join("");
+}
+function toggleSheet(which,e){
+  if(e)e.stopPropagation();
+  const a=document.getElementById("sheetActions"), t=document.getElementById("sheetTabs");
+  const tgt=which==="actions"?a:t, other=which==="actions"?t:a;
+  other.classList.add("hidden"); tgt.classList.toggle("hidden");
+}
+function closeSheets(){ document.getElementById("sheetActions").classList.add("hidden"); document.getElementById("sheetTabs").classList.add("hidden"); }
+document.addEventListener("click",e=>{ if(!e.target.closest(".bsheet,.bottombar"))closeSheets(); });
+function barAction(a,e){ if(e)e.stopPropagation(); closeSheets();
+  if(a==="refresh")triggerRefresh(); else if(a==="export")openPicksModal(); else if(a==="sync")syncXG(); }
+function nextCard(){
+  const cont=document.getElementById(activeView==="results"?"results":"fixtures");
+  const cards=[...cont.querySelectorAll(".card")]; if(!cards.length)return;
+  const off=116;
+  let target=cards.find(c=>c.getBoundingClientRect().top>off+6)||cards[0];
+  window.scrollTo({top:window.scrollY+target.getBoundingClientRect().top-off,behavior:"smooth"});
+}
+// hand-maintained: one line per shipped change, newest first
+const CHANGELOG=[
+  ["17 Jun","New bottom bar — actions, next-card jump, and tabs tucked away"],
+  ["17 Jun","New xG tab — measured xG vs goals, who's riding their luck"],
+  ["17 Jun","The model now learns from xG, not just the scoreline"],
+  ["17 Jun","Enter & sync each game's xG from the result cards"],
+  ["17 Jun","Scoring fixed: exact scoreline = 3 pts total (was 5)"],
+  ["16 Jun","Next banner stacks simultaneous kickoffs · League Points/RPS toggle"],
+  ["15 Jun","Save a pick card as an image · richer export for analysis"],
+  ["14 Jun","One-tap refresh · odds-credit ring · host advantage + calibration"],
+];
+function renderChangelog(){
+  $("#changelog").innerHTML=`<div class="subline">What's changed recently — newest first.</div>`+
+    CHANGELOG.map(e=>`<div class="clrow"><div class="cldate">${e[0]}</div><div class="cltext">${e[1]}</div></div>`).join("");
+}
+// contextual "updated Tod, 0930H" (SGT, 24h, three-letter day prefix, no wrapping)
+function fmtUpdatedCtx(utc){
+  if(!utc)return "–";
+  const m=utc.match(/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/); if(!m)return utc;
+  const d=new Date(Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5]));
+  const f=new Intl.DateTimeFormat("en-GB",{timeZone:"Asia/Singapore",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false});
+  const p=Object.fromEntries(f.formatToParts(d).map(x=>[x.type,x.value]));
+  const hhmm=`${p.hour}${p.minute}H`;
+  const upd=`${p.year}-${p.month}-${p.day}`;
+  const np=Object.fromEntries(f.formatToParts(new Date()).map(x=>[x.type,x.value]));
+  const now=`${np.year}-${np.month}-${np.day}`;
+  const days=Math.round((Date.parse(now+"T00:00:00Z")-Date.parse(upd+"T00:00:00Z"))/864e5);
+  let lbl;
+  if(days<=0)lbl="Tod"; else if(days===1)lbl="Ytd";
+  else if(days<7)lbl=new Date(upd+"T00:00:00Z").toLocaleDateString("en-GB",{weekday:"short",timeZone:"UTC"});
+  else lbl=new Date(upd+"T00:00:00Z").toLocaleDateString("en-GB",{day:"2-digit",month:"short",timeZone:"UTC"});
+  return `· updated ${lbl}, ${hhmm}`;
 }
 
 fetch("predictions.json",{cache:"no-store"}).then(r=>r.json()).then(d=>{DATA=d;init(d)})
@@ -254,7 +343,9 @@ fetch("predictions.json",{cache:"no-store"}).then(r=>r.json()).then(d=>{DATA=d;i
 function init(d){
   RP=(d.scoring||{}).result_pts??2; EP=(d.scoring||{}).exact_pts??3; BONUS=EP-RP;
   ALLFIX=(d.fixtures||[]).filter(f=>f.resolved);
-  $("#updated").innerHTML=`Last Updated: <b>${toSGT(d.generated_utc)}</b>`;
+  $("#updated").textContent=fmtUpdatedCtx(d.generated_utc);
+  $("#updated").title=`Last updated ${toSGT(d.generated_utc)}`;
+  renderTabSheet();
   $("#explainer").innerHTML=explainerHTML();
   renderOdds();
   renderLeague(d);
@@ -574,26 +665,23 @@ function xgEditRow(f,i){
     <span id="xgv-${i}" data-gh="${f.actual[0]}" data-ga="${f.actual[1]}" data-t1="${f.team1}" data-t2="${f.team2}" class="xgverdict">${xgVerdict(ax,f.actual[0],f.actual[1],f.team1,f.team2)}</span>
   </div>`;
 }
+// slim hint at the top of Results: enter xG on the cards, then push it from the ⋯ menu
 function syncBar(){
-  return `<div class="syncbar">
-    <span class="sb-note" id="xgSyncNote">Type each game's xG from FotMob below, then sync so the model can learn from it.</span>
-    <button class="hbtn primary xgsync" id="xgSyncBtn" onclick="syncXG()" title="Sync xG to the model">⇪ Sync xG</button>
-  </div>`;
+  return `<div class="syncbar"><span class="sb-note">Add each game's xG below, then push it to the model from <b style="color:var(--ink)">⋯ → Sync xG</b>.</span></div>`;
 }
 async function syncXG(){
-  const b=document.getElementById("xgSyncBtn"), note=document.getElementById("xgSyncNote");
-  if(!b||b.disabled)return;
+  const dots=document.getElementById("bbDots");
   const X=loadXG(), n=Object.keys(X).length;
-  if(!n){ if(note)note.textContent="No xG entered yet — add some below first."; return; }
-  const prev=b.textContent; b.disabled=true; b.textContent="Syncing…";
-  if(note)note.textContent=`Syncing ${n} game${n>1?'s':''}…`;
-  const done=(txt,nt)=>{ b.textContent=txt; if(note&&nt)note.textContent=nt; setTimeout(()=>{b.textContent=prev;b.disabled=false;},4500); };
+  if(!n){ toast("No xG entered yet — add it on the Results cards",3000); return; }
+  if(dots.classList.contains("busy"))return;
+  bbBusy(true); toast(`Syncing ${n} game${n>1?'s':''}…`,0);
+  const fin=(m,ms)=>{ bbBusy(false); toast(m,ms); };
   try{
     const r=await fetch("/sync-xg",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({xg:X})});
     const j=await r.json().catch(()=>({}));
-    if(r.ok&&j.ok) done("Synced ✓",`Synced ${n} game${n>1?'s':''}. The model rebuilds shortly — hit ↻ or wait for the next run.`);
-    else done("Failed","Sync failed: "+((j&&j.error)||("HTTP "+r.status)));
-  }catch(e){ done("Failed","Sync failed: "+e); }
+    if(r.ok&&j.ok) fin(`Synced ${n} game${n>1?'s':''} ✓ — model rebuilds shortly`,5000);
+    else fin("Sync failed: "+((j&&j.error)||("HTTP "+r.status)),5000);
+  }catch(e){ fin("Sync failed: "+e,5000); }
 }
 
 function scoreboard(t){
@@ -818,10 +906,6 @@ function explainerHTML(){return `
   <h3>Win it (tournament odds)</h3>
   <p>The model plays the <span class="k">rest of the tournament 20,000 times</span> — and counts how often each nation wins its group, reaches each round, and lifts the trophy. Crucially it <span class="k">banks games already played</span>: finished results are locked in, and only the games still to come are simulated, so the odds update as the tournament unfolds. One simulation is luck; 20,000 averages it out into a probability. That's why a clear favourite still only sits around 1-in-5 — even the best team must win seven knockout games where anything can happen.</p>`;}
 
-document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
-  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active")); t.classList.add("active");
-  const v=t.dataset.view; ["fixtures","results","ratings","odds","league","xg","explainer"].forEach(id=>$("#"+id).classList.toggle("hidden", id!==v));
-}));
 </script>
 </body>
 </html>
