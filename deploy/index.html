@@ -888,8 +888,7 @@ function renderLeague(d){
     .concat([{m:"you",label:"You",g:yn,pts:yr*RP+ye*BONUS,rps:null}])  // you ranked in the table too
     .filter(r=>r.g>0)                                   // Market only appears once it has priced games
     .sort((a,b)=>(b.pts-a.pts)||((a.rps??9)-(b.rps??9)));
-  let html=`<div class="subline">Every rung makes its honest call on each game; scored on your pool rules (<b>${RP}</b> pts result, <b>${EP}</b> pts exact) plus <b>RPS</b> (probability quality, lower = better). Backfilled and live over ${ng} game${ng==1?'':'s'}.</div>`;
-  html+=`<div class="oddsel"><span class="opt ${lbMode==='points'?'on':''}" onclick="lbMode='points';renderLeague(DATA)">Points</span><span class="opt ${lbMode==='rps'?'on':''}" onclick="lbMode='rps';renderLeague(DATA)">RPS</span></div>`;
+  let html=`<div class="oddsel"><span class="opt ${lbMode==='points'?'on':''}" onclick="lbMode='points';renderLeague(DATA)">Points</span><span class="opt ${lbMode==='rps'?'on':''}" onclick="lbMode='rps';renderLeague(DATA)">RPS</span></div>`;
   html+=`<div style="position:relative;height:210px;margin:4px 0 16px"><canvas id="lbchart"></canvas></div>`;
   html+=`<div class="lbhdr"><span style="flex:1">model</span><span class="lbn">pts</span><span class="lbn">RPS</span></div>`;
   html+=rows.map((r,i)=>{const me=r.m==="you", c=me?"var(--you)":"var(--ink)";
