@@ -40,6 +40,10 @@ XG_FILE = os.path.join(DEPLOY, "xg.json")            # measured match xG, synced
 OUT = os.path.join(DEPLOY, "predictions.json")
 
 W_DC, RECENT_YEARS, MIN_MATCHES, XI = 0.6, 8, 10, 0.001
+# Phase B xG layer: how much the Elo rating update trusts measured xG over the
+# scoreline, for games we have xG for (deploy/xg.json). 0 = off (goals only),
+# 1 = trust xG fully. Kill-switch: set to 0.0 to revert instantly.
+XG_ELO_WEIGHT, XG_TAU = 1.0, 1.0
 RESULT_PTS, EXACT_PTS = scoring.RESULT_PTS, scoring.EXACT_PTS
 
 
@@ -49,6 +53,48 @@ def _now():
 
 def _key(date, t1, t2):
     return f"{date}|{t1}|{t2}"
+
+
+def attach_measured_xg(full, xg_path):
+    """Add xg_home/xg_away columns to the results frame from deploy/xg.json.
+
+    xg.json is keyed "date|team1|team2" with the dashboard's team names (same space
+    as the results frame). We match on date + the unordered team pair and orient the
+    two xG numbers to the frame's home/away. Returns the number of games matched.
+    Mutates `full` in place; leaves xG as NaN for every other game.
+    """
+    if not os.path.exists(xg_path):
+        return 0
+    try:
+        raw = json.load(open(xg_path))
+    except Exception:
+        return 0
+    lut = {}
+    for key, v in raw.items():
+        if not (isinstance(v, list) and len(v) == 2):
+            continue
+        parts = key.split("|")
+        if len(parts) != 3:
+            continue
+        d, t1, t2 = parts
+        lut[(d, frozenset((t1, t2)))] = (t1, float(v[0]), float(v[1]))
+    if not lut:
+        return 0
+    full["xg_home"] = float("nan")
+    full["xg_away"] = float("nan")
+    dates = {d for (d, _) in lut}
+    ds = full["date"].dt.strftime("%Y-%m-%d")
+    n = 0
+    for idx in full.index[ds.isin(dates)]:
+        d = ds.at[idx]
+        h, a = full.at[idx, "home_team"], full.at[idx, "away_team"]
+        rec = lut.get((d, frozenset((h, a))))
+        if not rec:
+            continue
+        t1, x1, x2 = rec
+        full.at[idx, "xg_home"], full.at[idx, "xg_away"] = (x1, x2) if h == t1 else (x2, x1)
+        n += 1
+    return n
 
 
 def clean(o):
@@ -218,7 +264,12 @@ def main() -> int:
     full = data.load_results(os.path.join(RAW, "results.csv"))
     rec = data.filter_teams(data.filter_recent(full, years=RECENT_YEARS), MIN_MATCHES)
     dm = dc.fit(rec, xi=XI)
-    em = E.fit(full)
+    # Phase B: graft measured match xG onto the history (oriented to each row's
+    # home/away) so the Elo rating update can learn from xG, not just the scoreline.
+    n_xg = attach_measured_xg(full, XG_FILE)
+    em = E.fit(full, xg_weight=(XG_ELO_WEIGHT if n_xg else 0.0), xg_tau=XG_TAU)
+    print(f"  xG-Elo: {n_xg} game(s) updated on measured xG (weight {XG_ELO_WEIGHT})"
+          if n_xg else "  xG-Elo: no measured xG yet — goals only")
     known = set(dm.teams) & set(em.teams)
     try:
         pm = pois.fit(rec)            # rung-1 Poisson, for the model leaderboard

@@ -61,14 +61,26 @@ def _g_multiplier(goal_diff: int) -> float:
     return (11 + gd) / 8.0
 
 
-def compute_ratings(df: pd.DataFrame, home_adv: float = 65.0, base: float = 1500.0):
+def compute_ratings(df: pd.DataFrame, home_adv: float = 65.0, base: float = 1500.0,
+                    xg_weight: float = 0.0, xg_tau: float = 1.0):
     """Single chronological pass. Returns (ratings dict, calib DataFrame).
 
     `calib` has one row per match: the PRE-match rating gap `dr` (home minus away,
     plus home advantage when not neutral) and the realised `outcome`. Because dr
     is recorded before the update, fitting the gap->1X2 mapping on it is leak-free.
+
+    xG layer (Phase B): when a row carries measured match xG (columns xg_home/xg_away,
+    NaN where unknown) and xg_weight > 0, the rating UPDATE for that game uses the xG
+    performance instead of (or blended with) the goals result — the better signal for
+    what a team's level really was. The pre-match gap `dr` and the calibration
+    `outcome` stay on the REAL result (the gap->1X2 map must predict actual outcomes),
+    so only how much ratings move changes, never what we predict from a given gap.
+
+        sa_xg = 0.5 + 0.5*tanh((xg_home - xg_away) / xg_tau)   # soft, bounded margin
+        sa    = xg_weight*sa_xg + (1 - xg_weight)*sa_goals
     """
     df = df.sort_values("date")
+    has_xg = xg_weight > 0 and "xg_home" in df.columns and "xg_away" in df.columns
     ratings: dict[str, float] = {}
     drs, outs = [], []
     for r in df.itertuples():
@@ -83,8 +95,16 @@ def compute_ratings(df: pd.DataFrame, home_adv: float = 65.0, base: float = 1500
             outs.append("away"); sa = 0.0
         else:
             outs.append("draw"); sa = 0.5
+        gmult = _g_multiplier(r.home_score - r.away_score)
+        if has_xg:
+            xgh, xga = getattr(r, "xg_home", float("nan")), getattr(r, "xg_away", float("nan"))
+            if xgh == xgh and xga == xga:          # both present (not NaN)
+                margin = float(xgh) - float(xga)
+                sa_xg = 0.5 + 0.5 * np.tanh(margin / xg_tau)
+                sa = xg_weight * sa_xg + (1.0 - xg_weight) * sa
+                gmult = _g_multiplier(round(margin))
         exp = 1.0 / (1.0 + 10 ** (-dr / 400.0))
-        k = _k_base(getattr(r, "tournament", "")) * _g_multiplier(r.home_score - r.away_score)
+        k = _k_base(getattr(r, "tournament", "")) * gmult
         ratings[r.home_team] = ra + k * (sa - exp)
         ratings[r.away_team] = rb + k * (exp - sa)  # away gains the mirror image
     calib = pd.DataFrame({"dr": drs, "outcome": outs})
@@ -130,9 +150,11 @@ class EloModel:
         return [({"home": (1, 0), "draw": (1, 1), "away": (0, 1)}[pick], o[pick])]
 
 
-def fit(df: pd.DataFrame, home_adv: float = 65.0, base: float = 1500.0) -> EloModel:
+def fit(df: pd.DataFrame, home_adv: float = 65.0, base: float = 1500.0,
+        xg_weight: float = 0.0, xg_tau: float = 1.0) -> EloModel:
     """Compute ratings, then calibrate the gap->1X2 mapping by minimising log-loss."""
-    ratings, calib = compute_ratings(df, home_adv=home_adv, base=base)
+    ratings, calib = compute_ratings(df, home_adv=home_adv, base=base,
+                                     xg_weight=xg_weight, xg_tau=xg_tau)
     y = calib["outcome"].map({"home": 0, "draw": 1, "away": 2}).to_numpy()
     dr = calib["dr"].to_numpy()
 

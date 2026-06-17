@@ -186,17 +186,18 @@ function setXG(key,side,val,i){
   cur[side]=v;
   if(cur[0]==null&&cur[1]==null)delete X[key]; else X[key]=cur;
   saveXG(X);
-  const el=document.getElementById("xgv-"+i); if(el)el.innerHTML=xgVerdict(X[key], +el.dataset.gh, +el.dataset.ga);
+  const el=document.getElementById("xgv-"+i); if(el)el.innerHTML=xgVerdict(X[key], +el.dataset.gh, +el.dataset.ga, el.dataset.t1, el.dataset.t2);
 }
 // reads measured xG against the actual scoreline: did the result flatter someone?
-function xgVerdict(ax,gh,ga){
+function xgVerdict(ax,gh,ga,t1,t2){
   if(!ax||ax[0]==null||ax[1]==null)return `<span style="color:var(--muted)">add match xG to teach the model</span>`;
   const xd=ax[0]-ax[1], xs=Math.sign(xd), gs=Math.sign(gh-ga), tag=`xG ${ax[0]}–${ax[1]}`;
+  const led=xs>0?t1:xs<0?t2:null, won=gh>ga?t1:gh<ga?t2:null;
   if(gs===0) return Math.abs(xd)>=0.7
-    ? `<span style="color:var(--muted)">drew, but ${tag} leaned one way</span>`
-    : `<span style="color:var(--good)">fair draw · ${tag}</span>`;
-  if(xs===gs) return `<span style="color:var(--good)">deserved · ${tag}</span>`;
-  return `<span style="color:var(--bad)">flattering result · ${tag}</span>`;
+    ? `<span style="color:var(--muted)">drew, but ${led} shaded the xG · ${tag}</span>`
+    : `<span style="color:var(--good)">even game, fair draw · ${tag}</span>`;
+  if(xs===gs) return `<span style="color:var(--good)">deserved by ${won} · ${tag}</span>`;
+  return `<span style="color:var(--bad)">flattering for ${won} · ${tag}</span>`;
 }
 function seedArr(f){ if(f.your_pick){const[a,b]=f.your_pick.split("-");return[+a,+b]} return null; }
 function pickArr(f){ const P=loadPicks(); if(P[keyOf(f)])return P[keyOf(f)]; return seedArr(f); }
@@ -567,7 +568,7 @@ function xgEditRow(f,i){
   return `<div class="rrow2 xgrow">
     <span class="lbl" style="min-width:auto;color:var(--home)">Match xG</span>${pred}
     <span class="xgins">${inp(0,v0)}<span style="color:var(--muted)">–</span>${inp(1,v1)}</span>
-    <span id="xgv-${i}" data-gh="${f.actual[0]}" data-ga="${f.actual[1]}" class="xgverdict">${xgVerdict(ax,f.actual[0],f.actual[1])}</span>
+    <span id="xgv-${i}" data-gh="${f.actual[0]}" data-ga="${f.actual[1]}" data-t1="${f.team1}" data-t2="${f.team2}" class="xgverdict">${xgVerdict(ax,f.actual[0],f.actual[1],f.team1,f.team2)}</span>
   </div>`;
 }
 function syncBar(){
