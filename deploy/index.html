@@ -125,8 +125,8 @@
   .upd{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:16px}
   .hright{flex:none;display:flex;align-items:center;gap:8px}
   .hcd{flex:none;font-size:12px;font-weight:700;color:var(--ink);white-space:nowrap;cursor:pointer}
-  main{padding-bottom:78px}
-  .bottombar{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:flex-end;justify-content:space-around;gap:8px;padding:0 26px 8px;padding-bottom:calc(8px + env(safe-area-inset-bottom));background:none;border:0;z-index:40;pointer-events:none}
+  main{padding-bottom:74px}
+  .bottombar{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:flex-end;justify-content:space-around;gap:8px;padding:40px 26px 8px;padding-bottom:calc(8px + env(safe-area-inset-bottom));background:linear-gradient(to top, rgba(6,6,12,.9) 0%, rgba(6,6,12,.5) 42%, rgba(6,6,12,0) 100%);border:0;z-index:40;pointer-events:none}
   .bottombar .bbtn{pointer-events:auto}
   .bbtn{width:44px;height:44px;border-radius:50%;background:rgba(20,20,32,.5);backdrop-filter:blur(12px) saturate(150%);-webkit-backdrop-filter:blur(12px) saturate(150%);border:1px solid rgba(255,255,255,.16);color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:0;font-family:inherit;box-shadow:0 3px 14px rgba(0,0,0,.45);-webkit-tap-highlight-color:transparent}
   .bbtn:active{transform:scale(.92)} .bbtn svg{display:block}
@@ -225,7 +225,7 @@ function setXG(key,side,val,i){
 function xgVerdict(ax,gh,ga,t1,t2){
   if(!ax||ax[0]==null||ax[1]==null)return `<span style="color:var(--muted)">add match xG to teach the model</span>`;
   const xd=ax[0]-ax[1], xs=Math.sign(xd), gs=Math.sign(gh-ga), tag=`xG ${ax[0]}–${ax[1]}`;
-  const led=xs>0?t1:xs<0?t2:null, won=gh>ga?t1:gh<ga?t2:null;
+  const led=xs>0?code3(t1):xs<0?code3(t2):null, won=gh>ga?code3(t1):gh<ga?code3(t2):null;
   if(gs===0) return Math.abs(xd)>=0.7
     ? `<span style="color:var(--muted)">drew, but ${led} shaded the xG · ${tag}</span>`
     : `<span style="color:var(--good)">even game, fair draw · ${tag}</span>`;
@@ -243,6 +243,7 @@ const resultOf=(h,a)=>h>a?"home":h<a?"away":"draw";
 const FLAGS={Algeria:["ALG","dz"],Argentina:["ARG","ar"],Australia:["AUS","au"],Austria:["AUT","at"],Belgium:["BEL","be"],"Bosnia and Herzegovina":["BIH","ba"],Brazil:["BRA","br"],Canada:["CAN","ca"],"Cape Verde":["CPV","cv"],Colombia:["COL","co"],Croatia:["CRO","hr"],"Curaçao":["CUW","cw"],"Czech Republic":["CZE","cz"],Czechia:["CZE","cz"],"DR Congo":["COD","cd"],Ecuador:["ECU","ec"],Egypt:["EGY","eg"],England:["ENG","gb-eng"],France:["FRA","fr"],Germany:["GER","de"],Ghana:["GHA","gh"],Haiti:["HAI","ht"],Iran:["IRN","ir"],Iraq:["IRQ","iq"],"Ivory Coast":["CIV","ci"],"Côte d'Ivoire":["CIV","ci"],Japan:["JPN","jp"],Jordan:["JOR","jo"],Mexico:["MEX","mx"],Morocco:["MAR","ma"],Netherlands:["NED","nl"],"New Zealand":["NZL","nz"],Norway:["NOR","no"],Panama:["PAN","pa"],Paraguay:["PAR","py"],Portugal:["POR","pt"],Qatar:["QAT","qa"],"Saudi Arabia":["KSA","sa"],Scotland:["SCO","gb-sct"],Senegal:["SEN","sn"],"South Africa":["RSA","za"],"South Korea":["KOR","kr"],"Korea Republic":["KOR","kr"],Spain:["ESP","es"],Sweden:["SWE","se"],Switzerland:["SUI","ch"],Tunisia:["TUN","tn"],Turkey:["TUR","tr"],"Türkiye":["TUR","tr"],"United States":["USA","us"],USA:["USA","us"],Uruguay:["URU","uy"],Uzbekistan:["UZB","uz"]};
 function flagImg(t,sm){const m=FLAGS[t];return m?`<img class="flag${sm?' sm':''}" src="https://flagcdn.com/${m[1]}.svg" alt="" loading="lazy">`:"";}
 function code3(t){const m=FLAGS[t];return m?m[0]:t;}
+function teamTag(t,sm){return flagImg(t,sm)+code3(t);}   // flag + 3-letter code, used everywhere a team shows
 function scorePick(p,act){ if(!p||p[0]==null||p[1]==null||!act)return null;
   const rh=resultOf(p[0],p[1])===resultOf(act[0],act[1]); const eh=p[0]===act[0]&&p[1]===act[1];
   return {pts:(eh?EP:(rh?RP:0)), rh, eh}; }
@@ -321,17 +322,24 @@ function closeSheets(){ document.getElementById("sheetActions").classList.add("h
 document.addEventListener("click",e=>{ if(!e.target.closest(".bsheet,.bottombar"))closeSheets(); });
 function barAction(a,e){ if(e)e.stopPropagation(); closeSheets();
   if(a==="refresh")triggerRefresh(); else if(a==="export")openPicksModal(); else if(a==="sync")syncXG(); }
-const NAV_TOP=14;          // where the chosen card snaps to (px from the top)
+const NAV_TOP=14;          // top padding when a tall card has to top-align
+let _nav={view:null,idx:-1,t:0};
 function nextCard(){
   const cont=document.getElementById(activeView==="results"?"results":"fixtures");
   const cards=[...cont.querySelectorAll(".card")]; if(!cards.length)return;
-  // position-aware: the "current" card is the last one already at/above the snap line;
-  // the next tap goes to the one after it. Reads live scroll, so it's never stale.
-  const line=NAV_TOP+56;
-  let cur=-1;
-  cards.forEach((c,k)=>{ if(c.getBoundingClientRect().top<=line) cur=k; });
-  const target=cards[(cur+1)%cards.length];
-  window.scrollTo({top:Math.max(0,window.scrollY+target.getBoundingClientRect().top-NAV_TOP),behavior:"smooth"});
+  const now=Date.now();
+  let cur;
+  if(_nav.view===activeView && now-_nav.t<550){
+    cur=_nav.idx;                 // rapid re-tap (still animating): advance from where we just sent you
+  }else{
+    cur=-1;                       // otherwise read live scroll: the last card at/above the attention line
+    const line=80; cards.forEach((c,k)=>{ if(c.getBoundingClientRect().top<=line) cur=k; });
+  }
+  const idx=(cur+1)%cards.length, target=cards[idx], r=target.getBoundingClientRect(), vh=window.innerHeight;
+  // centre the card; cards taller than the screen top-align (centring would hide their header)
+  const y=Math.max(0, window.scrollY+r.top-Math.max(NAV_TOP,(vh-r.height)/2));
+  window.scrollTo({top:y,behavior:"smooth"});
+  _nav={view:activeView,idx,t:Date.now()};
   target.classList.remove("flashcard"); void target.offsetWidth; target.classList.add("flashcard");
   setTimeout(()=>target.classList.remove("flashcard"),1400);
 }
@@ -386,7 +394,7 @@ function init(d){
   $("#ratings").innerHTML=`<div class="subline">How the model rates the ${show.length} teams — Elo strength, movement vs a year ago (▲▼), and recent form (oldest → newest).</div>`+
     show.map((r,i)=>`<div class="rrow">
       <div class="rank">${i+1}</div>
-      <div style="flex:1;min-width:0"><div class="rname">${flagImg(r.team)}${r.team}</div><div style="margin-top:4px">${formStrip(r.team)}</div></div>
+      <div style="flex:1;min-width:0"><div class="rname">${flagImg(r.team)}${code3(r.team)}</div><div style="margin-top:4px">${formStrip(r.team)}</div></div>
       <div style="text-align:right"><div class="relo">${r.elo}</div><div style="margin-top:3px">${chev(r.delta)}</div></div>
     </div>`).join("");
   renderAll();
@@ -559,12 +567,12 @@ function pickCard(f){
   const pickUI=`<div class="pickwrap"><div class="hstepper">${hbox(0,a)}${center}${hbox(1,b)}</div></div>`;
   return `<div class="card">
     <div class="frow">
-      <div><div class="teams">${flagImg(f.team1)}${f.team1}<span class="v">v</span>${flagImg(f.team2)}${f.team2}</div>
-        <div class="meta">${xg}${timeOnly(f)} · ${f.group||f.round||""}${f.host?` · <span style="color:${f.host===f.team2?'var(--away)':'var(--home)'}">🏠 ${f.host}</span>`:""}</div></div>
-      <div style="text-align:right;flex-shrink:0"><div style="color:${rcol};font-weight:700;font-size:13px">${cf.kind==="draw"?"Draw":cf.who+" win"}</div><div style="font-size:11px"><span class="rc-${cf.lvl}">${cf.lvl==="toss"?"toss-up":cf.lvl}</span> <span style="color:var(--muted)">· ${pc(cf.p)}%</span></div></div>
+      <div><div class="teams">${flagImg(f.team1)}${code3(f.team1)}<span class="v">v</span>${flagImg(f.team2)}${code3(f.team2)}</div>
+        <div class="meta">${xg}${timeOnly(f)} · ${f.group||f.round||""}${f.host?` · <span style="color:${f.host===f.team2?'var(--away)':'var(--home)'}">🏠 ${code3(f.host)}</span>`:""}</div></div>
+      <div style="text-align:right;flex-shrink:0"><div style="color:${rcol};font-weight:700;font-size:13px">${cf.kind==="draw"?"Draw":code3(cf.who)+" win"}</div><div style="font-size:11px"><span class="rc-${cf.lvl}">${cf.lvl==="toss"?"toss-up":cf.lvl}</span> <span style="color:var(--muted)">· ${pc(cf.p)}%</span></div></div>
     </div>
     <div class="bar"><i class="h" style="width:${pc(f.p_home)}%"></i><i class="d" style="width:${pc(f.p_draw)}%"></i><i class="a" style="width:${pc(f.p_away)}%"></i></div>
-    <div class="legend"><span style="color:var(--home)">${f.team1} <b>${pc(f.p_home)}%</b></span><span>Draw <b>${pc(f.p_draw)}%</b></span><span style="color:var(--away)">${f.team2} <b>${pc(f.p_away)}%</b></span></div>
+    <div class="legend"><span style="color:var(--home)">${teamTag(f.team1,true)} <b>${pc(f.p_home)}%</b></span><span>Draw <b>${pc(f.p_draw)}%</b></span><span style="color:var(--away)">${teamTag(f.team2,true)} <b>${pc(f.p_away)}%</b></span></div>
     <div class="formends"><span>${formStrip(f.team1)}</span><span>${formStrip(f.team2)}</span></div>
     <div class="tops" style="margin-top:13px">${tops}</div>
     ${modelSays(f)}
@@ -670,8 +678,8 @@ function resultCard(f){
   const i=ALLFIX.indexOf(f);
   return `<div class="card">
     <div class="frow">
-      <div><div class="teams">${flagImg(f.team1)}${f.team1}<span class="v">v</span>${flagImg(f.team2)}${f.team2}</div>
-        <div class="meta">${timeOnly(f)} · ${f.group||f.round||""} · ${winner?winner+" won":"draw"}</div></div>
+      <div><div class="teams">${flagImg(f.team1)}${code3(f.team1)}<span class="v">v</span>${flagImg(f.team2)}${code3(f.team2)}</div>
+        <div class="meta">${timeOnly(f)} · ${f.group||f.round||""} · ${winner?code3(winner)+" won":"draw"}</div></div>
       <div class="score">${f.actual[0]}–${f.actual[1]}${apct}</div>
     </div>
     ${youRow}
@@ -730,7 +738,7 @@ function marketLine(f){
   let bi=0,bd=0; for(let i=0;i<3;i++){const dd=mod[i]-mk[i]; if(Math.abs(dd)>Math.abs(bd)){bd=dd;bi=i;}}
   const lab=bi===0?f.team1:bi===2?f.team2:"Draw";
   const col=bd>=0?"var(--good)":"var(--bad)", sign=bd>=0?"+":"";
-  return `<div style="font-size:12px;margin-top:8px;color:var(--muted)">vs market · <b style="color:var(--ink)">${lab}</b> model <b style="color:var(--ink)">${pc(mod[bi])}%</b> vs market ${pc(mk[bi])}% <span style="color:${col};font-weight:700">(${sign}${pc(bd)})</span></div>`;
+  return `<div style="font-size:12px;margin-top:8px;color:var(--muted)">vs market · <b style="color:var(--ink)">${code3(lab)}</b> model <b style="color:var(--ink)">${pc(mod[bi])}%</b> vs market ${pc(mk[bi])}% <span style="color:${col};font-weight:700">(${sign}${pc(bd)})</span></div>`;
 }
 function modelSays(f){
   if(!f.lb) return "";
@@ -738,7 +746,7 @@ function modelSays(f){
   const ens=(f.lb.ensemble&&f.lb.ensemble.probs)||null;          // baseline for the per-row delta
   const cells=ORDER.filter(m=>f.lb[m]).map(m=>{ const v=f.lb[m];
     const idx={home:0,draw:1,away:2}[v.result];
-    const r=v.result==="draw"?"draw":`${v.result==="home"?f.team1:f.team2} win`;
+    const r=v.result==="draw"?"draw":`${code3(v.result==="home"?f.team1:f.team2)} win`;
     const rcol=v.result==="home"?"var(--home)":v.result==="away"?"var(--away)":"var(--draw)";
     const pv=(v.probs&&v.probs[idx]!=null)?v.probs[idx]:null;
     let delta="";
@@ -870,13 +878,13 @@ function renderOdds(){
   html+=live.map((r,i)=>`<div class="orow">
       <div class="rank">${i+1}</div>
       <div style="flex:1;min-width:0">
-        <div class="rname">${flagImg(r.team)}${r.team}</div>
+        <div class="rname">${flagImg(r.team)}${code3(r.team)}</div>
         <div class="obar"><i style="width:${Math.max(2,Math.round(r.champion/mx*100))}%"></i></div>
         <div style="font-size:10.5px;color:var(--muted);margin-top:4px">final ${pc(r.Final)}% · semis ${pc(r.SF)}% · last 8 ${pc(r.QF)}% · last 32 ${pc(r.advance)}%</div>
       </div>
       <div style="text-align:right"><div style="font-weight:700;color:var(--good)">${(r.champion*100).toFixed(1)}%</div><div style="font-size:10px;color:var(--muted)">title</div></div>
     </div>`).join("");
-  if(out.length) html+=`<div style="margin-top:14px;font-size:11px;color:var(--muted);line-height:1.6"><b style="color:var(--ink)">Out (${out.length}):</b> ${out.join(" · ")}</div>`;
+  if(out.length) html+=`<div style="margin-top:14px;font-size:11px;color:var(--muted);line-height:1.9"><b style="color:var(--ink)">Out (${out.length}):</b> ${out.map(t=>teamTag(t,true)).join("　")}</div>`;
   $("#odds").innerHTML=html;
 }
 
