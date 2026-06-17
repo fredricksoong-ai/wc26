@@ -88,6 +88,13 @@
   .pts{margin-left:auto;font-weight:700;color:var(--good)} .pts.zero{color:var(--muted)}
   .vs{font-size:11px;color:var(--muted);margin-top:6px}
   .big{display:flex;gap:8px;padding:0 2px 6px}
+  .rtiles{display:flex;gap:8px;margin:2px 0 12px}
+  .rtile{flex:1;border-radius:12px;padding:9px 10px;min-width:0}
+  .rt-l{font-size:11px;font-weight:600} .rt-n{font-size:21px;font-weight:700;margin-top:1px;color:var(--ink);font-variant-numeric:tabular-nums} .rt-u{font-size:11px;color:var(--muted);font-weight:400;margin-left:2px}
+  .rt-s{font-size:11px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rrec{display:flex;gap:14px;font-size:12px;color:var(--ink);padding:0 2px 10px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .rrec .m{color:var(--muted)} .rrec b{font-weight:700}
+  .rbw{display:flex;gap:8px 18px;font-size:11px;margin-top:10px;flex-wrap:wrap;color:var(--muted)}
   .stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
   .stat .l{font-size:11px;color:var(--muted)} .stat .n{font-size:22px;font-weight:700;margin-top:2px}
   .subline{padding:0 4px 8px;color:var(--muted);font-size:12px}
@@ -352,6 +359,8 @@ function nextCard(){
 }
 // hand-maintained: one line per shipped change, newest first
 const CHANGELOG=[
+  ["17 Jun","Richer Results header — you vs the model vs the market, your record & calls"],
+  ["17 Jun","Country flags + 3-letter codes across every screen"],
   ["17 Jun","New bottom bar — actions, next-card jump, and tabs tucked away"],
   ["17 Jun","New xG tab — measured xG vs goals, who's riding their luck"],
   ["17 Jun","The model now learns from xG, not just the scoreline"],
@@ -737,12 +746,40 @@ async function syncXG(){
   }catch(e){ fin("Sync failed: "+e,5000); }
 }
 
+// You vs the model vs the bookmakers on the same games, then your record + standout calls
 function scoreboard(t){
-  return `<div class="big">
-    <div class="stat"><div class="l">Your points</div><div class="n" style="color:var(--you)">${t.yP}/${t.yMax}</div></div>
-    <div class="stat"><div class="l">Model points</div><div class="n" style="color:var(--pick)">${t.mP}/${t.mMax}</div></div>
-  </div>
-  <div class="subline">You called the <b>correct result in ${t.yR} of ${t.yN}</b> games, and the <b>exact scoreline in ${t.yE}</b>. (Correct result = ${RP} pts; exact scoreline = ${EP} pts total, not on top.)</div>`;
+  const tile=(lbl,fg,bg,bd,st,rps)=> st?`<div class="rtile" style="background:${bg};border:1px solid ${bd}">
+      <div class="rt-l" style="color:${fg}">${lbl}</div>
+      <div class="rt-n">${st.pts}<span class="rt-u">pts</span></div>
+      <div class="rt-s">${ord(st.rank)}${rps&&st.rps!=null?` · rps ${st.rps.toFixed(3)}`:""}</div>
+    </div>`:"";
+  const ys=standingOf("you"), es=standingOf("ensemble"), mk=standingOf("market");
+  const hit=t.yN?Math.round(t.yR/t.yN*100):0;
+  const tiles=[tile("You","#22d3ee","rgba(34,211,238,.10)","rgba(34,211,238,.30)",ys,false),
+               tile("Ensemble","#a78bfa","rgba(167,139,250,.10)","rgba(167,139,250,.30)",es,true),
+               tile("Market","#e5e7eb","rgba(229,231,235,.07)","rgba(229,231,235,.22)",mk,true)].filter(Boolean).join("");
+  return `${tiles?`<div class="rtiles">${tiles}</div>`:""}
+  <div class="rrec">
+    <span><b>${t.yR}</b><span class="m">/${t.yN} results</span></span>
+    <span><b>${t.yE}</b><span class="m"> exact</span></span>
+    <span><b>${hit}%</b><span class="m"> hit rate</span></span>
+    <span style="margin-left:auto" class="m">banked <b style="color:var(--ink)">${t.yP}</b>/${t.yMax}</span>
+  </div>${bestWorst()}`;
+}
+// your highest-scoring pick, and the confident call that hurt most (a 0-pointer you backed strongest)
+function bestWorst(){
+  const played=(ALLFIX||[]).filter(f=>f.played&&f.actual&&((pickArr(f)||[])[0]!=null));
+  if(!played.length) return "";
+  let best=null, worst=null;
+  played.forEach(f=>{ const yp=pickArr(f), s=scorePick(yp,f.actual); if(!s)return;
+    if(!best || s.pts>best.s.pts || (s.pts===best.s.pts && s.eh && !best.s.eh)) best={f,yp,s};
+    if(s.pts===0){ const o=resultOf(yp[0],yp[1]), conf=(o==="home"?f.p_home:o==="away"?f.p_away:f.p_draw)||0;
+      if(!worst || conf>worst.conf) worst={f,yp,conf}; }
+  });
+  const out=[];
+  if(best && best.s.pts>0) out.push(`<span><span style="color:var(--good)">▲ best</span> ${code3(best.f.team1)} <b style="color:var(--ink)">${best.yp[0]}–${best.yp[1]}</b> ${code3(best.f.team2)} <span style="color:var(--good)">(+${best.s.pts})</span></span>`);
+  if(worst) out.push(`<span><span style="color:var(--bad)">▼ missed</span> ${code3(worst.f.team1)} <b style="color:var(--ink)">${worst.f.actual[0]}–${worst.f.actual[1]}</b> ${code3(worst.f.team2)} <span class="m">· you ${worst.yp[0]}–${worst.yp[1]}</span></span>`);
+  return out.length?`<div class="rbw">${out.join("")}</div>`:"";
 }
 
 let lbChart=null, lbMode="points";
