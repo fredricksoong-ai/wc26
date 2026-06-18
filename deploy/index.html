@@ -112,6 +112,8 @@
   .xgctl{display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap}
   .xgsel{flex:1;min-width:140px;background:var(--card2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 8px;font-size:12px;font-family:inherit}
   .xgslide{display:flex;align-items:center;gap:8px;flex:1;min-width:150px}
+  .xgdetail{font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.6;border-top:1px solid var(--line);padding-top:8px}
+  .xgdetail:empty{display:none}
   .xgreset{flex:none;width:34px;height:34px;border-radius:8px;background:var(--card2);border:1px solid var(--line);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer}
   .xgreset:active{transform:scale(.93)}
   .xgslide input[type=range]{flex:1;accent-color:#a78bfa}
@@ -251,6 +253,12 @@ const keyOf=f=>`${f.date}|${f.team1}|${f.team2}`;
 // measured match xG you type in from FotMob, per game, on this device until synced.
 const loadXG=()=>{try{return JSON.parse(localStorage.getItem(XGKEY))||{}}catch(e){return{}}};
 const saveXG=o=>localStorage.setItem(XGKEY,JSON.stringify(o));
+// "dirty" set = games edited since the last successful sync, so Sync only pushes what changed.
+// First run after this lands: seed it with everything already entered (one full sync), then deltas.
+const DKEY="wc26xgd";
+function loadDirty(){ if(localStorage.getItem(DKEY)==null){const all=new Set(Object.keys(loadXG()));localStorage.setItem(DKEY,JSON.stringify([...all]));return all;} try{return new Set(JSON.parse(localStorage.getItem(DKEY))||[])}catch(e){return new Set()} }
+const saveDirty=s=>localStorage.setItem(DKEY,JSON.stringify([...s]));
+function markXGDirty(k){const d=loadDirty();d.add(k);saveDirty(d);}
 function xgFor(f){ const X=loadXG(), k=keyOf(f); if(X[k])return X[k];
   if(f.xg_meas_home!=null)return[f.xg_meas_home,f.xg_meas_away]; return null; }
 function setXG(key,side,val,i){
@@ -258,7 +266,7 @@ function setXG(key,side,val,i){
   let v=parseFloat(val); if(val===""||isNaN(v))v=null; else v=Math.max(0,Math.min(10,Math.round(v*100)/100));
   cur[side]=v;
   if(cur[0]==null&&cur[1]==null)delete X[key]; else X[key]=cur;
-  saveXG(X);
+  saveXG(X); markXGDirty(key);
   const el=document.getElementById("xgv-"+i); if(el)el.innerHTML=xgVerdict(X[key], +el.dataset.gh, +el.dataset.ga, el.dataset.t1, el.dataset.t2);
 }
 // reads measured xG against the actual scoreline: did the result flatter someone?
@@ -387,6 +395,7 @@ function nextCard(){
 }
 // hand-maintained: one line per shipped change, newest first
 const CHANGELOG=[
+  ["17 Jun","xG charts: tap a point for its numbers+zone; matchday slider; Sync only pushes changed games"],
   ["17 Jun","xG charts: games-over-time slider + team search/highlight; tidier labels"],
   ["17 Jun","xG charts — attack/defence map, luck & finishing scatters (zones + outliers)"],
   ["17 Jun","League: P/R/E table + best-forecaster; xG page slimmed to one bar per team"],
@@ -786,15 +795,17 @@ function syncBar(){
 }
 async function syncXG(){
   const dots=document.getElementById("bbDots");
-  const X=loadXG(), n=Object.keys(X).length;
-  if(!n){ toast("No xG entered yet — add it on the Results cards",3000); return; }
+  const X=loadXG(), dirty=loadDirty();
+  const keys=[...dirty].filter(k=>X[k]);          // only the games changed since the last sync
+  if(!keys.length){ toast("No new xG to sync",2500); return; }
   if(dots.classList.contains("busy"))return;
+  const payload={}; keys.forEach(k=>payload[k]=X[k]); const n=keys.length;
   bbBusy(true); toast(`Syncing ${n} game${n>1?'s':''}…`,0);
   const fin=(m,ms)=>{ bbBusy(false); toast(m,ms); };
   try{
-    const r=await fetch("/sync-xg",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({xg:X})});
+    const r=await fetch("/sync-xg",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({xg:payload})});
     const j=await r.json().catch(()=>({}));
-    if(r.ok&&j.ok) fin(`Synced ${n} game${n>1?'s':''} ✓ — model rebuilds shortly`,5000);
+    if(r.ok&&j.ok){ const d=loadDirty(); keys.forEach(k=>d.delete(k)); saveDirty(d); fin(`Synced ${n} game${n>1?'s':''} ✓ — model rebuilds shortly`,5000); }
     else fin("Sync failed: "+((j&&j.error)||("HTTP "+r.status)),5000);
   }catch(e){ fin("Sync failed: "+e,5000); }
 }
@@ -896,8 +907,8 @@ function renderXG(){
   const allT=[...new Set(g.flatMap(f=>[f.team1,f.team2]))].sort();
   const sel=`<select class="xgsel" onchange="xgFocus=this.value;refreshXGChart()"><option value="">Find a team…</option>${allT.map(t=>`<option value="${t}" ${t===xgFocus?'selected':''}>${code3(t)} · ${t}</option>`).join("")}</select>`;
   const reset=`<button class="xgreset" onclick="xgFocus='';xgCutoff=null;renderXG()" title="Reset view" aria-label="Reset view"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11a9 9 0 0 1 15-5l3 3M21 13a9 9 0 0 1-15 5l-3-3"/><path d="M21 4v5h-5M3 20v-5h5"/></svg></button>`;
-  const slider=maxG>1?`<div class="xgslide"><input type="range" min="1" max="${maxG}" value="${xgCutoff}" oninput="xgCutoff=+this.value;refreshXGChart()"><span class="m" id="xgcut"></span></div>`:"";
-  $("#xg").innerHTML=vt+`<div class="xgctl">${sel}${reset}${slider}</div><div id="xgchart"></div>`;
+  const slider=maxG>1?`<div class="xgslide" style="margin-top:12px"><span class="m" style="min-width:78px" id="xgcut"></span><input type="range" min="1" max="${maxG}" value="${xgCutoff}" oninput="xgCutoff=+this.value;refreshXGChart()"></div>`:"";
+  $("#xg").innerHTML=vt+`<div class="xgctl">${sel}${reset}</div><div id="xgchart"></div>${slider}`;
   refreshXGChart();
 }
 // re-renders ONLY the chart (controls stay put so the slider keeps focus while dragging)
@@ -905,7 +916,7 @@ function refreshXGChart(){
   const el=document.getElementById("xgchart"); if(!el)return;
   const rows=xgRows(xgCutoff);
   const cut=document.getElementById("xgcut"); if(cut)cut.textContent=`${xgCutoff} game${xgCutoff>1?'s':''} each`;
-  if(xgView!=="bars"){ el.innerHTML=xgChart(rows,xgView,xgFocus,xgEliminated()); return; }
+  if(xgView!=="bars"){ el.innerHTML=xgChart(rows,xgView,xgFocus,xgEliminated())+`<div id="xgdetail" class="xgdetail"></div>`; if(xgFocus)xgPoint(code3(xgFocus)); return; }
   const metric=r=> xgMode==="luck" ? r.luck : r.xgd;
   rows.sort((a,b)=>metric(b)-metric(a));
   const maxAbs=Math.max(0.1,...rows.map(r=>Math.abs(metric(r))));
@@ -936,7 +947,8 @@ function scatterSVG(items,cfg){
   (cfg.notes||[]).forEach(n=>{s+=`<text x="${sx(n.x).toFixed(1)}" y="${sy(n.y).toFixed(1)}" fill="${n.col}" font-size="11" font-weight="600" text-anchor="${n.anchor||'start'}">${n.t}</text>`;});
   items.forEach(it=>{const X=sx(it.x),Y=sy(it.y);
     if(it.ring)s+=`<circle cx="${X.toFixed(1)}" cy="${Y.toFixed(1)}" r="9" fill="none" stroke="#a78bfa" stroke-width="2"/>`;
-    s+=`<circle cx="${X.toFixed(1)}" cy="${Y.toFixed(1)}" r="${it.big?6:4.5}" fill="${it.col}" fill-opacity="${it.dim?0.55:it.elim?0.4:0.9}"/>`;});
+    const r=it.big?6:3, op=it.dim?0.5:it.elim?0.35:it.big?0.92:0.42;   // non-outliers smaller + muted
+    s+=`<circle cx="${X.toFixed(1)}" cy="${Y.toFixed(1)}" r="${r}" fill="${it.col}" fill-opacity="${op}" style="cursor:pointer" onclick="xgPoint('${it.code}')"/>`;});
   // labels with greedy de-collision so close points don't overprint
   const placed=[], ov=(a,b)=>a[0]<b[0]+b[2]&&a[0]+a[2]>b[0]&&a[1]<b[1]+b[3]&&a[1]+a[3]>b[1];
   const cands=[[8,3.5,'start'],[8,-8,'start'],[-8,3.5,'end'],[8,15,'start'],[8,-15,'start'],[-8,-8,'end'],[-8,15,'end']];
@@ -945,7 +957,7 @@ function scatterSVG(items,cfg){
     for(let ci=0;ci<cands.length;ci++){const c=cands[ci],lx=X+c[0],ly=Y+c[1],bx=c[2]==='end'?lx-w:lx,box=[bx,ly-h+2,w,h];
       if(!placed.some(p=>ov(p,box))){ch=c;placed.push(box);break;}
       if(ci===cands.length-1){const bx0=ch[2]==='end'?X+ch[0]-w:X+ch[0];placed.push([bx0,Y+ch[1]-h+2,w,h]);}}
-    s+=`<text x="${(X+ch[0]).toFixed(1)}" y="${(Y+ch[1]).toFixed(1)}" fill="${it.dim||it.elim?'#7a7a90':'#e8e8f2'}" font-size="11" font-weight="600" text-anchor="${ch[2]}">${it.code}</text>`;});
+    s+=`<text x="${(X+ch[0]).toFixed(1)}" y="${(Y+ch[1]).toFixed(1)}" fill="${it.dim||it.elim?'#7a7a90':'#e8e8f2'}" font-size="11" font-weight="600" text-anchor="${ch[2]}" style="cursor:pointer" onclick="xgPoint('${it.code}')">${it.code}</text>`;});
   s+=`<text x="${(ml+pw/2).toFixed(1)}" y="${H-8}" fill="#8a8aa0" font-size="11" text-anchor="middle">${cfg.xlab}</text>`;
   s+=`<text transform="translate(11,${mt+2}) rotate(-90)" fill="#8a8aa0" font-size="11" text-anchor="end">${cfg.ylab}</text>`;
   return `<div style="margin-top:8px">${s}</svg></div>`;
@@ -985,6 +997,28 @@ function xgChart(rows,view,focus,elim){
   if(elim&&elim.size){ items.forEach(it=>{ if(elim.has(it.team)) it.elim=true; }); }   // knocked-out teams stay (frozen) but dim
   if(focus){ items.forEach(it=>{const f=it.team===focus; it.big=f; it.ring=f; if(!f){it.col='#3a3a52';it.dim=true;}}); }
   return scatterSVG(items,cfg);
+}
+// tap a point -> exact numbers + which zone it sits in (for the active view)
+function xgPoint(code){
+  const el=document.getElementById("xgdetail"); if(!el)return;
+  const rows=xgRows(xgCutoff), r=rows.find(x=>code3(x.t)===code); if(!r)return;
+  const avg=a=>a.reduce((p,q)=>p+q,0)/a.length, gp=r.gp;
+  let zone,zc,metric;
+  if(xgView==="map"){
+    const mxf=avg(rows.map(x=>x.xf/x.gp)), mxa=avg(rows.map(x=>x.xa/x.gp)), pf=r.xf/gp, pa=r.xa/gp;
+    if(pf>=mxf&&pa<=mxa){zone="dominant";zc="var(--good)";}
+    else if(pf<mxf&&pa>mxa){zone="outclassed";zc="var(--bad)";}
+    else if(pf>=mxf&&pa>mxa){zone="busy both ends";zc="var(--muted)";}
+    else {zone="quiet both ends";zc="var(--muted)";}
+    metric=`net <b style="color:var(--ink)">${(r.xgd>0?'+':'')+r.xgd.toFixed(2)}</b>`;
+  } else if(xgView==="luck"){
+    const l=r.luck; zone=l>0.3?"overperforming (lucky)":l<-0.3?"underperforming (unlucky)":"about as expected"; zc=l>0.3?"var(--good)":l<-0.3?"var(--bad)":"var(--muted)";
+    metric=`vs xG <b style="color:var(--ink)">${(l>0?'+':'')+l.toFixed(2)}</b>`;
+  } else {
+    const fd=Math.round((r.gf-r.xf)*100)/100; zone=fd>0.3?"clinical":fd<-0.3?"wasteful":"as expected"; zc=fd>0.3?"var(--good)":fd<-0.3?"var(--bad)":"var(--muted)";
+    metric=`finishing <b style="color:var(--ink)">${(fd>0?'+':'')+fd.toFixed(2)}</b>`;
+  }
+  el.innerHTML=`${flagImg(r.t,true)}<b style="color:var(--ink)">${code3(r.t)}</b> · ${gp} game${gp>1?'s':''} · G <b style="color:var(--ink)">${r.gf}–${r.ga}</b> · xG <b style="color:var(--ink)">${r.xf.toFixed(2)}–${r.xa.toFixed(2)}</b> · ${metric} · <b style="color:${zc}">${zone}</b>`;
 }
 function renderLeague(d){
   const lb=d.leaderboard;
