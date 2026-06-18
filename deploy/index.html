@@ -112,6 +112,8 @@
   .xgctl{display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap}
   .xgsel{flex:1;min-width:140px;background:var(--card2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 8px;font-size:12px;font-family:inherit}
   .xgslide{display:flex;align-items:center;gap:8px;flex:1;min-width:150px}
+  .xgreset{flex:none;width:34px;height:34px;border-radius:8px;background:var(--card2);border:1px solid var(--line);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .xgreset:active{transform:scale(.93)}
   .xgslide input[type=range]{flex:1;accent-color:#a78bfa}
   .xgslide .m{font-size:11px;white-space:nowrap;color:var(--muted)}
   .xg-bar{position:relative;height:13px}
@@ -208,7 +210,7 @@
 </main>
 <div id="bbtoast" class="bbtoast"></div>
 <div id="sheetActions" class="bsheet bsheet-l hidden">
-  <div class="brow" onclick="barAction('refresh',event)"><span class="bic">↻</span>Refresh</div>
+  <div class="brow" onclick="barAction('refresh',event)"><span class="bic">↻</span>Rebuild</div>
   <div class="brow" onclick="barAction('export',event)"><span class="bic">⤒</span>Export picks</div>
   <div class="brow" onclick="barAction('sync',event)"><span class="bic">⇪</span>Sync xG</div>
 </div>
@@ -867,32 +869,43 @@ let xgMode="xg", xgView="bars", xgCutoff=null, xgFocus="";
 function xgPlayed(){
   return (ALLFIX||[]).filter(f=>f.played&&f.actual&&xgFor(f)).sort((a,b)=>(a.kickoff_sgt||a.date||"").localeCompare(b.kickoff_sgt||b.date||""));
 }
-function xgRows(cutoff){
-  const g=xgPlayed(), use=(cutoff!=null)?g.slice(0,cutoff):g, teams={};
-  use.forEach(f=>{ const xg=xgFor(f);
-    const add=(t,gf,ga,xf,xa)=>{const o=teams[t]||(teams[t]={gp:0,gf:0,ga:0,xf:0,xa:0});o.gp++;o.gf+=gf;o.ga+=ga;o.xf+=xf;o.xa+=xa;};
-    add(f.team1,f.actual[0],f.actual[1],xg[0],xg[1]); add(f.team2,f.actual[1],f.actual[0],xg[1],xg[0]); });
+function xgMaxGames(){ const g=xgPlayed(),c={}; g.forEach(f=>{c[f.team1]=(c[f.team1]||0)+1;c[f.team2]=(c[f.team2]||0)+1;}); return Math.max(1,...Object.values(c),1); }
+// teams already knocked out (no live route through the bracket), from the title sim
+function xgEliminated(){
+  const t=(DATA&&DATA.tournament)||(DATA&&DATA.tournament_by_model&&DATA.tournament_by_model.ensemble)||{};
+  const alive=r=>r.champion>0||["advance","R16","QF","SF","Final"].some(k=>r[k]>0&&r[k]<1);
+  const e=new Set(); Object.entries(t).forEach(([k,r])=>{if(r&&typeof r==="object"&&!alive(r))e.add(k);}); return e;
+}
+// cap = max games PER COUNTRY to include (the slider counts each team's games, i.e. matchday)
+function xgRows(cap){
+  const g=xgPlayed(), teams={}, cnt={};
+  g.forEach(f=>{ const xg=xgFor(f);
+    [[f.team1,f.actual[0],f.actual[1],xg[0],xg[1]],[f.team2,f.actual[1],f.actual[0],xg[1],xg[0]]].forEach(([t,gf,ga,xf,xa])=>{
+      cnt[t]=(cnt[t]||0)+1; if(cap!=null&&cnt[t]>cap)return;
+      const o=teams[t]||(teams[t]={gp:0,gf:0,ga:0,xf:0,xa:0});o.gp++;o.gf+=gf;o.ga+=ga;o.xf+=xf;o.xa+=xa; }); });
   return Object.entries(teams).map(([t,o])=>{const xf=Math.round(o.xf*100)/100,xa=Math.round(o.xa*100)/100,xgd=Math.round((o.xf-o.xa)*100)/100,gd=o.gf-o.ga;
     return {t,gp:o.gp,gf:o.gf,ga:o.ga,xf,xa,xgd,gd,luck:Math.round((gd-xgd)*100)/100};});
 }
 function renderXG(){
   const g=xgPlayed();
   if(!g.length){ $("#xg").innerHTML=`<div class="err">Add each game's xG on the Results cards, then ⋯ → Sync xG.</div>`; return; }
-  if(xgCutoff==null||xgCutoff>g.length) xgCutoff=g.length;
+  const maxG=xgMaxGames();
+  if(xgCutoff==null||xgCutoff>maxG) xgCutoff=maxG;
   const views=[["bars","Bars"],["map","Map"],["luck","Luck"],["finish","Finishing"]];
   const vt=`<div class="oddsel" style="margin-top:8px">`+views.map(([k,l])=>`<span class="opt ${xgView===k?'on':''}" onclick="xgView='${k}';renderXG()">${l}</span>`).join("")+`</div>`;
   const allT=[...new Set(g.flatMap(f=>[f.team1,f.team2]))].sort();
   const sel=`<select class="xgsel" onchange="xgFocus=this.value;refreshXGChart()"><option value="">Find a team…</option>${allT.map(t=>`<option value="${t}" ${t===xgFocus?'selected':''}>${code3(t)} · ${t}</option>`).join("")}</select>`;
-  const slider=`<div class="xgslide"><input type="range" min="1" max="${g.length}" value="${xgCutoff}" oninput="xgCutoff=+this.value;refreshXGChart()"><span class="m" id="xgcut"></span></div>`;
-  $("#xg").innerHTML=vt+`<div class="xgctl">${sel}${slider}</div><div id="xgchart"></div>`;
+  const reset=`<button class="xgreset" onclick="xgFocus='';xgCutoff=null;renderXG()" title="Reset view" aria-label="Reset view"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11a9 9 0 0 1 15-5l3 3M21 13a9 9 0 0 1-15 5l-3-3"/><path d="M21 4v5h-5M3 20v-5h5"/></svg></button>`;
+  const slider=maxG>1?`<div class="xgslide"><input type="range" min="1" max="${maxG}" value="${xgCutoff}" oninput="xgCutoff=+this.value;refreshXGChart()"><span class="m" id="xgcut"></span></div>`:"";
+  $("#xg").innerHTML=vt+`<div class="xgctl">${sel}${reset}${slider}</div><div id="xgchart"></div>`;
   refreshXGChart();
 }
 // re-renders ONLY the chart (controls stay put so the slider keeps focus while dragging)
 function refreshXGChart(){
   const el=document.getElementById("xgchart"); if(!el)return;
-  const g=xgPlayed(), rows=xgRows(xgCutoff);
-  const cut=document.getElementById("xgcut"); if(cut)cut.textContent=`${xgCutoff}/${g.length} games`;
-  if(xgView!=="bars"){ el.innerHTML=xgChart(rows,xgView,xgFocus); return; }
+  const rows=xgRows(xgCutoff);
+  const cut=document.getElementById("xgcut"); if(cut)cut.textContent=`${xgCutoff} game${xgCutoff>1?'s':''} each`;
+  if(xgView!=="bars"){ el.innerHTML=xgChart(rows,xgView,xgFocus,xgEliminated()); return; }
   const metric=r=> xgMode==="luck" ? r.luck : r.xgd;
   rows.sort((a,b)=>metric(b)-metric(a));
   const maxAbs=Math.max(0.1,...rows.map(r=>Math.abs(metric(r))));
@@ -923,7 +936,7 @@ function scatterSVG(items,cfg){
   (cfg.notes||[]).forEach(n=>{s+=`<text x="${sx(n.x).toFixed(1)}" y="${sy(n.y).toFixed(1)}" fill="${n.col}" font-size="11" font-weight="600" text-anchor="${n.anchor||'start'}">${n.t}</text>`;});
   items.forEach(it=>{const X=sx(it.x),Y=sy(it.y);
     if(it.ring)s+=`<circle cx="${X.toFixed(1)}" cy="${Y.toFixed(1)}" r="9" fill="none" stroke="#a78bfa" stroke-width="2"/>`;
-    s+=`<circle cx="${X.toFixed(1)}" cy="${Y.toFixed(1)}" r="${it.big?6:4.5}" fill="${it.col}" fill-opacity="${it.dim?0.55:0.9}"/>`;});
+    s+=`<circle cx="${X.toFixed(1)}" cy="${Y.toFixed(1)}" r="${it.big?6:4.5}" fill="${it.col}" fill-opacity="${it.dim?0.55:it.elim?0.4:0.9}"/>`;});
   // labels with greedy de-collision so close points don't overprint
   const placed=[], ov=(a,b)=>a[0]<b[0]+b[2]&&a[0]+a[2]>b[0]&&a[1]<b[1]+b[3]&&a[1]+a[3]>b[1];
   const cands=[[8,3.5,'start'],[8,-8,'start'],[-8,3.5,'end'],[8,15,'start'],[8,-15,'start'],[-8,-8,'end'],[-8,15,'end']];
@@ -932,12 +945,12 @@ function scatterSVG(items,cfg){
     for(let ci=0;ci<cands.length;ci++){const c=cands[ci],lx=X+c[0],ly=Y+c[1],bx=c[2]==='end'?lx-w:lx,box=[bx,ly-h+2,w,h];
       if(!placed.some(p=>ov(p,box))){ch=c;placed.push(box);break;}
       if(ci===cands.length-1){const bx0=ch[2]==='end'?X+ch[0]-w:X+ch[0];placed.push([bx0,Y+ch[1]-h+2,w,h]);}}
-    s+=`<text x="${(X+ch[0]).toFixed(1)}" y="${(Y+ch[1]).toFixed(1)}" fill="${it.dim?'#6b6b80':'#e8e8f2'}" font-size="11" font-weight="600" text-anchor="${ch[2]}">${it.code}</text>`;});
+    s+=`<text x="${(X+ch[0]).toFixed(1)}" y="${(Y+ch[1]).toFixed(1)}" fill="${it.dim||it.elim?'#7a7a90':'#e8e8f2'}" font-size="11" font-weight="600" text-anchor="${ch[2]}">${it.code}</text>`;});
   s+=`<text x="${(ml+pw/2).toFixed(1)}" y="${H-8}" fill="#8a8aa0" font-size="11" text-anchor="middle">${cfg.xlab}</text>`;
   s+=`<text transform="translate(11,${mt+2}) rotate(-90)" fill="#8a8aa0" font-size="11" text-anchor="end">${cfg.ylab}</text>`;
   return `<div style="margin-top:8px">${s}</svg></div>`;
 }
-function xgChart(rows,view,focus){
+function xgChart(rows,view,focus,elim){
   const avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
   const colNet=n=>n>=1.5?'#1d9e75':n>=0.5?'#5dcaa5':n>-0.5?'#9a9aae':n>-1.5?'#ef9f27':'#e24b4a';
   const colDiff=d=>d>0.4?'#1d9e75':d<-0.4?'#e24b4a':'#9a9aae';
@@ -969,6 +982,7 @@ function xgChart(rows,view,focus){
       tris:[{pts:[[0,mx],[0,0],[mx,mx]],fill:'rgba(29,158,117,.07)'},{pts:[[mx,0],[0,0],[mx,mx]],fill:'rgba(226,75,74,.07)'}],
       notes:[{x:0.12,y:mx-0.18,t:'clinical',col:'#5dcaa5',anchor:'start'},{x:mx-0.12,y:0.35,t:'wasteful',col:'#ef9f27',anchor:'end'}]};
   }
+  if(elim&&elim.size){ items.forEach(it=>{ if(elim.has(it.team)) it.elim=true; }); }   // knocked-out teams stay (frozen) but dim
   if(focus){ items.forEach(it=>{const f=it.team===focus; it.big=f; it.ring=f; if(!f){it.col='#3a3a52';it.dim=true;}}); }
   return scatterSVG(items,cfg);
 }
