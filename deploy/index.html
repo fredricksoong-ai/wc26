@@ -380,6 +380,7 @@ function nextCard(){
 }
 // hand-maintained: one line per shipped change, newest first
 const CHANGELOG=[
+  ["17 Jun","xG charts — attack/defence map, luck & finishing scatters (zones + outliers)"],
   ["17 Jun","League: P/R/E table + best-forecaster; xG page slimmed to one bar per team"],
   ["17 Jun","Richer result cards — expected/upset, model odds, points per row"],
   ["17 Jun","Richer Results header — you vs the model vs the market, your record & calls"],
@@ -855,7 +856,7 @@ function modelSays(f){
 // xG table: measured xG vs actual goals per team, surfacing over/under-performance.
 // Pulls measured xG from xgFor() (your synced numbers, localStorage-first) so it
 // populates even before a rebuild carries xg_meas into predictions.json.
-let xgMode="xg";
+let xgMode="xg", xgView="bars";
 function renderXG(){
   const teams={};
   (ALLFIX||[]).filter(f=>f.played&&f.actual).forEach(f=>{
@@ -870,21 +871,78 @@ function renderXG(){
     return {t,gp:o.gp,gf:o.gf,ga:o.ga,xf,xa,xgd,gd,luck:Math.round((gd-xgd)*100)/100};
   });
   if(!rows.length){ $("#xg").innerHTML=`<div class="err">Add each game's xG on the Results cards, then ⋯ → Sync xG.</div>`; return; }
-  const metric=r=> xgMode==="luck" ? r.luck : r.xgd;
-  rows.sort((a,b)=>metric(b)-metric(a));
-  const maxAbs=Math.max(0.1,...rows.map(r=>Math.abs(metric(r))));
-  const toggle=`<div class="oddsel" style="margin-top:8px"><span class="opt ${xgMode==='xg'?'on':''}" onclick="xgMode='xg';renderXG()">By xG</span><span class="opt ${xgMode==='luck'?'on':''}" onclick="xgMode='luck';renderXG()">By luck</span></div>`;
-  const lbl=xgMode==="luck"?"vs xG":"net xG";
-  const hdr=`<div class="xgrow2 xg-head"><span>team</span><span>goals</span><span>xG</span><span></span><span style="text-align:right">${lbl}</span></div>`;
-  const bars=rows.map(r=>{ const v=metric(r), up=v>=0, w=Math.min(50,Math.abs(v)/maxAbs*50), c=v>0.05?'var(--good)':v<-0.05?'var(--bad)':'var(--muted)';
-    return `<div class="xgrow2">
-      <span class="xg-team" title="${r.t}">${flagImg(r.t,true)}${code3(r.t)}</span>
-      <span class="xg-d">${r.gf}–${r.ga}</span>
-      <span class="xg-d">${r.xf.toFixed(1)}–${r.xa.toFixed(1)}</span>
-      <div class="xg-bar"><span class="xg-mid"></span><span class="xg-fill" style="${up?'left:50%':'right:50%'};width:${w.toFixed(1)}%;background:${c}"></span></div>
-      <span class="xg-val" style="color:${c}">${v>0?'+':''}${v.toFixed(2)}</span>
-    </div>`; }).join("");
-  $("#xg").innerHTML=toggle+hdr+`<div>${bars}</div>`;
+  const views=[["bars","Bars"],["map","Map"],["luck","Luck"],["finish","Finishing"]];
+  const vt=`<div class="oddsel" style="margin-top:8px">`+views.map(([k,l])=>`<span class="opt ${xgView===k?'on':''}" onclick="xgView='${k}';renderXG()">${l}</span>`).join("")+`</div>`;
+  let body;
+  if(xgView!=="bars"){
+    body=xgChart(rows,xgView);
+  } else {
+    const metric=r=> xgMode==="luck" ? r.luck : r.xgd;
+    rows.sort((a,b)=>metric(b)-metric(a));
+    const maxAbs=Math.max(0.1,...rows.map(r=>Math.abs(metric(r))));
+    const sub=`<div class="oddsel" style="margin-top:8px"><span class="opt ${xgMode==='xg'?'on':''}" onclick="xgMode='xg';renderXG()">By xG</span><span class="opt ${xgMode==='luck'?'on':''}" onclick="xgMode='luck';renderXG()">By luck</span></div>`;
+    const lbl=xgMode==="luck"?"vs xG":"net xG";
+    const hdr=`<div class="xgrow2 xg-head"><span>team</span><span>goals</span><span>xG</span><span></span><span style="text-align:right">${lbl}</span></div>`;
+    const bars=rows.map(r=>{ const v=metric(r), up=v>=0, w=Math.min(50,Math.abs(v)/maxAbs*50), c=v>0.05?'var(--good)':v<-0.05?'var(--bad)':'var(--muted)';
+      return `<div class="xgrow2">
+        <span class="xg-team" title="${r.t}">${flagImg(r.t,true)}${code3(r.t)}</span>
+        <span class="xg-d">${r.gf}–${r.ga}</span>
+        <span class="xg-d">${r.xf.toFixed(1)}–${r.xa.toFixed(1)}</span>
+        <div class="xg-bar"><span class="xg-mid"></span><span class="xg-fill" style="${up?'left:50%':'right:50%'};width:${w.toFixed(1)}%;background:${c}"></span></div>
+        <span class="xg-val" style="color:${c}">${v>0?'+':''}${v.toFixed(2)}</span>
+      </div>`; }).join("");
+    body=sub+hdr+`<div>${bars}</div>`;
+  }
+  $("#xg").innerHTML=vt+body;
+}
+// generic dark scatter: zones (rects), tris (polygons), notes (text), optional y=x diagonal, outlier labels
+function scatterSVG(items,cfg){
+  const W=340,H=300,ml=30,mr=12,mt=14,mb=26,pw=W-ml-mr,ph=H-mt-mb;
+  const sx=v=>ml+(v-cfg.xmin)/(cfg.xmax-cfg.xmin)*pw;
+  const sy=v=> cfg.flipY ? mt+(v-cfg.ymin)/(cfg.ymax-cfg.ymin)*ph : mt+(cfg.ymax-v)/(cfg.ymax-cfg.ymin)*ph;
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="${cfg.aria||'xG scatter'}">`;
+  (cfg.zones||[]).forEach(z=>{const xa=sx(z.x0),xb=sx(z.x1),ya=sy(z.y0),yb=sy(z.y1);s+=`<rect x="${Math.min(xa,xb).toFixed(1)}" y="${Math.min(ya,yb).toFixed(1)}" width="${Math.abs(xb-xa).toFixed(1)}" height="${Math.abs(yb-ya).toFixed(1)}" fill="${z.fill}"/>`;});
+  (cfg.tris||[]).forEach(t=>{s+=`<polygon points="${t.pts.map(([a,b])=>`${sx(a).toFixed(1)},${sy(b).toFixed(1)}`).join(" ")}" fill="${t.fill}"/>`;});
+  for(let g=Math.ceil(cfg.xmin);g<=Math.floor(cfg.xmax);g++){s+=`<line x1="${sx(g).toFixed(1)}" y1="${mt}" x2="${sx(g).toFixed(1)}" y2="${H-mb}" stroke="${g===0&&cfg.xmin<0?'#3a3a55':'#1b1b2b'}"/><text x="${sx(g).toFixed(1)}" y="${H-mb+13}" fill="#5b5b70" font-size="11" text-anchor="middle">${g}</text>`;}
+  for(let g=Math.ceil(cfg.ymin);g<=Math.floor(cfg.ymax);g++){s+=`<line x1="${ml}" y1="${sy(g).toFixed(1)}" x2="${W-mr}" y2="${sy(g).toFixed(1)}" stroke="${g===0&&cfg.ymin<0?'#3a3a55':'#1b1b2b'}"/><text x="${ml-4}" y="${(sy(g)+3).toFixed(1)}" fill="#5b5b70" font-size="11" text-anchor="end">${g}</text>`;}
+  if(cfg.diag){const a=Math.max(cfg.xmin,cfg.ymin),b=Math.min(cfg.xmax,cfg.ymax);s+=`<line x1="${sx(a).toFixed(1)}" y1="${sy(a).toFixed(1)}" x2="${sx(b).toFixed(1)}" y2="${sy(b).toFixed(1)}" stroke="#55557a" stroke-dasharray="3 3"/>`;}
+  (cfg.notes||[]).forEach(n=>{s+=`<text x="${sx(n.x).toFixed(1)}" y="${sy(n.y).toFixed(1)}" fill="${n.col}" font-size="11" font-weight="600" text-anchor="${n.anchor||'start'}">${n.t}</text>`;});
+  items.forEach(it=>{const X=sx(it.x),Y=sy(it.y);s+=`<circle cx="${X.toFixed(1)}" cy="${Y.toFixed(1)}" r="${it.big?6:4.5}" fill="${it.col}" fill-opacity="0.9"/>`;if(it.big)s+=`<text x="${(X+8).toFixed(1)}" y="${(Y+3.5).toFixed(1)}" fill="#e8e8f2" font-size="11" font-weight="600">${it.code}</text>`;});
+  s+=`<text x="${W-mr}" y="${H-mb+13}" fill="#8a8aa0" font-size="11" text-anchor="end">${cfg.xlab}</text>`;
+  s+=`<text transform="translate(12,${mt+2}) rotate(-90)" fill="#8a8aa0" font-size="11" text-anchor="end">${cfg.ylab}</text>`;
+  return `<div style="margin-top:8px">${s}</svg></div>`;
+}
+function xgChart(rows,view){
+  const avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
+  const colNet=n=>n>=1.5?'#1d9e75':n>=0.5?'#5dcaa5':n>-0.5?'#9a9aae':n>-1.5?'#ef9f27':'#e24b4a';
+  const colDiff=d=>d>0.4?'#1d9e75':d<-0.4?'#e24b4a':'#9a9aae';
+  const k=Math.max(1,Math.round(rows.length*0.1));
+  const pick=acc=>{const srt=[...rows].sort((a,b)=>acc(b)-acc(a));return new Set([...srt.slice(0,k),...srt.slice(-k)].map(r=>r.t));};
+  if(view==="map"){
+    const xf=r=>r.xf/r.gp, ya=r=>r.xa/r.gp, net=r=>xf(r)-ya(r);
+    const xmax=Math.max(2,Math.ceil(Math.max(...rows.map(xf))+0.2)), ymax=Math.max(2,Math.ceil(Math.max(...rows.map(ya))+0.2));
+    const lab=pick(net), mxf=avg(rows.map(xf)), mxa=avg(rows.map(ya));
+    const items=rows.map(r=>({x:xf(r),y:ya(r),code:code3(r.t),big:lab.has(r.t),col:colNet(net(r))}));
+    return scatterSVG(items,{xmin:0,xmax,ymin:0,ymax,flipY:true,diag:false,xlab:"xG created →",ylab:"← xG conceded",aria:"attack vs defence",
+      zones:[{x0:mxf,x1:xmax,y0:0,y1:mxa,fill:'rgba(29,158,117,.08)'},{x0:0,x1:mxf,y0:mxa,y1:ymax,fill:'rgba(226,75,74,.08)'}],
+      notes:[{x:xmax-0.06,y:0.2,t:'dominant',col:'#5dcaa5',anchor:'end'},{x:0.06,y:ymax-0.1,t:'outclassed',col:'#ef9f27',anchor:'start'}]});
+  }
+  if(view==="luck"){
+    const xd=r=>(r.xf-r.xa)/r.gp, yd=r=>(r.gf-r.ga)/r.gp, luck=r=>yd(r)-xd(r);
+    const m=Math.max(1,Math.ceil(Math.max(...rows.map(r=>Math.max(Math.abs(xd(r)),Math.abs(yd(r)))))+0.2));
+    const lab=pick(luck);
+    const items=rows.map(r=>({x:xd(r),y:yd(r),code:code3(r.t),big:lab.has(r.t),col:colDiff(luck(r))}));
+    return scatterSVG(items,{xmin:-m,xmax:m,ymin:-m,ymax:m,flipY:false,diag:true,xlab:"xG diff →",ylab:"goal diff ↑",aria:"over/under-performance vs xG",
+      tris:[{pts:[[-m,m],[-m,-m],[m,m]],fill:'rgba(29,158,117,.07)'},{pts:[[m,-m],[-m,-m],[m,m]],fill:'rgba(226,75,74,.07)'}],
+      notes:[{x:-m+0.12,y:m-0.18,t:'overperforming',col:'#5dcaa5',anchor:'start'},{x:m-0.12,y:-m+0.35,t:'underperforming',col:'#ef9f27',anchor:'end'}]});
+  }
+  const xf=r=>r.xf/r.gp, gf=r=>r.gf/r.gp, fin=r=>gf(r)-xf(r);
+  const mx=Math.max(2,Math.ceil(Math.max(...rows.map(xf),...rows.map(gf))+0.2));
+  const lab=pick(fin);
+  const items=rows.map(r=>({x:xf(r),y:gf(r),code:code3(r.t),big:lab.has(r.t),col:colDiff(fin(r))}));
+  return scatterSVG(items,{xmin:0,xmax:mx,ymin:0,ymax:mx,flipY:false,diag:true,xlab:"xG created →",ylab:"goals scored ↑",aria:"finishing efficiency",
+    tris:[{pts:[[0,mx],[0,0],[mx,mx]],fill:'rgba(29,158,117,.07)'},{pts:[[mx,0],[0,0],[mx,mx]],fill:'rgba(226,75,74,.07)'}],
+    notes:[{x:0.12,y:mx-0.18,t:'clinical',col:'#5dcaa5',anchor:'start'},{x:mx-0.12,y:0.35,t:'wasteful',col:'#ef9f27',anchor:'end'}]});
 }
 function renderLeague(d){
   const lb=d.leaderboard;
