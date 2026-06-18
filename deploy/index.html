@@ -112,8 +112,12 @@
   .xgctl{display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap}
   .xgsel{flex:1;min-width:140px;background:var(--card2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 8px;font-size:12px;font-family:inherit}
   .xgslide{display:flex;align-items:center;gap:8px;flex:1;min-width:150px}
-  .xgdetail{font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.6;border-top:1px solid var(--line);padding-top:8px}
+  .xgdetail{font-size:11.5px;color:var(--muted);margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
   .xgdetail:empty{display:none}
+  .xgd-h{margin-bottom:4px;font-size:12px}
+  .xgg{display:grid;grid-template-columns:auto 36px 1fr auto;gap:4px 8px;align-items:center;font-size:11.5px;padding:4px 0;border-top:1px solid var(--line)}
+  .xgg-o{font-weight:600;white-space:nowrap} .xgg-s{text-align:center;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+  .xgg-x{color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap} .xgg-l{text-align:right;white-space:nowrap}
   .xgreset{flex:none;width:34px;height:34px;border-radius:8px;background:var(--card2);border:1px solid var(--line);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer}
   .xgreset:active{transform:scale(.93)}
   .xgslide input[type=range]{flex:1;accent-color:#a78bfa}
@@ -395,6 +399,7 @@ function nextCard(){
 }
 // hand-maintained: one line per shipped change, newest first
 const CHANGELOG=[
+  ["17 Jun","xG caption: per-game breakdown + plain-English verdict (deserved/unlucky/flattered)"],
   ["17 Jun","xG charts: tap a point for its numbers+zone; matchday slider; Sync only pushes changed games"],
   ["17 Jun","xG charts: games-over-time slider + team search/highlight; tidier labels"],
   ["17 Jun","xG charts — attack/defence map, luck & finishing scatters (zones + outliers)"],
@@ -915,7 +920,7 @@ function renderXG(){
 function refreshXGChart(){
   const el=document.getElementById("xgchart"); if(!el)return;
   const rows=xgRows(xgCutoff);
-  const cut=document.getElementById("xgcut"); if(cut)cut.textContent=`${xgCutoff} game${xgCutoff>1?'s':''} each`;
+  const cut=document.getElementById("xgcut"); if(cut)cut.textContent= xgCutoff>=xgMaxGames() ? "All games" : "thru GW"+xgCutoff;
   if(xgView!=="bars"){ el.innerHTML=xgChart(rows,xgView,xgFocus,xgEliminated())+`<div id="xgdetail" class="xgdetail"></div>`; if(xgFocus)xgPoint(code3(xgFocus)); return; }
   const metric=r=> xgMode==="luck" ? r.luck : r.xgd;
   rows.sort((a,b)=>metric(b)-metric(a));
@@ -998,27 +1003,39 @@ function xgChart(rows,view,focus,elim){
   if(focus){ items.forEach(it=>{const f=it.team===focus; it.big=f; it.ring=f; if(!f){it.col='#3a3a52';it.dim=true;}}); }
   return scatterSVG(items,cfg);
 }
-// tap a point -> exact numbers + which zone it sits in (for the active view)
+// a plain-English read of one game from this team's view: result vs the xG it earned.
+// colour encodes the regression signal — green = underlying beat the result (a back), red = flattered.
+function xgGameLabel(gd,xgd){
+  const luck=gd-xgd; let t;
+  if(gd>0) t=xgd>=0.5?'deserved win':xgd<=-0.5?'smash & grab':'won a tight one';
+  else if(gd===0) t=xgd>=0.7?'dominated, drew':xgd<=-0.7?'stole a point':'fair draw';
+  else t=xgd>=0.7?'unlucky loss':xgd<=-0.7?'outplayed':'edged out';
+  const c=luck<=-0.5?'var(--good)':luck>=0.5?'var(--bad)':'var(--muted)';
+  return `<span style="color:${c};font-weight:600">${t}</span>`;
+}
+// tap/search a team -> zone, game count, and a per-game breakdown with a verdict for each
 function xgPoint(code){
   const el=document.getElementById("xgdetail"); if(!el)return;
   const rows=xgRows(xgCutoff), r=rows.find(x=>code3(x.t)===code); if(!r)return;
-  const avg=a=>a.reduce((p,q)=>p+q,0)/a.length, gp=r.gp;
-  let zone,zc,metric;
+  const team=r.t, avg=a=>a.reduce((p,q)=>p+q,0)/a.length;
+  let zone,zc;   // zone for the active view (green = favourable / a back, red = fade)
   if(xgView==="map"){
-    const mxf=avg(rows.map(x=>x.xf/x.gp)), mxa=avg(rows.map(x=>x.xa/x.gp)), pf=r.xf/gp, pa=r.xa/gp;
+    const mxf=avg(rows.map(x=>x.xf/x.gp)), mxa=avg(rows.map(x=>x.xa/x.gp)), pf=r.xf/r.gp, pa=r.xa/r.gp;
     if(pf>=mxf&&pa<=mxa){zone="dominant";zc="var(--good)";}
     else if(pf<mxf&&pa>mxa){zone="outclassed";zc="var(--bad)";}
     else if(pf>=mxf&&pa>mxa){zone="busy both ends";zc="var(--muted)";}
     else {zone="quiet both ends";zc="var(--muted)";}
-    metric=`net <b style="color:var(--ink)">${(r.xgd>0?'+':'')+r.xgd.toFixed(2)}</b>`;
   } else if(xgView==="luck"){
-    const l=r.luck; zone=l>0.3?"overperforming (lucky)":l<-0.3?"underperforming (unlucky)":"about as expected"; zc=l>0.3?"var(--good)":l<-0.3?"var(--bad)":"var(--muted)";
-    metric=`vs xG <b style="color:var(--ink)">${(l>0?'+':'')+l.toFixed(2)}</b>`;
+    const l=r.luck; zone=l<-0.3?"underperforming":l>0.3?"overperforming":"as expected"; zc=l<-0.3?"var(--good)":l>0.3?"var(--bad)":"var(--muted)";
   } else {
-    const fd=Math.round((r.gf-r.xf)*100)/100; zone=fd>0.3?"clinical":fd<-0.3?"wasteful":"as expected"; zc=fd>0.3?"var(--good)":fd<-0.3?"var(--bad)":"var(--muted)";
-    metric=`finishing <b style="color:var(--ink)">${(fd>0?'+':'')+fd.toFixed(2)}</b>`;
+    const fd=r.gf-r.xf; zone=fd<-0.3?"wasteful":fd>0.3?"clinical":"as expected"; zc=fd<-0.3?"var(--good)":fd>0.3?"var(--bad)":"var(--muted)";
   }
-  el.innerHTML=`${flagImg(r.t,true)}<b style="color:var(--ink)">${code3(r.t)}</b> · ${gp} game${gp>1?'s':''} · G <b style="color:var(--ink)">${r.gf}–${r.ga}</b> · xG <b style="color:var(--ink)">${r.xf.toFixed(2)}–${r.xa.toFixed(2)}</b> · ${metric} · <b style="color:${zc}">${zone}</b>`;
+  const gs=xgPlayed().filter(f=>f.team1===team||f.team2===team).slice(0,xgCutoff||99);
+  const games=gs.map(f=>{const home=team===f.team1, opp=home?f.team2:f.team1, xg=xgFor(f);
+    const xf=home?xg[0]:xg[1], xa=home?xg[1]:xg[0], gf=home?f.actual[0]:f.actual[1], ga=home?f.actual[1]:f.actual[0];
+    const xgd=Math.round((xf-xa)*100)/100;
+    return `<div class="xgg"><span class="xgg-o">v ${flagImg(opp,true)}${code3(opp)}</span><span class="xgg-s">${gf}–${ga}</span><span class="xgg-x">${xf.toFixed(1)}–${xa.toFixed(1)} <span class="m">(${xgd>0?'+':''}${xgd.toFixed(1)})</span></span><span class="xgg-l">${xgGameLabel(gf-ga,xgd)}</span></div>`;}).join("");
+  el.innerHTML=`<div class="xgd-h">${flagImg(team,true)}<b style="color:var(--ink)">${code3(team)}</b> <span class="m">${team}</span> · <b style="color:${zc}">${zone}</b> <span class="m">· ${r.gp} game${r.gp>1?'s':''}</span></div>${games}`;
 }
 function renderLeague(d){
   const lb=d.leaderboard;
