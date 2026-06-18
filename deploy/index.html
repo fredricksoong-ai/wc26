@@ -116,12 +116,12 @@
   .xgdetail:empty{display:none}
   .xgd-h{margin-bottom:4px;font-size:12px}
   .xggrow{padding:6px 0;border-top:1px solid var(--line)}
-  .xgg{display:grid;grid-template-columns:22px 56px 48px auto;gap:8px;align-items:center;font-size:11.5px}
+  .xgg{display:grid;grid-template-columns:22px 54px 40px 46px 1fr;gap:8px;align-items:center;font-size:11.5px}
   .xgg-head{color:#6b7a90;font-size:10.5px;padding-bottom:2px}
   .xgg-gw{text-align:center;color:var(--muted)} .xgg-o{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .xgg-s{text-align:center;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
-  .xgg-n{font-variant-numeric:tabular-nums;color:var(--muted)}
-  .xgg-rem{text-align:right;margin-top:2px;font-size:11.5px}
+  .xgg-n{text-align:center;font-variant-numeric:tabular-nums;color:var(--muted)}
+  .xgg-l{text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .xgg-ctx{text-align:right;font-size:11px;color:var(--muted);margin-top:1px}
   .xgd-sum{font-size:11px;line-height:1.4;margin:2px 0 7px}
   .xgreset{flex:none;width:34px;height:34px;border-radius:8px;background:var(--card2);border:1px solid var(--line);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer}
@@ -1052,9 +1052,9 @@ function xgPoint(code){
     const xgd=Math.round(((home?xg[0]:xg[1])-(home?xg[1]:xg[0]))*100)/100, gd=gf-ga;
     const ew=home?f.p_home:f.p_away, dom=gd===0?0.7:0.5;
     return {gw:gi+1,opp,gf,ga,xgd,gd,ew,sig:xgd>=dom?'back':xgd<=-dom?'fade':'even'};});
-  const head=`<div class="xgg xgg-head"><span style="text-align:center">GW</span><span>Opp</span><span style="text-align:center">Score</span><span>Net xG</span></div>`;
+  const head=`<div class="xgg xgg-head"><span style="text-align:center">GW</span><span>Opp</span><span style="text-align:center">Score</span><span style="text-align:center">Net xG</span><span style="text-align:right">Remarks</span></div>`;
   const games=G.map(g=>{const note=xgContextNote(g.ew,g.gd);
-    return `<div class="xggrow"><div class="xgg"><span class="xgg-gw">${g.gw}</span><span class="xgg-o">${flagImg(g.opp,true)}${code3(g.opp)}</span><span class="xgg-s">${g.gf}–${g.ga}</span><span class="xgg-n">${g.xgd>0?'+':''}${g.xgd.toFixed(1)}</span></div><div class="xgg-rem">${xgGameLabel(g.gd,g.xgd)}</div>${note?`<div class="xgg-ctx">${note}</div>`:''}</div>`;}).join("");
+    return `<div class="xggrow"><div class="xgg"><span class="xgg-gw">${g.gw}</span><span class="xgg-o">${flagImg(g.opp,true)}${code3(g.opp)}</span><span class="xgg-s">${g.gf}–${g.ga}</span><span class="xgg-n">${g.xgd>0?'+':''}${g.xgd.toFixed(1)}</span><span class="xgg-l">${xgGameLabel(g.gd,g.xgd)}</span></div>${note?`<div class="xgg-ctx">${note}</div>`:''}</div>`;}).join("");
   // consistency summary (≥2 games): is the pattern signal or noise?
   let summary="";
   if(G.length>=2){
