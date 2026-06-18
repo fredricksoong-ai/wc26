@@ -115,12 +115,12 @@
   .xgdetail{font-size:11.5px;color:var(--muted);margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
   .xgdetail:empty{display:none}
   .xgd-h{margin-bottom:4px;font-size:12px}
-  .xgg{display:grid;grid-template-columns:22px auto 40px 48px 1fr;gap:4px 8px;align-items:start;font-size:11.5px;padding:5px 0;border-top:1px solid var(--line)}
-  .xgg-head{color:#6b7a90;font-size:10.5px;border-top:none;padding-bottom:1px;align-items:center}
-  .xgg-gw{text-align:center;color:var(--muted)} .xgg-o{font-weight:600;white-space:nowrap}
+  .xgg{display:grid;grid-template-columns:22px 58px 40px 48px 1fr;gap:4px 8px;align-items:center;font-size:11.5px;padding:5px 0;border-top:1px solid var(--line)}
+  .xgg-head{color:#6b7a90;font-size:10.5px;border-top:none;padding-bottom:1px}
+  .xgg-gw{text-align:center;color:var(--muted)} .xgg-o{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .xgg-s{text-align:center;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
-  .xgg-n{text-align:center;font-variant-numeric:tabular-nums;color:var(--muted)} .xgg-l{text-align:right;line-height:1.35}
-  .xgg-note{color:var(--muted);font-size:10px}
+  .xgg-n{text-align:center;font-variant-numeric:tabular-nums;color:var(--muted)} .xgg-l{text-align:right}
+  .xgg-note{color:var(--muted);font-size:11px}
   .xgd-sum{font-size:11px;line-height:1.4;margin:2px 0 7px}
   .xgreset{flex:none;width:34px;height:34px;border-radius:8px;background:var(--card2);border:1px solid var(--line);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer}
   .xgreset:active{transform:scale(.93)}
@@ -991,18 +991,18 @@ function xgChart(rows,view,focus,elim){
     const xd=r=>(r.xf-r.xa)/r.gp, yd=r=>(r.gf-r.ga)/r.gp, luck=r=>yd(r)-xd(r);
     const m=Math.max(1,Math.ceil(Math.max(...rows.map(r=>Math.max(Math.abs(xd(r)),Math.abs(yd(r)))))+0.2));
     const lab=pick(luck);
-    items=rows.map(r=>({x:xd(r),y:yd(r),code:code3(r.t),team:r.t,big:lab.has(r.t),col:colDiff(luck(r))}));
+    items=rows.map(r=>({x:xd(r),y:yd(r),code:code3(r.t),team:r.t,big:lab.has(r.t),col:colDiff(-luck(r))}));   // under = green (back), over = red (fade)
     cfg={xmin:-m,xmax:m,ymin:-m,ymax:m,flipY:false,diag:true,xlab:"xG diff →",ylab:"goal diff ↑",aria:"over/under-performance vs xG",
-      tris:[{pts:[[-m,m],[-m,-m],[m,m]],fill:'rgba(29,158,117,.07)'},{pts:[[m,-m],[-m,-m],[m,m]],fill:'rgba(226,75,74,.07)'}],
-      notes:[{x:-m+0.12,y:m-0.18,t:'overperforming',col:'#5dcaa5',anchor:'start'},{x:m-0.12,y:-m+0.35,t:'underperforming',col:'#ef9f27',anchor:'end'}]};
+      tris:[{pts:[[-m,m],[-m,-m],[m,m]],fill:'rgba(226,75,74,.07)'},{pts:[[m,-m],[-m,-m],[m,m]],fill:'rgba(29,158,117,.07)'}],
+      notes:[{x:-m+0.12,y:m-0.18,t:'overperforming',col:'#ef9f27',anchor:'start'},{x:m-0.12,y:-m+0.35,t:'underperforming',col:'#5dcaa5',anchor:'end'}]};
   }else{
     const xf=r=>r.xf/r.gp, gf=r=>r.gf/r.gp, fin=r=>gf(r)-xf(r);
     const mx=Math.max(2,Math.ceil(Math.max(...rows.map(xf),...rows.map(gf))+0.2));
     const lab=pick(fin);
-    items=rows.map(r=>({x:xf(r),y:gf(r),code:code3(r.t),team:r.t,big:lab.has(r.t),col:colDiff(fin(r))}));
+    items=rows.map(r=>({x:xf(r),y:gf(r),code:code3(r.t),team:r.t,big:lab.has(r.t),col:colDiff(-fin(r))}));   // wasteful = green (back), clinical = red (fade)
     cfg={xmin:0,xmax:mx,ymin:0,ymax:mx,flipY:false,diag:true,xlab:"xG created →",ylab:"goals scored ↑",aria:"finishing efficiency",
-      tris:[{pts:[[0,mx],[0,0],[mx,mx]],fill:'rgba(29,158,117,.07)'},{pts:[[mx,0],[0,0],[mx,mx]],fill:'rgba(226,75,74,.07)'}],
-      notes:[{x:0.12,y:mx-0.18,t:'clinical',col:'#5dcaa5',anchor:'start'},{x:mx-0.12,y:0.35,t:'wasteful',col:'#ef9f27',anchor:'end'}]};
+      tris:[{pts:[[0,mx],[0,0],[mx,mx]],fill:'rgba(226,75,74,.07)'},{pts:[[mx,0],[0,0],[mx,mx]],fill:'rgba(29,158,117,.07)'}],
+      notes:[{x:0.12,y:mx-0.18,t:'clinical',col:'#ef9f27',anchor:'start'},{x:mx-0.12,y:0.35,t:'wasteful',col:'#5dcaa5',anchor:'end'}]};
   }
   if(elim&&elim.size){ items.forEach(it=>{ if(elim.has(it.team)) it.elim=true; }); }   // knocked-out teams stay (frozen) but dim
   if(focus){ items.forEach(it=>{const f=it.team===focus; it.big=f; it.ring=f; if(!f){it.col='#3a3a52';it.dim=true;}}); }
@@ -1050,9 +1050,9 @@ function xgPoint(code){
     const xgd=Math.round(((home?xg[0]:xg[1])-(home?xg[1]:xg[0]))*100)/100, gd=gf-ga;
     const ew=home?f.p_home:f.p_away, dom=gd===0?0.7:0.5;
     return {gw:gi+1,opp,gf,ga,xgd,gd,ew,sig:xgd>=dom?'back':xgd<=-dom?'fade':'even'};});
-  const head=`<div class="xgg xgg-head"><span style="text-align:center">GW</span><span>opp</span><span style="text-align:center">score</span><span style="text-align:center">net xG</span><span style="text-align:right">remarks</span></div>`;
+  const head=`<div class="xgg xgg-head"><span style="text-align:center">GW</span><span>Opp</span><span style="text-align:center">Score</span><span style="text-align:center">Net xG</span><span style="text-align:right">Remarks</span></div>`;
   const games=G.map(g=>{const note=xgContextNote(g.ew,g.gd);
-    return `<div class="xgg"><span class="xgg-gw">${g.gw}</span><span class="xgg-o">${flagImg(g.opp,true)}${code3(g.opp)}</span><span class="xgg-s">${g.gf}–${g.ga}</span><span class="xgg-n">${g.xgd>0?'+':''}${g.xgd.toFixed(1)}</span><span class="xgg-l">${xgGameLabel(g.gd,g.xgd)}${note?`<br><span class="xgg-note">${note}</span>`:''}</span></div>`;}).join("");
+    return `<div class="xgg"><span class="xgg-gw">${g.gw}</span><span class="xgg-o">${flagImg(g.opp,true)}${code3(g.opp)}</span><span class="xgg-s">${g.gf}–${g.ga}</span><span class="xgg-n">${g.xgd>0?'+':''}${g.xgd.toFixed(1)}</span><span class="xgg-l">${xgGameLabel(g.gd,g.xgd)}${note?` <span class="xgg-note">· ${note}</span>`:''}</span></div>`;}).join("");
   // consistency summary (≥2 games): is the pattern signal or noise?
   let summary="";
   if(G.length>=2){
