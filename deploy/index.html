@@ -115,9 +115,11 @@
   .xgdetail{font-size:11.5px;color:var(--muted);margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
   .xgdetail:empty{display:none}
   .xgd-h{margin-bottom:4px;font-size:12px}
-  .xgg{display:grid;grid-template-columns:auto 36px 1fr auto;gap:4px 8px;align-items:center;font-size:11.5px;padding:4px 0;border-top:1px solid var(--line)}
-  .xgg-o{font-weight:600;white-space:nowrap} .xgg-s{text-align:center;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
-  .xgg-x{color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap} .xgg-l{text-align:right;white-space:nowrap}
+  .xgg{display:grid;grid-template-columns:22px auto 40px 48px 1fr;gap:4px 8px;align-items:center;font-size:11.5px;padding:4px 0;border-top:1px solid var(--line)}
+  .xgg-head{color:#6b7a90;font-size:10.5px;border-top:none;padding-bottom:1px}
+  .xgg-gw{text-align:center;color:var(--muted)} .xgg-o{font-weight:600;white-space:nowrap}
+  .xgg-s{text-align:center;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+  .xgg-n{text-align:center;font-variant-numeric:tabular-nums;color:var(--muted)} .xgg-l{text-align:right;white-space:nowrap}
   .xgreset{flex:none;width:34px;height:34px;border-radius:8px;background:var(--card2);border:1px solid var(--line);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer}
   .xgreset:active{transform:scale(.93)}
   .xgslide input[type=range]{flex:1;accent-color:#a78bfa}
@@ -1006,11 +1008,12 @@ function xgChart(rows,view,focus,elim){
 // a plain-English read of one game from this team's view: result vs the xG it earned.
 // colour encodes the regression signal — green = underlying beat the result (a back), red = flattered.
 function xgGameLabel(gd,xgd){
-  const luck=gd-xgd; let t;
+  const dom=gd===0?0.7:0.5; let t;   // draws need a wider band to count as "dominated"
   if(gd>0) t=xgd>=0.5?'deserved win':xgd<=-0.5?'smash & grab':'won a tight one';
   else if(gd===0) t=xgd>=0.7?'dominated, drew':xgd<=-0.7?'stole a point':'fair draw';
   else t=xgd>=0.7?'unlucky loss':xgd<=-0.7?'outplayed':'edged out';
-  const c=luck<=-0.5?'var(--good)':luck>=0.5?'var(--bad)':'var(--muted)';
+  // colour = xG dominance, aligned to the remark: green out-created (a back), red out-created against (a fade), grey even
+  const c=xgd>=dom?'var(--good)':xgd<=-dom?'var(--bad)':'var(--muted)';
   return `<span style="color:${c};font-weight:600">${t}</span>`;
 }
 // tap/search a team -> zone, game count, and a per-game breakdown with a verdict for each
@@ -1031,11 +1034,12 @@ function xgPoint(code){
     const fd=r.gf-r.xf; zone=fd<-0.3?"wasteful":fd>0.3?"clinical":"as expected"; zc=fd<-0.3?"var(--good)":fd>0.3?"var(--bad)":"var(--muted)";
   }
   const gs=xgPlayed().filter(f=>f.team1===team||f.team2===team).slice(0,xgCutoff||99);
-  const games=gs.map(f=>{const home=team===f.team1, opp=home?f.team2:f.team1, xg=xgFor(f);
-    const xf=home?xg[0]:xg[1], xa=home?xg[1]:xg[0], gf=home?f.actual[0]:f.actual[1], ga=home?f.actual[1]:f.actual[0];
-    const xgd=Math.round((xf-xa)*100)/100;
-    return `<div class="xgg"><span class="xgg-o">v ${flagImg(opp,true)}${code3(opp)}</span><span class="xgg-s">${gf}–${ga}</span><span class="xgg-x">${xf.toFixed(1)}–${xa.toFixed(1)} <span class="m">(${xgd>0?'+':''}${xgd.toFixed(1)})</span></span><span class="xgg-l">${xgGameLabel(gf-ga,xgd)}</span></div>`;}).join("");
-  el.innerHTML=`<div class="xgd-h">${flagImg(team,true)}<b style="color:var(--ink)">${code3(team)}</b> <span class="m">${team}</span> · <b style="color:${zc}">${zone}</b> <span class="m">· ${r.gp} game${r.gp>1?'s':''}</span></div>${games}`;
+  const head=`<div class="xgg xgg-head"><span style="text-align:center">GW</span><span>opp</span><span style="text-align:center">score</span><span style="text-align:center">net xG</span><span style="text-align:right">remarks</span></div>`;
+  const games=gs.map((f,gi)=>{const home=team===f.team1, opp=home?f.team2:f.team1, xg=xgFor(f);
+    const gf=home?f.actual[0]:f.actual[1], ga=home?f.actual[1]:f.actual[0];
+    const xgd=Math.round(((home?xg[0]:xg[1])-(home?xg[1]:xg[0]))*100)/100;
+    return `<div class="xgg"><span class="xgg-gw">${gi+1}</span><span class="xgg-o">${flagImg(opp,true)}${code3(opp)}</span><span class="xgg-s">${gf}–${ga}</span><span class="xgg-n">${xgd>0?'+':''}${xgd.toFixed(1)}</span><span class="xgg-l">${xgGameLabel(gf-ga,xgd)}</span></div>`;}).join("");
+  el.innerHTML=`<div class="xgd-h">${flagImg(team,true)}<b style="color:var(--ink)">${code3(team)}</b> <span class="m">${team}</span> · <b style="color:${zc}">${zone}</b> <span class="m">· ${r.gp} game${r.gp>1?'s':''}</span></div>${head}${games}`;
 }
 function renderLeague(d){
   const lb=d.leaderboard;
