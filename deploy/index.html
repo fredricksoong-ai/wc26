@@ -69,6 +69,8 @@
   .cardfoot{display:flex;align-items:center;gap:8px;margin-top:8px;min-height:16px}
   .snapbtn{flex:none;background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;padding:0;line-height:1} .vfill{flex:1;text-align:center}
   .editbtn{flex:none;background:none;border:1px solid var(--line);border-radius:7px;color:var(--muted);font-size:12px;cursor:pointer;padding:3px 7px;line-height:1}
+  .emteams{display:flex;align-items:center;justify-content:center;gap:5px;font-size:16px;font-weight:700;color:var(--ink)}
+  .embtn{margin-top:14px;width:100%;padding:11px;border-radius:10px;background:rgba(167,139,250,.18);border:1px solid rgba(167,139,250,.45);color:var(--pick);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
   .modalbox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;width:100%;max-width:460px;max-height:85vh;overflow:auto;display:flex;flex-direction:column}
   .modalhd{display:flex;align-items:center;justify-content:space-between;font-weight:700;color:var(--ink);margin-bottom:10px} .hdbtns{display:flex;align-items:center;gap:16px;font-weight:400} .modalhd .mx{display:flex;align-items:center;cursor:pointer;color:var(--muted);font-size:16px} .hdbtns svg{display:block}
@@ -247,6 +249,14 @@
     <div class="modalhd"><span>Save / share</span><span class="hdbtns"><span class="mx" onclick="shareImg()" title="Save / share"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M12 3l-4 4M12 3l4 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg></span><span class="mx" onclick="closeImg()" title="Close">✕</span></span></div>
     <img id="cardimg" alt="pick card" style="width:100%;border-radius:10px;display:block"/>
     <div class="mhint">Tap the share icon to save to Photos or send it — or long-press the image.</div>
+  </div>
+</div>
+<div id="editmodal" class="modal hidden" onclick="if(event.target===this)closeEdit()">
+  <div class="modalbox">
+    <div class="modalhd"><span>Override pick</span><span class="hdbtns"><span class="mx" onclick="closeEdit()" title="Close">✕</span></span></div>
+    <div id="editbody"></div>
+    <div class="mhint">Manually set your scoreline — this overrides the kickoff lock, so use it only to fix a mis-entry.</div>
+    <button class="embtn" onclick="saveEdit()">Save pick</button>
   </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -622,17 +632,21 @@ function renderGroup(list,cardFn,extra){ let html="",cur=null,first=true;
 
 function selOpts(sel){let s="";for(let i=0;i<=7;i++)s+=`<option value="${i}" ${sel===i?"selected":""}>${i}</option>`;return `<option value="" ${sel==null?"selected":""}>–</option>`+s;}
 
-// manual override of a saved pick — works even after kickoff, to fix a mis-entry
+// manual override of a saved pick — a two-number stepper (no text to parse), works post-kickoff
+let editIdx=null, editVal=[0,0];
 function editPick(i){
-  const f=ALLFIX[i], cur=pickArr(f), def=cur&&cur[0]!=null?`${cur[0]}-${cur[1]}`:"";
-  const v=prompt(`Override your pick — ${code3(f.team1)} v ${code3(f.team2)}\n(e.g. 3-0; overrides the kickoff lock)`,def);
-  if(v==null)return;
-  const t=v.trim(), P=loadPicks();
-  if(t===""){ delete P[keyOf(f)]; savePicks(P); renderAll(); return; }
-  const m=t.match(/^(\d+)\s*[-–:]\s*(\d+)$/);
-  if(!m){ alert("Use a format like 3-0"); return; }
-  P[keyOf(f)]=[Math.min(10,+m[1]),Math.min(10,+m[2])]; savePicks(P); renderAll();
+  editIdx=i; const cur=pickArr(ALLFIX[i]);
+  editVal=[cur&&cur[0]!=null?cur[0]:0, cur&&cur[1]!=null?cur[1]:0];
+  renderEdit(); $("#editmodal").classList.remove("hidden");
 }
+function renderEdit(){
+  const f=ALLFIX[editIdx], box=(side)=>`<div class="hbox"><button class="sbtn" onclick="bumpEdit(${side},-1)">−</button><div class="snum">${editVal[side]}</div><button class="sbtn" onclick="bumpEdit(${side},1)">+</button></div>`;
+  $("#editbody").innerHTML=`<div class="emteams">${flagImg(f.team1)}${code3(f.team1)}<span class="v">v</span>${code3(f.team2)}${flagImg(f.team2,false,true)}</div>
+    <div class="hstepper" style="margin-top:14px">${box(0)}<span class="pcenter">vs</span>${box(1)}</div>`;
+}
+function bumpEdit(side,d){ editVal[side]=Math.max(0,Math.min(10,(editVal[side]||0)+d)); renderEdit(); }
+function closeEdit(){ $("#editmodal").classList.add("hidden"); }
+function saveEdit(){ const f=ALLFIX[editIdx], P=loadPicks(); P[keyOf(f)]=[editVal[0],editVal[1]]; savePicks(P); closeEdit(); renderAll(); }
 function pickCard(f){
   const i=ALLFIX.indexOf(f);
   const mc=modelCall(f), cf=confidence(f);
