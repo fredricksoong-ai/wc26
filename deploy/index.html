@@ -68,6 +68,7 @@
   .vok{color:var(--good);font-weight:700} .vwarn{color:var(--away);font-weight:700}
   .cardfoot{display:flex;align-items:center;gap:8px;margin-top:8px;min-height:16px}
   .snapbtn{flex:none;background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;padding:0;line-height:1} .vfill{flex:1;text-align:center}
+  .editbtn{flex:none;background:none;border:1px solid var(--line);border-radius:7px;color:var(--muted);font-size:12px;cursor:pointer;padding:3px 7px;line-height:1}
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
   .modalbox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;width:100%;max-width:460px;max-height:85vh;overflow:auto;display:flex;flex-direction:column}
   .modalhd{display:flex;align-items:center;justify-content:space-between;font-weight:700;color:var(--ink);margin-bottom:10px} .hdbtns{display:flex;align-items:center;gap:16px;font-weight:400} .modalhd .mx{display:flex;align-items:center;cursor:pointer;color:var(--muted);font-size:16px} .hdbtns svg{display:block}
@@ -405,6 +406,7 @@ function nextCard(){
 }
 // hand-maintained: one line per shipped change, newest first
 const CHANGELOG=[
+  ["18 Jun","Override 'edit pick' button on cards — fix a mis-entered pick even after kickoff"],
   ["17 Jun","xG caption: opponent-strength context per game + a consistency verdict (signal vs noise)"],
   ["17 Jun","xG caption: per-game breakdown + plain-English verdict (deserved/unlucky/flattered)"],
   ["17 Jun","xG charts: tap a point for its numbers+zone; matchday slider; Sync only pushes changed games"],
@@ -620,6 +622,17 @@ function renderGroup(list,cardFn,extra){ let html="",cur=null,first=true;
 
 function selOpts(sel){let s="";for(let i=0;i<=7;i++)s+=`<option value="${i}" ${sel===i?"selected":""}>${i}</option>`;return `<option value="" ${sel==null?"selected":""}>–</option>`+s;}
 
+// manual override of a saved pick — works even after kickoff, to fix a mis-entry
+function editPick(i){
+  const f=ALLFIX[i], cur=pickArr(f), def=cur&&cur[0]!=null?`${cur[0]}-${cur[1]}`:"";
+  const v=prompt(`Override your pick — ${code3(f.team1)} v ${code3(f.team2)}\n(e.g. 3-0; overrides the kickoff lock)`,def);
+  if(v==null)return;
+  const t=v.trim(), P=loadPicks();
+  if(t===""){ delete P[keyOf(f)]; savePicks(P); renderAll(); return; }
+  const m=t.match(/^(\d+)\s*[-–:]\s*(\d+)$/);
+  if(!m){ alert("Use a format like 3-0"); return; }
+  P[keyOf(f)]=[Math.min(10,+m[1]),Math.min(10,+m[2])]; savePicks(P); renderAll();
+}
 function pickCard(f){
   const i=ALLFIX.indexOf(f);
   const mc=modelCall(f), cf=confidence(f);
@@ -638,7 +651,7 @@ function pickCard(f){
     <div class="tops" style="margin-top:13px">${tops}</div>
     ${modelSays(f)}
     <div class="pickbox" id="pk-${i}">${pickUIFor(f,i)}</div>
-    <div class="cardfoot"><button class="snapbtn" onclick="snapCard(this)" title="Save as image">📷</button><div class="vfill" id="vf-${i}">${validationLine(f,pickArr(f)?pickArr(f)[0]:null,pickArr(f)?pickArr(f)[1]:null,isLocked(f))}</div></div>
+    <div class="cardfoot"><button class="snapbtn" onclick="snapCard(this)" title="Save as image">📷</button><div class="vfill" id="vf-${i}">${validationLine(f,pickArr(f)?pickArr(f)[0]:null,pickArr(f)?pickArr(f)[1]:null,isLocked(f))}</div><button class="editbtn" onclick="editPick(${i})" title="Override your pick">✎ edit</button></div>
   </div>`;
 }
 
@@ -785,6 +798,7 @@ function resultCard(f){
     ${probBar}
     <div class="rgrid">${head}${youRow}${modelRows}</div>
     ${xgEditRow(f,i)}
+    <div class="cardfoot" style="justify-content:flex-end;margin-top:8px"><button class="editbtn" onclick="editPick(${i})" title="Fix your pick">✎ edit pick</button></div>
   </div>`;
 }
 
