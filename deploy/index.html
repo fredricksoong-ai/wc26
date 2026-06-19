@@ -665,7 +665,7 @@ function pickCard(f){
     <div class="tops" style="margin-top:13px">${tops}</div>
     ${modelSays(f)}
     <div class="pickbox" id="pk-${i}">${pickUIFor(f,i)}</div>
-    <div class="cardfoot"><button class="snapbtn" onclick="snapCard(this)" title="Save as image">📷</button><div class="vfill" id="vf-${i}">${validationLine(f,pickArr(f)?pickArr(f)[0]:null,pickArr(f)?pickArr(f)[1]:null,isLocked(f))}</div><button class="editbtn" onclick="editPick(${i})" title="Override your pick">✎ edit</button></div>
+    <div class="cardfoot"><button class="snapbtn" onclick="snapCard(this)" title="Save as image">📷</button><div class="vfill" id="vf-${i}">${validationLine(f,pickArr(f)?pickArr(f)[0]:null,pickArr(f)?pickArr(f)[1]:null,isLocked(f))}</div>${isLocked(f)?`<button class="editbtn" onclick="editPick(${i})" title="Override your pick">✎</button>`:""}</div>
   </div>`;
 }
 
@@ -812,7 +812,7 @@ function resultCard(f){
     ${probBar}
     <div class="rgrid">${head}${youRow}${modelRows}</div>
     ${xgEditRow(f,i)}
-    <div class="cardfoot" style="justify-content:flex-end;margin-top:8px"><button class="editbtn" onclick="editPick(${i})" title="Fix your pick">✎ edit pick</button></div>
+    <div class="cardfoot" style="justify-content:flex-end;margin-top:8px"><button class="editbtn" onclick="editPick(${i})" title="Fix your pick">✎</button></div>
   </div>`;
 }
 
