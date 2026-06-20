@@ -42,6 +42,7 @@
   .teams.tappable{cursor:pointer} .xgcmp{font-size:11px;margin-left:7px;opacity:.55}
   .mxg-sum{margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
   .mxg-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:4px 0;gap:8px}
+  .mxg-fc{margin:8px 0 2px} .mxg-fcx{font-size:11px;color:var(--muted);text-align:center;margin-top:6px} .mxg-fcx b{color:var(--ink)}
   .meta{color:var(--muted);font-size:11px;margin-top:2px}
   .badge{border-radius:8px;padding:4px 9px;font-size:12px;white-space:nowrap;border:1px solid var(--line);background:var(--card2)}
   .badge.m b{color:var(--pick)}
@@ -1113,16 +1114,26 @@ function closeMatchXG(){ $("#matchxgmodal").classList.add("hidden"); }
 function renderMatchXG(){
   const f=ALLFIX[mxgIdx], t1=f.team1, t2=f.team2, rows=xgRows(null), hi=new Set([t1,t2]);
   $("#mxgtitle").innerHTML=`${flagImg(t1)}${code3(t1)}<span class="v">v</span>${code3(t2)}${flagImg(t2,false,true)}`;
-  const present=rows.filter(r=>hi.has(r.t)).map(r=>r.t);
-  if(!present.length){ $("#mxgbody").innerHTML=`<div class="err" style="text-align:center;padding:18px 0">No xG yet — these teams need to have played.</div>`; return; }
-  const views=[["map","Map"],["luck","Luck"],["finish","Finishing"]];
-  const vt=`<div class="oddsel" style="margin-top:6px">`+views.map(([k,l])=>`<span class="opt ${mxgView===k?'on':''}" onclick="mxgView='${k}';renderMatchXG()">${l}</span>`).join("")+`</div>`;
-  const chart=xgChart(rows,mxgView,hi,xgEliminated());
-  const line=t=>{const r=rows.find(x=>x.t===t);
-    if(!r) return `<div class="mxg-row"><span>${flagImg(t,true)}<b style="color:var(--ink)">${code3(t)}</b></span><span class="m">not played yet</span></div>`;
-    const z=teamZone(rows,r,mxgView);
-    return `<div class="mxg-row"><span>${flagImg(t,true)}<b style="color:var(--ink)">${code3(t)}</b></span><span><b style="color:${z.zc}">${z.zone}</b> <span class="m">· net ${r.xgd>0?'+':''}${r.xgd.toFixed(2)} · ${r.gp}g</span></span></div>`;};
-  $("#mxgbody").innerHTML=vt+chart+`<div class="mxg-sum">${line(t1)}${line(t2)}</div>`;
+  // model forecast up top — the actual pick guidance
+  const fc=f.p_home!=null?`<div class="mxg-fc">
+    <div class="bar"><i class="h" style="width:${pc(f.p_home)}%"></i><i class="d" style="width:${pc(f.p_draw)}%"></i><i class="a" style="width:${pc(f.p_away)}%"></i></div>
+    <div class="legend"><span style="color:var(--home)">${code3(t1)} <b>${pc(f.p_home)}%</b></span><span>Draw <b>${pc(f.p_draw)}%</b></span><span style="color:var(--away)">${code3(t2)} <b>${pc(f.p_away)}%</b></span></div>
+    <div class="mxg-fcx">model likeliest <b>${modelCall(f)}</b> · ${pc(modelProb(f))}%${f.xg_home!=null?` · xG ${f.xg_home}–${f.xg_away}`:""}</div>
+  </div>`:"";
+  const present=rows.filter(r=>hi.has(r.t));
+  let body;
+  if(!present.length){ body=`<div class="err" style="text-align:center;padding:14px 0">No xG charts yet — these teams need to have played.</div>`; }
+  else {
+    const views=[["map","Map"],["luck","Luck"],["finish","Finishing"]];
+    const vt=`<div class="oddsel" style="margin-top:8px">`+views.map(([k,l])=>`<span class="opt ${mxgView===k?'on':''}" onclick="mxgView='${k}';renderMatchXG()">${l}</span>`).join("")+`</div>`;
+    const chart=xgChart(rows,mxgView,hi,xgEliminated());
+    const line=t=>{const r=rows.find(x=>x.t===t);
+      if(!r) return `<div class="mxg-row"><span>${flagImg(t,true)}<b style="color:var(--ink)">${code3(t)}</b></span><span class="m">not played yet</span></div>`;
+      const z=teamZone(rows,r,mxgView);
+      return `<div class="mxg-row"><span>${flagImg(t,true)}<b style="color:var(--ink)">${code3(t)}</b></span><span><b style="color:${z.zc}">${z.zone}</b> <span class="m">· net ${r.xgd>0?'+':''}${r.xgd.toFixed(2)} · ${r.gp}g</span></span></div>`;};
+    body=vt+chart+`<div class="mxg-sum">${line(t1)}${line(t2)}</div>`;
+  }
+  $("#mxgbody").innerHTML=fc+body;
 }
 function renderLeague(d){
   const lb=d.leaderboard;
