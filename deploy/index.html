@@ -39,6 +39,9 @@
   .frow{display:flex;justify-content:space-between;align-items:center;gap:8px}
   .teams{font-weight:600} .teams .v{color:var(--muted);font-weight:400;margin:0 6px}
   .rscore{font-weight:800;color:var(--ink);background:var(--card2);border-radius:6px;padding:1px 7px;margin:0 5px;font-variant-numeric:tabular-nums}
+  .teams.tappable{cursor:pointer} .xgcmp{font-size:11px;margin-left:7px;opacity:.55}
+  .mxg-sum{margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
+  .mxg-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:4px 0;gap:8px}
   .meta{color:var(--muted);font-size:11px;margin-top:2px}
   .badge{border-radius:8px;padding:4px 9px;font-size:12px;white-space:nowrap;border:1px solid var(--line);background:var(--card2)}
   .badge.m b{color:var(--pick)}
@@ -260,6 +263,12 @@
     <button class="embtn" onclick="saveEdit()">Save pick</button>
   </div>
 </div>
+<div id="matchxgmodal" class="modal hidden" onclick="if(event.target===this)closeMatchXG()">
+  <div class="modalbox">
+    <div class="modalhd"><span id="mxgtitle" class="teams"></span><span class="hdbtns"><span class="mx" onclick="closeMatchXG()" title="Close">✕</span></span></div>
+    <div id="mxgbody"></div>
+  </div>
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <footer id="foot"></footer>
@@ -417,6 +426,7 @@ function nextCard(){
 }
 // hand-maintained: one line per shipped change, newest first
 const CHANGELOG=[
+  ["18 Jun","Tap a pick's matchup → xG compare modal (both teams on Map/Luck/Finishing)"],
   ["18 Jun","Override 'edit pick' button on cards — fix a mis-entered pick even after kickoff"],
   ["17 Jun","xG caption: opponent-strength context per game + a consistency verdict (signal vs noise)"],
   ["17 Jun","xG caption: per-game breakdown + plain-English verdict (deserved/unlucky/flattered)"],
@@ -656,7 +666,7 @@ function pickCard(f){
   const xg=f.xg_home!=null?`xG ${f.xg_home} – ${f.xg_away} · `:"";
   return `<div class="card">
     <div class="frow">
-      <div><div class="teams">${flagImg(f.team1)}${code3(f.team1)}<span class="v">v</span>${code3(f.team2)}${flagImg(f.team2,false,true)}</div>
+      <div style="min-width:0"><div class="teams tappable" onclick="openMatchXG(${i})" title="Compare these two on the xG charts">${flagImg(f.team1)}${code3(f.team1)}<span class="v">v</span>${code3(f.team2)}${flagImg(f.team2,false,true)}<span class="xgcmp">📊</span></div>
         <div class="meta">${xg}${timeOnly(f)} · ${f.group||f.round||""}${f.host?` · <span style="color:${f.host===f.team2?'var(--away)':'var(--home)'}">🏠 ${code3(f.host)}</span>`:""}</div></div>
       <div style="text-align:right;flex-shrink:0"><div style="color:${rcol};font-weight:700;font-size:13px">${cf.kind==="draw"?"Draw":code3(cf.who)+" win"}</div><div style="font-size:11px"><span class="rc-${cf.lvl}">${cf.lvl==="toss"?"toss-up":cf.lvl}</span> <span style="color:var(--muted)">· ${pc(cf.p)}%</span></div></div>
     </div>
@@ -1035,8 +1045,20 @@ function xgChart(rows,view,focus,elim){
       notes:[{x:0.12,y:mx-0.18,t:'clinical',col:'#ef9f27',anchor:'start'},{x:mx-0.12,y:0.35,t:'wasteful',col:'#5dcaa5',anchor:'end'}]};
   }
   if(elim&&elim.size){ items.forEach(it=>{ if(elim.has(it.team)) it.elim=true; }); }   // knocked-out teams stay (frozen) but dim
-  if(focus){ items.forEach(it=>{const f=it.team===focus; it.big=f; it.ring=f; if(!f){it.col='#3a3a52';it.dim=true;}}); }
+  const hi=focus?(focus instanceof Set?focus:new Set([focus])):null;   // highlight one (search) or many (match compare)
+  if(hi){ items.forEach(it=>{const f=hi.has(it.team); it.big=f; it.ring=f; if(!f){it.col='#3a3a52';it.dim=true;}}); }
   return scatterSVG(items,cfg);
+}
+// the active-view zone for a team's aggregate row (green favourable/back, red fade)
+function teamZone(rows,r,view){
+  const avg=a=>a.reduce((p,q)=>p+q,0)/a.length;
+  if(view==="map"){const mxf=avg(rows.map(x=>x.xf/x.gp)),mxa=avg(rows.map(x=>x.xa/x.gp)),pf=r.xf/r.gp,pa=r.xa/r.gp;
+    if(pf>=mxf&&pa<=mxa)return{zone:"dominant",zc:"var(--good)"};
+    if(pf<mxf&&pa>mxa)return{zone:"outclassed",zc:"var(--bad)"};
+    if(pf>=mxf&&pa>mxa)return{zone:"busy both ends",zc:"var(--muted)"};
+    return{zone:"quiet both ends",zc:"var(--muted)"};}
+  if(view==="luck"){const l=r.luck;return l<-0.3?{zone:"underperforming",zc:"var(--good)"}:l>0.3?{zone:"overperforming",zc:"var(--bad)"}:{zone:"as expected",zc:"var(--muted)"};}
+  const fd=r.gf-r.xf;return fd<-0.3?{zone:"wasteful",zc:"var(--good)"}:fd>0.3?{zone:"clinical",zc:"var(--bad)"}:{zone:"as expected",zc:"var(--muted)"};
 }
 // a plain-English read of one game from this team's view: result vs the xG it earned.
 // colour encodes the regression signal — green = underlying beat the result (a back), red = flattered.
@@ -1061,19 +1083,7 @@ function xgContextNote(ew,gd){
 function xgPoint(code){
   const el=document.getElementById("xgdetail"); if(!el)return;
   const rows=xgRows(xgCutoff), r=rows.find(x=>code3(x.t)===code); if(!r)return;
-  const team=r.t, avg=a=>a.reduce((p,q)=>p+q,0)/a.length;
-  let zone,zc;   // zone for the active view (green = favourable / a back, red = fade)
-  if(xgView==="map"){
-    const mxf=avg(rows.map(x=>x.xf/x.gp)), mxa=avg(rows.map(x=>x.xa/x.gp)), pf=r.xf/r.gp, pa=r.xa/r.gp;
-    if(pf>=mxf&&pa<=mxa){zone="dominant";zc="var(--good)";}
-    else if(pf<mxf&&pa>mxa){zone="outclassed";zc="var(--bad)";}
-    else if(pf>=mxf&&pa>mxa){zone="busy both ends";zc="var(--muted)";}
-    else {zone="quiet both ends";zc="var(--muted)";}
-  } else if(xgView==="luck"){
-    const l=r.luck; zone=l<-0.3?"underperforming":l>0.3?"overperforming":"as expected"; zc=l<-0.3?"var(--good)":l>0.3?"var(--bad)":"var(--muted)";
-  } else {
-    const fd=r.gf-r.xf; zone=fd<-0.3?"wasteful":fd>0.3?"clinical":"as expected"; zc=fd<-0.3?"var(--good)":fd>0.3?"var(--bad)":"var(--muted)";
-  }
+  const team=r.t, {zone,zc}=teamZone(rows,r,xgView);
   const gs=xgPlayed().filter(f=>f.team1===team||f.team2===team).slice(0,xgCutoff||99);
   const G=gs.map((f,gi)=>{const home=team===f.team1, opp=home?f.team2:f.team1, xg=xgFor(f);
     const gf=home?f.actual[0]:f.actual[1], ga=home?f.actual[1]:f.actual[0];
@@ -1095,6 +1105,24 @@ function xgPoint(code){
     summary=`<div class="xgd-sum"><span class="m">out-created ${back} of ${n}${fade?`, ${fade} against`:''}${vsStr?` · ${vsStr} vs stronger`:''} → </span><b style="color:${vc}">${verd}</b></div>`;
   }
   el.innerHTML=`<div class="xgd-h">${flagImg(team,true)}<b style="color:var(--ink)">${code3(team)}</b> <span class="m">${team}</span> · <b style="color:${zc}">${zone}</b> <span class="m">· ${r.gp} game${r.gp>1?'s':''}</span></div>${summary}${head}${games}`;
+}
+// tap a matchup on a pick card -> a modal placing both teams on the xG scatters for a quick compare
+let mxgIdx=null, mxgView="map";
+function openMatchXG(i){ mxgIdx=i; mxgView="map"; renderMatchXG(); $("#matchxgmodal").classList.remove("hidden"); }
+function closeMatchXG(){ $("#matchxgmodal").classList.add("hidden"); }
+function renderMatchXG(){
+  const f=ALLFIX[mxgIdx], t1=f.team1, t2=f.team2, rows=xgRows(null), hi=new Set([t1,t2]);
+  $("#mxgtitle").innerHTML=`${flagImg(t1)}${code3(t1)}<span class="v">v</span>${code3(t2)}${flagImg(t2,false,true)}`;
+  const present=rows.filter(r=>hi.has(r.t)).map(r=>r.t);
+  if(!present.length){ $("#mxgbody").innerHTML=`<div class="err" style="text-align:center;padding:18px 0">No xG yet — these teams need to have played.</div>`; return; }
+  const views=[["map","Map"],["luck","Luck"],["finish","Finishing"]];
+  const vt=`<div class="oddsel" style="margin-top:6px">`+views.map(([k,l])=>`<span class="opt ${mxgView===k?'on':''}" onclick="mxgView='${k}';renderMatchXG()">${l}</span>`).join("")+`</div>`;
+  const chart=xgChart(rows,mxgView,hi,xgEliminated());
+  const line=t=>{const r=rows.find(x=>x.t===t);
+    if(!r) return `<div class="mxg-row"><span>${flagImg(t,true)}<b style="color:var(--ink)">${code3(t)}</b></span><span class="m">not played yet</span></div>`;
+    const z=teamZone(rows,r,mxgView);
+    return `<div class="mxg-row"><span>${flagImg(t,true)}<b style="color:var(--ink)">${code3(t)}</b></span><span><b style="color:${z.zc}">${z.zone}</b> <span class="m">· net ${r.xgd>0?'+':''}${r.xgd.toFixed(2)} · ${r.gp}g</span></span></div>`;};
+  $("#mxgbody").innerHTML=vt+chart+`<div class="mxg-sum">${line(t1)}${line(t2)}</div>`;
 }
 function renderLeague(d){
   const lb=d.leaderboard;
