@@ -1,0 +1,28 @@
+name: xG backtest (manual)
+
+# Does the manually-entered xG actually improve the Elo forecasts?
+# Pulls fresh results, then A/B-tests Elo RPS with xG on vs off on the WC games.
+# Trigger from the Actions tab, then read the log. Touches nothing, deploys nothing.
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        run: pip install pandas numpy scipy statsmodels requests
+
+      # carry the committed xG forward and pull fresh results
+      - name: Pull fresh data (results + fixtures)
+        run: python scripts/update_data.py
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+
+      - name: Run xG backtest
+        run: python scripts/xg_backtest.py
