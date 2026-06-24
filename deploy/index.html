@@ -427,6 +427,7 @@ function nextCard(){
 }
 // hand-maintained: one line per shipped change, newest first
 const CHANGELOG=[
+  ["24 Jun","New Blend forecast — the model ensemble with the bookmakers folded in; now drives the headline win bar"],
   ["18 Jun","Tap a pick's matchup → xG compare modal (both teams on Map/Luck/Finishing)"],
   ["18 Jun","Override 'edit pick' button on cards — fix a mis-entered pick even after kickoff"],
   ["17 Jun","xG caption: opponent-strength context per game + a consistency verdict (signal vs noise)"],
@@ -602,11 +603,11 @@ function renderAll(){
   const t=tallies(), d=DATA;
   renderHeaderCountdown();
   // header pills: colour IS the identity (cyan You, purple Ensemble, white Market) — no labels
-  const ys=youStanding(), es=standingOf("ensemble"), mk=standingOf("market");
+  const ys=youStanding(), es=standingOf("ensemble"), bl=standingOf("blend"), mk=standingOf("market");
   const dot=`<span style="color:var(--muted)">·</span>`;
   const pill=(st,bc,trend)=> st?`<span class="pill"><b style="color:${bc}">${st.pts}</b>pts ${dot} ${ord(st.rank)}${st.rps!=null?` ${dot} <b>${st.rps.toFixed(3)}</b>${trend}`:""}</span>`:"";
   const mePill=ys?pill(ys,"#22d3ee",""):`<span class="pill"><b style="color:#22d3ee">${t.yP}</b>pts</span>`;
-  $("#metrics").innerHTML=[mePill, pill(es,"#a78bfa",rpsTrendFor("ensemble")), pill(mk,"#e5e7eb",rpsTrendFor("market"))].filter(Boolean).join("");
+  $("#metrics").innerHTML=[mePill, pill(bl,"#2dd4bf",rpsTrendFor("blend")), pill(es,"#a78bfa",rpsTrendFor("ensemble")), pill(mk,"#e5e7eb",rpsTrendFor("market"))].filter(Boolean).join("");
   $("#oddsslot").innerHTML=(d.odds&&d.odds.credits_remaining!=null)?oddsRing(d.odds.credits_remaining):"";
   $("#foot").textContent="Lower RPS = more accurate · picks lock at kickoff (SGT) · saved on this device";
 
@@ -720,7 +721,7 @@ function bumpPick(i,side,delta){
 // and how you + each model/market scored, plus upcoming picks and the table.
 function richExport(){
   const d=DATA||{}, lb=d.leaderboard, out=[], ys=youStanding();
-  const order=["ensemble","poisson","dixon_coles","elo","market"];
+  const order=["ensemble","blend","poisson","dixon_coles","elo","market"];
   out.push("Please review my World Cup 2026 prediction pool from the data below: how I (You) am doing vs the models and the market, what my pick patterns reveal, and where I and the models can improve. Legend — R: correct result, E: exact score, .: miss, -: no pick/data.","");
   out.push("WC2026 PREDICTOR EXPORT");
   out.push(ys?`You ${ys.pts}pts · ${ord(ys.rank)} · ${lb&&lb.games?lb.games.length:0} games scored`:"No scored games yet");
@@ -803,7 +804,7 @@ function resultCard(f){
     :`<span class="gl" style="color:var(--you)">You</span><span class="gc" style="grid-column:2/7;text-align:left;color:var(--muted)">no pick</span>`;
   let modelRows="";
   if(f.lb_scored){
-    modelRows=["ensemble","poisson","dixon_coles","elo","market"].filter(m=>f.lb_scored[m]).map(m=>{
+    modelRows=["ensemble","blend","poisson","dixon_coles","elo","market"].filter(m=>f.lb_scored[m]).map(m=>{
       const v=f.lb[m]||{}, s=f.lb_scored[m];
       const label=m==="ensemble"?"Ensemble":LB_LABELS[m];
       const col=m==="ensemble"?"var(--pick)":(LB_COLORS[m]||"var(--muted)");
@@ -889,12 +890,13 @@ function bestWorst(){
 }
 
 let lbChart=null, lbMode="points";
-const LB_COLORS={poisson:"#f472b6",dixon_coles:"#facc15",elo:"#60a5fa",ensemble:"#a78bfa",market:"#e5e7eb",you:"#22d3ee"};
-const LB_LABELS={poisson:"Poisson",dixon_coles:"Dixon–Coles",elo:"Elo",ensemble:"Ensemble",market:"Market",you:"You"};
+const LB_COLORS={poisson:"#f472b6",dixon_coles:"#facc15",elo:"#60a5fa",ensemble:"#a78bfa",blend:"#2dd4bf",market:"#e5e7eb",you:"#22d3ee"};
+const LB_LABELS={poisson:"Poisson",dixon_coles:"Dixon–Coles",elo:"Elo",ensemble:"Ensemble",blend:"Blend",market:"Market",you:"You"};
 // edge vs the bookmakers: where the model (ensemble) most disagrees with the de-vigged market
 function marketLine(f){
   const mk=f.lb&&f.lb.market&&f.lb.market.probs; if(!mk) return "";
-  const mod=[f.p_home,f.p_draw,f.p_away]; if(mod.some(x=>x==null)) return "";
+  const mod=(f.lb&&f.lb.ensemble&&f.lb.ensemble.probs)||null; // pure model vs bookies (headline bar is the blend)
+  if(!mod||mod.some(x=>x==null)) return "";
   let bi=0,bd=0; for(let i=0;i<3;i++){const dd=mod[i]-mk[i]; if(Math.abs(dd)>Math.abs(bd)){bd=dd;bi=i;}}
   const lab=bi===0?f.team1:bi===2?f.team2:"Draw";
   const col=bd>=0?"var(--good)":"var(--bad)", sign=bd>=0?"+":"";
@@ -902,7 +904,7 @@ function marketLine(f){
 }
 function modelSays(f){
   if(!f.lb) return "";
-  const ORDER=["ensemble","poisson","dixon_coles","elo","market"]; // Elo + Market last (naive scoreline, no %)
+  const ORDER=["ensemble","blend","poisson","dixon_coles","elo","market"]; // Elo + Market last (naive scoreline, no %)
   const ens=(f.lb.ensemble&&f.lb.ensemble.probs)||null;          // baseline for the per-row delta
   const head=`<span></span><span class="gh" style="text-align:center">pick</span><span class="gh" style="text-align:center">odds</span><span class="gh" style="text-align:right">call</span><span class="gh" style="text-align:right">vs ens</span>`;
   const rows=ORDER.filter(m=>f.lb[m]).map(m=>{ const v=f.lb[m];
@@ -1256,7 +1258,7 @@ function explainerHTML(){return `
   <h3>What this is</h3>
   <p>A statistical model that forecasts every World Cup match — its honest best guess at the score, not a pick engineered to win your pool. You enter your own picks separately.</p>
   <h3>The win bar</h3>
-  <p><span class="dot" style="background:var(--home)"></span>team 1 win &nbsp; <span class="dot" style="background:var(--draw)"></span>draw &nbsp; <span class="dot" style="background:var(--away)"></span>team 2 win — the model's probability for each outcome. Wider = more likely.</p>
+  <p><span class="dot" style="background:var(--home)"></span>team 1 win &nbsp; <span class="dot" style="background:var(--draw)"></span>draw &nbsp; <span class="dot" style="background:var(--away)"></span>team 2 win — the <span class="k">Blend</span> probability for each outcome (model ensemble with the bookies folded in, once a game is priced; the pure model otherwise). Wider = more likely.</p>
   <h3>Most likely score + %</h3>
   <p>The single exact scoreline the model thinks is <span class="k">most probable</span>, with its chance. Because international football is low-scoring, this is often 1-0, 0-0 or 1-1 — that genuinely is the most likely exact result, even when one team is favoured to win.</p>
   <h3>Expected goals</h3>
@@ -1276,6 +1278,8 @@ function explainerHTML(){return `
   <p>Most games are treated as <span class="k">neutral</span> — no home edge. The exception is the three hosts: when <span class="k">USA, Mexico or Canada</span> play in their own country (a 🏠 badge on the card), the model applies its fitted home advantage to that side. Mexico at altitude in Mexico City, for instance, gets a real bump.</p>
   <h3>Market (the bookies)</h3>
   <p>A <span class="k">Market</span> contestant in the League is the bookmakers' odds, averaged across books and stripped of their margin (the overround) to give clean probabilities. Beating the market's RPS is hard — it's the real test of whether the model is any good. Market only appears once odds coverage begins, so it's scored over its own games.</p>
+  <h3>Blend (model + market)</h3>
+  <p>The headline forecast. When a game has bookmaker odds, it mixes the de-vigged <span class="k">Market</span> 50/50 with the model <span class="k">Ensemble</span> — two good forecasts averaged usually beat either alone. Before a game is priced it's just the Ensemble. The pure Ensemble stays in the League alongside it, so the honest "does the model beat the bookies?" test isn't muddied. The Blend uses the model's scoreline (the market has none), so it competes on result + RPS.</p>
   <h3>vs market (edge)</h3>
   <p>On each upcoming card, the line where the model most <span class="k">disagrees</span> with the bookies: e.g. <i>model 48% vs market 41%</i> on a side. A positive gap means the model rates that outcome higher than the market does — your contrarian signal. Big disagreements are where your pool pick is a genuine call, for better or worse.</p>
   <h3>Result call</h3>

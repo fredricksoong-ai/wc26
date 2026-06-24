@@ -44,6 +44,12 @@ W_DC, RECENT_YEARS, MIN_MATCHES, XI = 0.6, 8, 10, 0.001
 # scoreline, for games we have xG for (deploy/xg.json). 0 = off (goals only),
 # 1 = trust xG fully. Kill-switch: set to 0.0 to revert instantly.
 XG_ELO_WEIGHT, XG_TAU = 1.0, 1.0
+# Market blend: when bookmaker odds exist for a game, the 'blend' forecast mixes
+# the de-vigged market into the model ensemble (W_MKT on market, 1-W_MKT on the
+# DC/Elo ensemble). 0 = ignore the market, 1 = defer fully to the bookies.
+# This drives the card's headline forecast; the pure Ensemble stays alongside it
+# (League contestant + the vs-market edge line) so the model-vs-bookies test stays clean.
+W_MKT = 0.5
 RESULT_PTS, EXACT_PTS = scoring.RESULT_PTS, scoring.EXACT_PTS
 
 
@@ -276,7 +282,15 @@ def main() -> int:
     except Exception as e:
         pm = None; print(f"  (Poisson rung-1 skipped: {e})")
 
-    LB_MODELS = ["poisson", "dixon_coles", "elo", "ensemble", "market"]
+    LB_MODELS = ["poisson", "dixon_coles", "elo", "ensemble", "blend", "market"]
+
+    def blend_mkt(enp, mp):
+        """Mix the de-vigged market into the model ensemble. mp=None -> pure ensemble."""
+        if mp is None:
+            return enp
+        b = {k: W_MKT * mp[k] + (1 - W_MKT) * enp[k] for k in ("home", "draw", "away")}
+        s = sum(b.values())
+        return {k: v / s for k, v in b.items()}
 
     # bookmaker odds (optional): de-vigged consensus probs keyed by team pair.
     # Lives in deploy/ so it's carried forward from the live site between runs (throttle).
@@ -333,6 +347,11 @@ def main() -> int:
         if mp is not None:                      # bookmaker consensus, scored like Elo (naive score, no scoreline model)
             mscore = naive[amax(mp)]
             out["market"] = {"score": mscore, "sp": None, "result": res_of(mscore), "probs": vec(mp)}
+        # blend: market-weighted ensemble. Uses DC's scoreline (market has none), so it
+        # competes on result+RPS like the ensemble but with the bookies folded in.
+        # When unpriced it equals the ensemble, so it only diverges once odds exist.
+        bp = blend_mkt(enp, mp)
+        out["blend"] = {"score": ds, "sp": dsp, "result": res_of(ds), "probs": vec(bp)}
         return out
 
     def score_models(lb, actual):
@@ -376,8 +395,12 @@ def main() -> int:
             matrix = o_matrix(dm, r.team1, r.team2, r.ground)
 
             if not r.played:
-                probs = E.ensemble_probs(o_probs(dm.outcome_probs, r.team1, r.team2, r.ground),
-                                         o_probs(em.outcome_probs, r.team1, r.team2, r.ground), W_DC)
+                enp = E.ensemble_probs(o_probs(dm.outcome_probs, r.team1, r.team2, r.ground),
+                                       o_probs(em.outcome_probs, r.team1, r.team2, r.ground), W_DC)
+                # headline forecast = market-blended ensemble (falls back to the pure
+                # ensemble when the game isn't priced). The pure ensemble is kept in
+                # lb.ensemble for the vs-market edge line and the model-only League row.
+                probs = blend_mkt(enp, market_probs(r.team1, r.team2))
                 # honest forecast: the most likely scoreline (mode of the DC grid)
                 # plus expected goals (the average). No pool-points optimisation.
                 tops = [[f"{i}-{j}", round(p, 3)] for (i, j), p in scoring.top_scorelines(matrix, 10)]
@@ -541,12 +564,12 @@ def main() -> int:
     ng = len(lb_src)
     standings = {m: {"result_hits": res[m], "exact_hits": exa[m], "games": nm[m],
                      "rps": round(rsum[m] / nm[m], 4) if nm[m] else None} for m in LB_MODELS}
-    leaderboard = {"models": LB_MODELS, "labels": ["Poisson", "Dixon–Coles", "Elo", "Ensemble", "Market"],
+    leaderboard = {"models": LB_MODELS, "labels": ["Poisson", "Dixon–Coles", "Elo", "Ensemble", "Blend", "Market"],
                    "games": lb_games, "cum_rps": cum_rps, "standings": standings}
 
     payload = {
         "generated_utc": _now(),
-        "model": f"Dixon-Coles (xi={XI}) + Elo ensemble (w_DC={W_DC}); host advantage for USA/Mexico/Canada",
+        "model": f"Dixon-Coles (xi={XI}) + Elo ensemble (w_DC={W_DC}), market-blended (w_mkt={W_MKT}) when priced; host advantage for USA/Mexico/Canada",
         "scoring": {"result_pts": RESULT_PTS, "exact_pts": EXACT_PTS},
         "backtest": backtest_rps(rec, full),
         "calibration": calibration_backtest(rec, full),
