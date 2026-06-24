@@ -16,3 +16,15 @@ __pycache__/
 # os
 .DS_Store
 deploy/odds.json
+
+# FPLanner prototype files — separate project, parked here from early work (Jun 18).
+# Kept on disk but never committed to the wc26 repo.
+/FPL-Integration-Plan.md
+/FPL-UI-Direction.md
+/fpl/
+/scripts/backtest_pl.py
+/scripts/fetch_pl_data.py
+/scripts/fpl_points_demo.py
+/src/data_pl.py
+/src/fixtures_fpl.py
+/src/fpl_points.py
