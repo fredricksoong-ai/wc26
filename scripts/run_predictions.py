@@ -508,8 +508,22 @@ def main() -> int:
     if os.path.exists(fpath):
         try:
             groups, group_games, ko_games = sim.parse_structure(fpath)
+            # Map the parsed bracket onto the model's EXACT spellings before the gate,
+            # so a diacritic/punctuation mismatch (e.g. 'Curaçao' vs 'Curacao') can't
+            # drop a team from `known` and silently gate off the whole tournament.
+            fixup = lambda t: fx.match_to_model(t, known)
+            groups = {g: [fixup(t) for t in ts] for g, ts in groups.items()}
+            group_games = {g: [(fixup(a), fixup(b), pl, sc) for (a, b, pl, sc) in gs]
+                           for g, gs in group_games.items()}
+            for kg in ko_games:
+                if kg.get("winner"):
+                    kg["winner"] = fixup(kg["winner"])
             sim_teams = [t for ts in groups.values() for t in ts if t in known]
+            missing = sorted({t for ts in groups.values() for t in ts if t not in known})
             full_groups = sum(1 for ts in groups.values() if len([t for t in ts if t in known]) == 4)
+            if missing:
+                print(f"  tournament: {len(missing)} bracket team(s) NOT in model "
+                      f"(add an alias): {missing}")
             if full_groups == 12 and ko_games:
                 padv = lambda o: o["home"] + 0.5 * o["draw"]
                 def elo_eg(a, b):           # Elo has no goals model: derive a crude scoreline rate
@@ -537,7 +551,7 @@ def main() -> int:
                 print(f"  tournament sim: {len(by_model)} models, "
                       f"ensemble favourite { max(tournament, key=lambda x: tournament[x]['champion']) }")
             else:
-                print(f"  tournament sim skipped (only {full_groups}/12 full groups)")
+                print(f"  tournament sim skipped (full_groups={full_groups}/12, ko_games={len(ko_games)})")
         except Exception as e:
             print(f"  tournament sim skipped: {e}")
 

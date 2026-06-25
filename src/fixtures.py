@@ -21,9 +21,34 @@ from __future__ import annotations
 
 import json
 import re
+import unicodedata
 from pathlib import Path
 
 import pandas as pd
+
+
+def fold(name: str) -> str:
+    """Accent/case/punctuation-insensitive key for fuzzy team matching.
+
+    'Curaçao' and 'Curacao', 'Côte d'Ivoire' and 'Cote dIvoire' fold to the same
+    key. Used as a last-resort match so a diacritic mismatch between the fixture
+    feed and the model's team list can't silently drop a team.
+    """
+    s = unicodedata.normalize("NFKD", str(name))
+    s = "".join(c for c in s if not unicodedata.combining(c))
+    return re.sub(r"[^a-z0-9]", "", s.lower())
+
+
+def match_to_model(name: str, model_teams) -> str:
+    """Map one (already alias-resolved) name onto the model's exact spelling.
+
+    Exact hit first, then an accent-insensitive fold match. Returns the name
+    unchanged if nothing matches (caller decides what to do with the miss).
+    """
+    if name in model_teams:
+        return name
+    folded = {fold(t): t for t in model_teams}
+    return folded.get(fold(name), name)
 
 # openfootball play-off placeholder -> real team (martj42 names).
 # Confirmed winners: UEFA A=Bosnia, B=Sweden, C=Turkiye, D=Czechia; IC=DR Congo, Iraq.
@@ -121,9 +146,17 @@ def reconcile_names(fixtures: pd.DataFrame, model_teams, aliases: dict | None = 
         name = name.replace(" & ", " and ")   # "Bosnia & Herzegovina" -> "...and..."
         return aliases.get(name, name)
 
+    folded = {fold(t): t for t in model_teams}
+
+    def m2(name):                              # alias first, then accent-fold fallback
+        name = m(name)
+        if _is_placeholder(name) or name in model_teams:
+            return name
+        return folded.get(fold(name), name)
+
     out = fixtures.copy()
-    out["team1"] = out["team1"].map(m)
-    out["team2"] = out["team2"].map(m)
+    out["team1"] = out["team1"].map(m2)
+    out["team2"] = out["team2"].map(m2)
 
     unmatched = set()
     for col in ("team1", "team2"):
