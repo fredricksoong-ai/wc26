@@ -71,6 +71,7 @@
   .pcenter{color:var(--muted);font-size:12px;font-weight:600}
   .validrow{text-align:center;font-size:11px;color:var(--muted)}
   .vok{color:var(--good);font-weight:700} .vwarn{color:var(--away);font-weight:700}
+  .vnudge{text-align:center;font-size:11px;margin-top:3px;color:var(--ink)}
   .cardfoot{display:flex;align-items:center;gap:8px;margin-top:8px;min-height:16px}
   .snapbtn{flex:none;background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;padding:0;line-height:1} .vfill{flex:1;text-align:center}
   .editbtn{flex:none;background:none;border:1px solid var(--line);border-radius:7px;color:var(--muted);font-size:12px;cursor:pointer;padding:3px 7px;line-height:1}
@@ -427,7 +428,8 @@ function nextCard(){
 }
 // hand-maintained: one line per shipped change, newest first
 const CHANGELOG=[
-  ["25 Jun","Fixed the Winner page going blank — an accented team name (Curaçao) was quietly knocking out the title-odds sim"],
+  ["25 Jun","Coach now nudges the best pool pick — back the favourite + its likeliest score, instead of an autopilot draw"],
+  ["25 Jun","Hardened team-name matching (accents) and added diagnostics while chasing the blank Winner page"],
   ["24 Jun","New Blend forecast — the model ensemble with the bookmakers folded in; now drives the headline win bar"],
   ["18 Jun","Tap a pick's matchup → xG compare modal (both teams on Map/Luck/Finishing)"],
   ["18 Jun","Override 'edit pick' button on cards — fix a mis-entered pick even after kickoff"],
@@ -533,20 +535,41 @@ function fmtProb(p){
   if(x>=0.01) return x.toFixed(2)+"%";
   return "<0.01%";
 }
+// likeliest scoreline CONSISTENT with a given result (home/draw/away), from the model's
+// ranked scorelines — i.e. the best exact to pick *if* you're backing that outcome.
+function bestScoreFor(f,out){
+  let best=null;
+  (f.top_scores||[]).forEach(([sc,p])=>{const [i,j]=sc.split("-").map(Number);
+    const r=i>j?"home":i<j?"away":"draw";
+    if(r===out&&(best==null||p>best.p)) best={score:sc,p};});
+  return best;
+}
 // live pick coach: does your pick agree with the model's result + a likely scoreline? (a nudge, not a verdict)
+// The pool-optimal pick is RESULT-first: the model's most likely OUTCOME, then the likeliest
+// scoreline within it — NOT the modal scoreline overall (often a draw even when a side is favoured).
 function validationLine(f,a,b,locked){
   if(a==null||b==null||locked||f.played) return "";
   const probs=[f.p_home,f.p_draw,f.p_away];
   if(probs.some(x=>x==null)) return "";
+  const oi={home:0,draw:1,away:2};
   const modelOut=["home","draw","away"][probs.indexOf(Math.max(...probs))];
   const pickOut=a>b?"home":a<b?"away":"draw";
   const res=pickOut===modelOut?`<span class="vok">✓ result</span>`:`<span class="vwarn">⚠ vs model</span>`;
-  // likelihood of YOUR exact scoreline, from the full grid; ≥5% = a plausible call
-  const p=scoreProb(f,a,b), top1=(f.top_scores&&f.top_scores[0])?f.top_scores[0][0]:"";
+  // likelihood of YOUR exact scoreline, from the full grid; ≥5% = a plausible call.
+  // The hint stays loyal to the side YOU picked (tightens the score, doesn't flip your call).
+  const p=scoreProb(f,a,b), mine=bestScoreFor(f,pickOut);
   const score=(p!=null&&p>=0.05)
     ?`<span class="vok">✓ scoreline</span> <span style="color:var(--muted)">${fmtProb(p)}</span>`
-    :`<span class="vwarn">⚠ scoreline</span> <span style="color:var(--muted)">${fmtProb(p)}${top1?` · model likes ${top1}`:""}</span>`;
-  return `<div class="validrow">${res} · ${score}</div>`;
+    :`<span class="vwarn">⚠ scoreline</span> <span style="color:var(--muted)">${fmtProb(p)}${(mine&&mine.score!==`${a}-${b}`)?` · try ${mine.score}`:""}</span>`;
+  // result-first pool nudge: only when you're OFF the favourite (the draw-trap catcher,
+  // the single biggest lever on pool points). Names the favourite + its likeliest scoreline.
+  let nudge="";
+  const fav=bestScoreFor(f,modelOut);
+  if(pickOut!==modelOut && fav && fav.score){
+    const who=modelOut==="draw"?"draw":code3(modelOut==="home"?f.team1:f.team2)+" win";
+    nudge=`<div class="vnudge">💡 best pool pick: <b>${fav.score}</b> · ${who} <span style="color:var(--muted)">(${pc(probs[oi[modelOut]])}%)</span></div>`;
+  }
+  return `<div class="validrow">${res} · ${score}</div>${nudge}`;
 }
 // countdown to the next kickoff, lifted into the header (the Next banner was dropped)
 function renderHeaderCountdown(){

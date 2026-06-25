@@ -553,7 +553,9 @@ def main() -> int:
             else:
                 print(f"  tournament sim skipped (full_groups={full_groups}/12, ko_games={len(ko_games)})")
         except Exception as e:
+            import traceback
             print(f"  tournament sim skipped: {e}")
+            traceback.print_exc()
 
     # model leaderboard: correct results, correct scorelines, and RPS over played games
     lb_src = sorted([f for f in fixtures_out if f.get("lb_scored")],
