@@ -191,9 +191,12 @@ def simulate(teams, groups, group_games, ko_games, EG, PADV, n_sims=10000, seed=
         def resolve(code, num, side, results):
             if re.match(r"^1[A-L]$", code): return winner[code[1]]
             if re.match(r"^2[A-L]$", code): return runner[code[1]]
-            if code.startswith("3"): return third_assign[(num, side)]
-            if code.startswith("W"): return results[int(code[1:])]
-            return None
+            if code.startswith("3") and "/" in code: return third_assign[(num, side)]
+            if re.match(r"^W\d+$", code): return results[int(code[1:])]
+            # openfootball fills a real qualified team name into the slot once its group
+            # finishes ("1E" -> "Germany"); map it straight to its index (None if unknown,
+            # which the caller guards) rather than letting it fall through to newaxis indexing.
+            return idx.get(code, idx.get(normalize_team(code)))
 
         results = {}
         seen = defaultdict(set)
@@ -203,6 +206,9 @@ def simulate(teams, groups, group_games, ko_games, EG, PADV, n_sims=10000, seed=
             else:
                 t1 = resolve(game["s1"], game["num"], "s1", results)
                 t2 = resolve(game["s2"], game["num"], "s2", results)
+                if t1 is None or t2 is None:   # fail loud, not with a cryptic numpy error
+                    raise ValueError(f"unresolved KO slot in game {game['num']}: "
+                                     f"{game['s1']!r}->{t1}, {game['s2']!r}->{t2}")
                 w = t1 if rng.random() < PADV[t1, t2] else t2
             seen[KO_ROUND[game["num"]]].update((t1, t2))
             results[game["num"]] = w

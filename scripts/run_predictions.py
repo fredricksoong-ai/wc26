@@ -516,6 +516,10 @@ def main() -> int:
             group_games = {g: [(fixup(a), fixup(b), pl, sc) for (a, b, pl, sc) in gs]
                            for g, gs in group_games.items()}
             for kg in ko_games:
+                # openfootball fills real qualified team names into KO slots once a group
+                # ends ("1E" -> "Germany"); map those onto model spellings too (slot codes
+                # like "2A"/"3A/B.."/"W74" fold-match nothing and pass through unchanged).
+                kg["s1"] = fixup(kg["s1"]); kg["s2"] = fixup(kg["s2"])
                 if kg.get("winner"):
                     kg["winner"] = fixup(kg["winner"])
             sim_teams = [t for ts in groups.values() for t in ts if t in known]
