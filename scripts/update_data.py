@@ -6,6 +6,8 @@ Sources (both public domain, both updated ~once a day by hand upstream):
       training history AND live WC2026 results as they're played.
   * openfootball/worldcup.json     -> 2026/worldcup.json
       the WC2026 fixture list (schedule, groups, venues) to predict on.
+  * RealGM xG tracker (optional)   -> deploy/xg.json
+      measured match xG, scraped fail-soft; feeds the dashboard's xG page.
 
 Run daily (see scripts/update_data.sh + the launchd plist). Idempotent:
 downloads to a temp file then atomically replaces, so a failed fetch never
@@ -13,8 +15,10 @@ corrupts the existing copy.
 """
 from __future__ import annotations
 
+import html as _html
 import json
 import os
+import re
 import sys
 import tempfile
 from datetime import datetime, timedelta, timezone
@@ -44,6 +48,100 @@ SGT = timezone(timedelta(hours=8))
 ODDS_TARGETS_SGT = (18, 22)          # 6pm and 10pm Singapore time
 ODDS_FLOOR_H = 24                    # only refetch off-schedule if a whole day was missed
 ODDS_FILE = os.path.join(PROJ, "deploy", "odds.json")
+
+# Measured match xG, scraped fail-soft from RealGM's hand-maintained WC2026 tracker
+# (clean static HTML, no key, no anti-bot). Feeds deploy/xg.json -> the xG page.
+XG_URL = ("https://soccer.realgm.com/analysis/559/"
+          "2026-FIFA-World-Cup-xG-Tracker-Results-Expected-Goals-Of-Every-Match")
+XG_FILE = os.path.join(PROJ, "deploy", "xg.json")
+_UA = {"User-Agent": ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                      "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36")}
+
+
+def _xg_side(s):
+    """('Team', xg) from one side of a RealGM line, tolerating its format quirks."""
+    s = s.replace("**", "")
+    m = re.search(r"\d+\.\d+", s)
+    if not m:
+        return None, None
+    name = re.sub(r"\d+\.?\d*", "", s)        # drop xG + goal numbers
+    name = re.sub(r"\(.*?\)", "", name)       # drop (goals) / (Group X)
+    name = name.replace("xG", "")
+    name = re.sub(r"\s+", " ", name).strip(" :)(")
+    return name, float(m.group())
+
+
+def update_xg_from_realgm(xg_path: str):
+    """Refresh the committed xg.json from RealGM. Returns (updated, added). Raises on
+    fetch/parse failure — the caller keeps it fail-soft so a bad scrape never sinks the run."""
+    from src.fixtures import fold                          # accent/punct-insensitive key
+    spec = {fold("Türkiye"): "Turkey", fold("Côte d'Ivoire"): "Ivory Coast",
+            fold("Czechia"): "Czech Republic", fold("Congo DR"): "DR Congo"}
+
+    resp = requests.get(XG_URL, headers=_UA, timeout=30)
+    resp.raise_for_status()
+    text = re.sub(r"(?i)<br\s*/?>", "\n", resp.text)
+    text = re.sub(r"(?i)</(p|div|li|tr|h2|h3)>", "\n", text)
+    text = _html.unescape(re.sub(r"<[^>]+>", "", text))
+
+    xg = json.load(open(xg_path)) if os.path.exists(xg_path) else {}
+    canon = {t for k in xg for t in k.split("|")[1:]}      # the 48 model team names
+    foldidx = {fold(t): t for t in canon}
+
+    def to_model(name):
+        f = fold(name)
+        if f in spec:
+            return spec[f]
+        if name in canon:
+            return name
+        return foldidx.get(f, name)
+
+    lut = {}                                               # (date, frozenset(pair)) -> {team: xg}
+    for line in text.splitlines():
+        md = re.search(r"\b(June|July)\s+(\d{1,2})\b", line)
+        if not md or " vs. " not in line:
+            continue
+        date = f"2026-{6 if md.group(1)=='June' else 7:02d}-{int(md.group(2)):02d}"
+        left, right = line.split(" vs. ", 1)
+        left = re.split(r":\s+", left)[-1]                 # strip the 'June DD (Group X): ' prefix
+        n1, x1 = _xg_side(left)
+        n2, x2 = _xg_side(right)
+        if x1 is None or x2 is None or not n1 or not n2:
+            continue
+        n1, n2 = to_model(n1), to_model(n2)
+        lut[(date, frozenset((n1, n2)))] = {n1: x1, n2: x2}
+
+    if not lut:
+        raise ValueError("parsed 0 matches — RealGM layout may have changed")
+
+    updated = added = 0
+    have = set()
+    for key in list(xg):                                   # refresh existing games in place
+        d, t1, t2 = key.split("|")
+        have.add((d, frozenset((t1, t2))))
+        rec = lut.get((d, frozenset((t1, t2))))
+        if rec and t1 in rec and t2 in rec:
+            nv = [round(rec[t1], 2), round(rec[t2], 2)]
+            if nv != xg[key]:
+                xg[key] = nv
+                updated += 1
+    for (d, pair), rec in lut.items():                     # add new games (knockouts) as logged
+        if (d, pair) in have:
+            continue
+        (a, x_a), (b, x_b) = list(rec.items())
+        xg[f"{d}|{a}|{b}"] = [round(x_a, 2), round(x_b, 2)]
+        added += 1
+
+    fd, tmp = tempfile.mkstemp(dir=os.path.dirname(xg_path))
+    try:
+        with os.fdopen(fd, "w") as f:
+            json.dump(xg, f, ensure_ascii=False, separators=(",", ":"))
+        os.replace(tmp, xg_path)
+    except BaseException:
+        if os.path.exists(tmp):
+            os.remove(tmp)
+        raise
+    return updated, added
 
 
 def _last_odds_fetch(path: str):
@@ -130,6 +228,14 @@ def main() -> int:
                 print(f"  WARN odds skipped: {e}")
     else:
         print("  (no ODDS_API_KEY set — skipping bookmaker odds)")
+
+    # measured match xG (optional, fail-soft): refresh deploy/xg.json from RealGM's
+    # tracker. A bad scrape (site down, layout change) leaves the existing file as-is.
+    try:
+        up, add = update_xg_from_realgm(XG_FILE)
+        print(f"  ok   xg.json   RealGM xG: {up} updated, {add} added")
+    except Exception as e:
+        print(f"  WARN xg skipped (kept existing xg.json): {e}")
 
     # quick sanity line on the headline file
     try:
