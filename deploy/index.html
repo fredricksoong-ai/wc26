@@ -83,15 +83,6 @@
   #pickdump{flex:1;min-height:170px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px;font:12px/1.45 ui-monospace,monospace;resize:vertical}
   .mhint{font-size:11px;color:var(--muted);margin-top:8px}
   .res{display:flex;align-items:center;gap:7px;font-size:12px;margin-top:9px;color:var(--muted);flex-wrap:wrap}
-  .rrow2{display:flex;align-items:center;gap:7px;margin-top:9px;font-size:12px;flex-wrap:wrap} .rrow2 .lbl{min-width:64px;font-weight:600} .rrow2 .pts{margin-left:auto}
-  .xgrow{margin-top:8px;gap:6px 8px;padding-top:8px;border-top:1px dashed var(--line)}
-  .xgins{display:inline-flex;align-items:center;gap:4px;margin-left:auto}
-  .xgin{width:46px;padding:4px 6px;border:1px solid var(--line);border-radius:7px;background:rgba(255,255,255,.04);color:var(--ink);font-size:13px;text-align:center;font-weight:700;font-family:inherit}
-  .xgin:focus{outline:none;border-color:var(--pick)}
-  .xgverdict{flex-basis:100%;font-size:11px}
-  .syncbar{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(167,139,250,.05)}
-  .syncbar .sb-note{flex:1;font-size:12px;color:var(--muted);line-height:1.35}
-  .xgsync{width:auto;padding:0 12px;gap:5px;white-space:nowrap;font-size:13px}
   .tag{border-radius:6px;padding:2px 7px;font-size:11px;font-weight:700;white-space:nowrap}
   .tag.ok{background:rgba(52,211,153,.15);color:var(--good)} .tag.no{background:rgba(248,113,113,.13);color:var(--bad)}
   .pts{margin-left:auto;font-weight:700;color:var(--good)} .pts.zero{color:var(--muted)}
@@ -423,6 +414,10 @@ function nextCard(){
 }
 // hand-maintained: one line per shipped change, newest first
 const CHANGELOG=[
+  ["28 Jun","xG is now auto-collected from a single source — no more manual entry or syncing; the page just reads the feed"],
+  ["28 Jun","Header: tappable '↻ ago' age pill (tap to rebuild); the odds gauge now shows only when credits run low"],
+  ["28 Jun","xG charts read intuitively now (green = good); knocked-out teams are muted; League chart trimmed to the last 10 games"],
+  ["28 Jun","Winner page shows last-16 and hides rounds already reached; 'what each model says' is ordered by league standing"],
   ["25 Jun","Coach now nudges the best pool pick — back the favourite + its likeliest score, instead of an autopilot draw"],
   ["25 Jun","Fixed the blank Winner page — the title-odds sim now handles real teams filling the knockout bracket as groups finish"],
   ["24 Jun","New Blend forecast — the model ensemble with the bookmakers folded in; now drives the headline win bar"],
