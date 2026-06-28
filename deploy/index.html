@@ -238,6 +238,7 @@
 <div id="sheetActions" class="bsheet bsheet-l hidden">
   <div class="brow" onclick="barAction('export',event)"><span class="bic">⤒</span>Export picks</div>
   <div class="brow" onclick="barAction('sync',event)"><span class="bic">⇪</span>Sync xG</div>
+  <div class="brow" onclick="barAction('resetxg',event)"><span class="bic">⌫</span>Reset xG to feed</div>
 </div>
 <div id="sheetTabs" class="bsheet bsheet-r hidden"></div>
 <div class="bbhit bbhit-l" onclick="toggleSheet('actions',event)" aria-hidden="true"></div>
@@ -305,6 +306,15 @@ const saveDirty=s=>localStorage.setItem(DKEY,JSON.stringify([...s]));
 function markXGDirty(k){const d=loadDirty();d.add(k);saveDirty(d);}
 function xgFor(f){ const X=loadXG(), k=keyOf(f); if(X[k])return X[k];
   if(f.xg_meas_home!=null)return[f.xg_meas_home,f.xg_meas_away]; return null; }
+// drop this device's local xG overrides so the page uses the committed (RealGM) feed.
+// Needed once when switching from hand-entry to the auto-collected feed, else the old
+// localStorage values keep winning (and a stray Sync would push them back).
+function resetXG(){
+  if(!confirm("Clear xG saved on this device and use the synced feed (RealGM) instead?")) return;
+  localStorage.removeItem(XGKEY); localStorage.removeItem(DKEY);
+  toast("Local xG cleared — using the feed",2600);
+  if(activeView==="xg")renderXG();
+}
 function setXG(key,side,val,i){
   const X=loadXG(), cur=(X[key]?X[key].slice():[null,null]);
   let v=parseFloat(val); if(val===""||isNaN(v))v=null; else v=Math.max(0,Math.min(10,Math.round(v*100)/100));
@@ -433,7 +443,7 @@ document.addEventListener("touchend",e=>{
   _lastTap=t;
 },{passive:false});
 function barAction(a,e){ if(e)e.stopPropagation(); closeSheets();
-  if(a==="refresh")triggerRefresh(); else if(a==="export")openPicksModal(); else if(a==="sync")syncXG(); }
+  if(a==="refresh")triggerRefresh(); else if(a==="export")openPicksModal(); else if(a==="sync")syncXG(); else if(a==="resetxg")resetXG(); }
 const NAV_TOP=16;          // where the chosen card snaps (px from top)
 let _nav={view:null,idx:-1,t:0};
 function nextCard(){
