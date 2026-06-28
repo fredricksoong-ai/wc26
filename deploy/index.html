@@ -182,6 +182,11 @@
   .upd{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:16px}
   .hright{flex:none;display:flex;align-items:center;gap:8px}
   .hcd{flex:none;font-size:12px;font-weight:700;color:var(--ink);white-space:nowrap;cursor:pointer}
+  .hago{color:var(--muted)}                                  /* data-age pill, lock-style but muted */
+  .hago.busy{opacity:.55} .hwarn{color:var(--bad)!important} /* odds warning only when low */
+  .mbtns{display:flex;gap:9px;margin-top:14px}
+  .mbtn{flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--ink);font-weight:700;font-size:14px;font-family:inherit;cursor:pointer}
+  .mbtn.go{background:var(--pick);border-color:var(--pick);color:#fff}
   main{padding-bottom:74px}
   .bottombar{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:flex-end;justify-content:space-around;gap:8px;padding:40px 26px 8px;padding-bottom:calc(8px + env(safe-area-inset-bottom));background:linear-gradient(to top, rgba(6,6,12,.9) 0%, rgba(6,6,12,.5) 42%, rgba(6,6,12,0) 100%);border:0;z-index:40;pointer-events:none}
   .bottombar .bbtn{pointer-events:auto}
@@ -212,11 +217,11 @@
   <div class="hrow">
     <h1>⚽️ WC '26 Predictor ⚽️</h1>
     <span class="hright">
+      <span id="agopill" class="hcd hago" onclick="confirmRebuild()" title="Data age — tap to rebuild"></span>
       <span id="oddsslot"></span>
       <span id="nextcd" class="hcd" onclick="selectView('fixtures')" title="Until the next kickoff"></span>
     </span>
   </div>
-  <div class="updated"><span id="updated">loading…</span></div>
 </header>
 <div class="metrics" id="metrics"></div>
 <main>
@@ -231,7 +236,6 @@
 </main>
 <div id="bbtoast" class="bbtoast"></div>
 <div id="sheetActions" class="bsheet bsheet-l hidden">
-  <div class="brow" onclick="barAction('refresh',event)"><span class="bic">↻</span>Rebuild</div>
   <div class="brow" onclick="barAction('export',event)"><span class="bic">⤒</span>Export picks</div>
   <div class="brow" onclick="barAction('sync',event)"><span class="bic">⇪</span>Sync xG</div>
 </div>
@@ -248,6 +252,13 @@
     <div class="modalhd"><span>Export</span><span class="hdbtns"><span class="mx" id="copyIco" onclick="copyPicks(this)" title="Copy">⧉</span><span class="mx" onclick="closeModal()" title="Close">✕</span></span></div>
     <textarea id="pickdump" spellcheck="false" readonly></textarea>
     <div class="mhint">Tap ⧉ to copy, then paste to Claude for analysis — it includes your picks, every result, and how each model &amp; the market scored.</div>
+  </div>
+</div>
+<div id="rebuildmodal" class="modal hidden" onclick="if(event.target===this)closeRebuild()">
+  <div class="modalbox">
+    <div class="modalhd"><span>Rebuild now?</span><span class="hdbtns"><span class="mx" onclick="closeRebuild()" title="Close">✕</span></span></div>
+    <div class="mhint" id="rebuildhint">Pulls fresh results &amp; odds and regenerates every forecast. Takes a couple of minutes.</div>
+    <div class="mbtns"><button class="mbtn" onclick="closeRebuild()">Cancel</button><button class="mbtn go" onclick="closeRebuild();triggerRefresh()">Rebuild</button></div>
   </div>
 </div>
 <div id="imgmodal" class="modal hidden" onclick="if(event.target===this)closeImg()">
@@ -337,7 +348,7 @@ function toast(msg,ms){
   clearTimeout(toastT);
   if(ms>0) toastT=setTimeout(()=>el.classList.remove("show"),ms);
 }
-const bbBusy=on=>document.getElementById("bbDots").classList.toggle("busy",on);
+const bbBusy=on=>{document.getElementById("bbDots").classList.toggle("busy",on); const a=document.getElementById("agopill"); if(a)a.classList.toggle("busy",on);};
 
 let refreshPoll=null;
 async function triggerRefresh(){
@@ -365,6 +376,19 @@ async function triggerRefresh(){
     },every);
   }catch(e){ fail(String(e)); }
 }
+// header data-age pill: relative time from the feed timestamp, refreshed each tick
+function relTime(utc){
+  if(!utc) return "—";
+  const m=utc.match(/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/); if(!m) return utc;
+  const mins=Math.max(0,Math.round((Date.now()-Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5]))/60000));
+  if(mins<1) return "just now";
+  if(mins<60) return mins+"m ago";
+  const h=Math.round(mins/60); if(h<24) return h+"h ago";
+  return Math.round(h/24)+"d ago";
+}
+function renderAgoPill(){ const el=document.getElementById("agopill"); if(el) el.innerHTML=`↻ ${relTime((DATA&&DATA.generated_utc)||"")}`; }
+function confirmRebuild(){ document.getElementById("rebuildmodal").classList.remove("hidden"); }
+function closeRebuild(){ document.getElementById("rebuildmodal").classList.add("hidden"); }
 
 // --- bottom-bar navigation ---------------------------------------------------
 let activeView="fixtures";
@@ -483,7 +507,7 @@ fetch("predictions.json",{cache:"no-store"}).then(r=>r.json()).then(d=>{DATA=d;i
 function init(d){
   RP=(d.scoring||{}).result_pts??2; EP=(d.scoring||{}).exact_pts??3; BONUS=EP-RP;
   ALLFIX=(d.fixtures||[]).filter(f=>f.resolved);
-  $("#updated").innerHTML=`Last updated: <b>${toSGT(d.generated_utc)}</b>`;
+  renderAgoPill();
   renderTabSheet(); updateMidButton();
   $("#explainer").innerHTML=explainerHTML();
   renderOdds();
@@ -498,7 +522,7 @@ function init(d){
       <div style="text-align:right"><div class="relo">${r.elo}</div><div style="margin-top:3px">${chev(r.delta)}</div></div>
     </div>`).join("");
   renderAll();
-  if(!window._nsTimer) window._nsTimer=setInterval(renderHeaderCountdown,30000);  // tick the countdown
+  if(!window._nsTimer) window._nsTimer=setInterval(()=>{renderHeaderCountdown();renderAgoPill();},30000);  // tick the countdown + data-age pill
 }
 
 function tallies(){
@@ -628,7 +652,9 @@ function renderAll(){
   renderHeaderCountdown();
   // header pills: colour IS the identity (cyan You, purple Ensemble, white Market) — no labels
   $("#metrics").innerHTML="";   // header standing pills removed (rarely used); the League tab is the home for this
-  $("#oddsslot").innerHTML=(d.odds&&d.odds.credits_remaining!=null)?oddsRing(d.odds.credits_remaining):"";
+  // odds gauge dropped from normal view — only surface a red warning pill when credits run low
+  const cr=d.odds&&d.odds.credits_remaining;
+  $("#oddsslot").innerHTML=(cr!=null&&cr<10)?`<span class="hcd hwarn" title="Odds API credits low — ${cr} left this month">⚠ ${cr}</span>`:"";
   $("#foot").textContent="Lower RPS = more accurate · picks lock at kickoff (SGT) · saved on this device";
 
   const up=ALLFIX.filter(f=>!f.played).sort((a,b)=>(a.kickoff_sgt||"").localeCompare(b.kickoff_sgt||""));
@@ -922,9 +948,15 @@ function marketLine(f){
   const col=bd>=0?"var(--good)":"var(--bad)", sign=bd>=0?"+":"";
   return `<div style="font-size:12px;margin-top:8px;color:var(--muted)">vs market · <b style="color:var(--ink)">${code3(lab)}</b> model <b style="color:var(--ink)">${pc(mod[bi])}%</b> vs market ${pc(mk[bi])}% <span style="color:${col};font-weight:700">(${sign}${pc(bd)})</span></div>`;
 }
+// models ranked by current league points (best first); falls back to the fixed order
+function modelOrderByStanding(){
+  const st=(DATA&&DATA.leaderboard&&DATA.leaderboard.standings)||{};
+  const pts=m=>st[m]?st[m].result_hits*RP+st[m].exact_hits*BONUS:-1;
+  return ["ensemble","blend","poisson","dixon_coles","elo","market"].slice().sort((a,b)=>pts(b)-pts(a));
+}
 function modelSays(f){
   if(!f.lb) return "";
-  const ORDER=["ensemble","blend","poisson","dixon_coles","elo","market"]; // Elo + Market last (naive scoreline, no %)
+  const ORDER=modelOrderByStanding();   // sorted by where each sits in the model league
   const ens=(f.lb.ensemble&&f.lb.ensemble.probs)||null;          // baseline for the per-row delta
   const head=`<span></span><span class="gh" style="text-align:center">pick</span><span class="gh" style="text-align:center">odds</span><span class="gh" style="text-align:right">call</span><span class="gh" style="text-align:right">vs ens</span>`;
   const rows=ORDER.filter(m=>f.lb[m]).map(m=>{ const v=f.lb[m];
