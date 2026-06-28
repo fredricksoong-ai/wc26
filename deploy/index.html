@@ -627,11 +627,7 @@ function renderAll(){
   const t=tallies(), d=DATA;
   renderHeaderCountdown();
   // header pills: colour IS the identity (cyan You, purple Ensemble, white Market) — no labels
-  const ys=youStanding(), es=standingOf("ensemble"), bl=standingOf("blend"), mk=standingOf("market");
-  const dot=`<span style="color:var(--muted)">·</span>`;
-  const pill=(st,bc,trend)=> st?`<span class="pill"><b style="color:${bc}">${st.pts}</b>pts ${dot} ${ord(st.rank)}${st.rps!=null?` ${dot} <b>${st.rps.toFixed(3)}</b>${trend}`:""}</span>`:"";
-  const mePill=ys?pill(ys,"#22d3ee",""):`<span class="pill"><b style="color:#22d3ee">${t.yP}</b>pts</span>`;
-  $("#metrics").innerHTML=[mePill, pill(bl,"#2dd4bf",rpsTrendFor("blend")), pill(es,"#a78bfa",rpsTrendFor("ensemble")), pill(mk,"#e5e7eb",rpsTrendFor("market"))].filter(Boolean).join("");
+  $("#metrics").innerHTML="";   // header standing pills removed (rarely used); the League tab is the home for this
   $("#oddsslot").innerHTML=(d.odds&&d.odds.credits_remaining!=null)?oddsRing(d.odds.credits_remaining):"";
   $("#foot").textContent="Lower RPS = more accurate · picks lock at kickoff (SGT) · saved on this device";
 
@@ -1000,9 +996,11 @@ function refreshXGChart(){
   const sub=`<div class="oddsel" style="margin-top:6px"><span class="opt ${xgMode==='xg'?'on':''}" onclick="xgMode='xg';refreshXGChart()">By xG</span><span class="opt ${xgMode==='luck'?'on':''}" onclick="xgMode='luck';refreshXGChart()">By luck</span></div>`;
   const lbl=xgMode==="luck"?"vs xG":"net xG";
   const hdr=`<div class="xgrow2 xg-head"><span>team</span><span>goals</span><span>xG</span><span></span><span style="text-align:right">${lbl}</span></div>`;
-  const bars=rows.map(r=>{ const v=metric(r), up=v>=0, w=Math.min(50,Math.abs(v)/maxAbs*50), c=v>0.05?'var(--good)':v<-0.05?'var(--bad)':'var(--muted)', dim=xgFocus&&r.t!==xgFocus;
-    return `<div class="xgrow2" style="${dim?'opacity:.3':r.t===xgFocus?'background:rgba(167,139,250,.14);border-radius:6px':''}">
-      <span class="xg-team" title="${r.t}">${flagImg(r.t,true)}${code3(r.t)}</span>
+  const elim=xgEliminated();
+  const bars=rows.map(r=>{ const v=metric(r), up=v>=0, w=Math.min(50,Math.abs(v)/maxAbs*50), c=v>0.05?'var(--good)':v<-0.05?'var(--bad)':'var(--muted)', dim=xgFocus&&r.t!==xgFocus, out=elim.has(r.t)&&r.t!==xgFocus;
+    const rstyle = dim?'opacity:.3' : r.t===xgFocus?'background:rgba(167,139,250,.14);border-radius:6px' : out?'opacity:.45':'';
+    return `<div class="xgrow2" style="${rstyle}">
+      <span class="xg-team" title="${r.t}${out?' (knocked out)':''}">${flagImg(r.t,true)}${code3(r.t)}${out?' <span class="m" style="font-size:8.5px;letter-spacing:.5px">OUT</span>':''}</span>
       <span class="xg-d">${r.gf}–${r.ga}</span>
       <span class="xg-d">${r.xf.toFixed(1)}–${r.xa.toFixed(1)}</span>
       <div class="xg-bar"><span class="xg-mid"></span><span class="xg-fill" style="${up?'left:50%':'right:50%'};width:${w.toFixed(1)}%;background:${c}"></span></div>
@@ -1058,18 +1056,18 @@ function xgChart(rows,view,focus,elim){
     const xd=r=>(r.xf-r.xa)/r.gp, yd=r=>(r.gf-r.ga)/r.gp, luck=r=>yd(r)-xd(r);
     const m=Math.max(1,Math.ceil(Math.max(...rows.map(r=>Math.max(Math.abs(xd(r)),Math.abs(yd(r)))))+0.2));
     const lab=pick(luck);
-    items=rows.map(r=>({x:xd(r),y:yd(r),code:code3(r.t),team:r.t,big:lab.has(r.t),col:colDiff(-luck(r))}));   // under = green (back), over = red (fade)
+    items=rows.map(r=>({x:xd(r),y:yd(r),code:code3(r.t),team:r.t,big:lab.has(r.t),col:colDiff(luck(r))}));   // intuitive: over = green (good results), under = red
     cfg={xmin:-m,xmax:m,ymin:-m,ymax:m,flipY:false,diag:true,xlab:"xG diff →",ylab:"goal diff ↑",aria:"over/under-performance vs xG",
-      tris:[{pts:[[-m,m],[-m,-m],[m,m]],fill:'rgba(226,75,74,.07)'},{pts:[[m,-m],[-m,-m],[m,m]],fill:'rgba(29,158,117,.07)'}],
-      notes:[{x:-m+0.12,y:m-0.18,t:'overperforming',col:'#ef9f27',anchor:'start'},{x:m-0.12,y:-m+0.35,t:'underperforming',col:'#5dcaa5',anchor:'end'}]};
+      tris:[{pts:[[-m,m],[-m,-m],[m,m]],fill:'rgba(29,158,117,.07)'},{pts:[[m,-m],[-m,-m],[m,m]],fill:'rgba(226,75,74,.07)'}],
+      notes:[{x:-m+0.12,y:m-0.18,t:'overperforming',col:'#5dcaa5',anchor:'start'},{x:m-0.12,y:-m+0.35,t:'underperforming',col:'#e24b4a',anchor:'end'}]};
   }else{
     const xf=r=>r.xf/r.gp, gf=r=>r.gf/r.gp, fin=r=>gf(r)-xf(r);
     const mx=Math.max(2,Math.ceil(Math.max(...rows.map(xf),...rows.map(gf))+0.2));
     const lab=pick(fin);
-    items=rows.map(r=>({x:xf(r),y:gf(r),code:code3(r.t),team:r.t,big:lab.has(r.t),col:colDiff(-fin(r))}));   // wasteful = green (back), clinical = red (fade)
+    items=rows.map(r=>({x:xf(r),y:gf(r),code:code3(r.t),team:r.t,big:lab.has(r.t),col:colDiff(fin(r))}));   // intuitive: clinical = green (good finishing), wasteful = red
     cfg={xmin:0,xmax:mx,ymin:0,ymax:mx,flipY:false,diag:true,xlab:"xG created →",ylab:"goals scored ↑",aria:"finishing efficiency",
-      tris:[{pts:[[0,mx],[0,0],[mx,mx]],fill:'rgba(226,75,74,.07)'},{pts:[[mx,0],[0,0],[mx,mx]],fill:'rgba(29,158,117,.07)'}],
-      notes:[{x:0.12,y:mx-0.18,t:'clinical',col:'#ef9f27',anchor:'start'},{x:mx-0.12,y:0.35,t:'wasteful',col:'#5dcaa5',anchor:'end'}]};
+      tris:[{pts:[[0,mx],[0,0],[mx,mx]],fill:'rgba(29,158,117,.07)'},{pts:[[mx,0],[0,0],[mx,mx]],fill:'rgba(226,75,74,.07)'}],
+      notes:[{x:0.12,y:mx-0.18,t:'clinical',col:'#5dcaa5',anchor:'start'},{x:mx-0.12,y:0.35,t:'wasteful',col:'#e24b4a',anchor:'end'}]};
   }
   if(elim&&elim.size){ items.forEach(it=>{ if(elim.has(it.team)) it.elim=true; }); }   // knocked-out teams stay (frozen) but dim
   const hi=focus?(focus instanceof Set?focus:new Set([focus])):null;   // highlight one (search) or many (match compare)
@@ -1084,8 +1082,8 @@ function teamZone(rows,r,view){
     if(pf<mxf&&pa>mxa)return{zone:"outclassed",zc:"var(--bad)"};
     if(pf>=mxf&&pa>mxa)return{zone:"busy both ends",zc:"var(--muted)"};
     return{zone:"quiet both ends",zc:"var(--muted)"};}
-  if(view==="luck"){const l=r.luck;return l<-0.3?{zone:"underperforming",zc:"var(--good)"}:l>0.3?{zone:"overperforming",zc:"var(--bad)"}:{zone:"as expected",zc:"var(--muted)"};}
-  const fd=r.gf-r.xf;return fd<-0.3?{zone:"wasteful",zc:"var(--good)"}:fd>0.3?{zone:"clinical",zc:"var(--bad)"}:{zone:"as expected",zc:"var(--muted)"};
+  if(view==="luck"){const l=r.luck;return l<-0.3?{zone:"underperforming",zc:"var(--bad)"}:l>0.3?{zone:"overperforming",zc:"var(--good)"}:{zone:"as expected",zc:"var(--muted)"};}
+  const fd=r.gf-r.xf;return fd<-0.3?{zone:"wasteful",zc:"var(--bad)"}:fd>0.3?{zone:"clinical",zc:"var(--good)"}:{zone:"as expected",zc:"var(--muted)"};
 }
 // a plain-English read of one game from this team's view: result vs the xG it earned.
 // colour encodes the regression signal — green = underlying beat the result (a back), red = flattered.
@@ -1126,8 +1124,8 @@ function xgPoint(code){
     const n=G.length, back=G.filter(g=>g.sig==='back').length, fade=G.filter(g=>g.sig==='fade').length;
     const vsStr=G.filter(g=>g.sig==='back'&&g.ew!=null&&g.ew<=0.30).length, need=Math.ceil(n*0.6);
     let verd,vc;
-    if(back>=need&&fade<=1){verd="consistent under-performer — back";vc="var(--good)";}
-    else if(fade>=need&&back<=1){verd="riding its luck — fade";vc="var(--bad)";}
+    if(back>=need&&fade<=1){verd="consistent under-performer — back";vc="var(--bad)";}      // red = poor recent results; "back" = buy-low
+    else if(fade>=need&&back<=1){verd="riding its luck — fade";vc="var(--good)";}            // green = flattering results; "fade" = sell-high
     else {verd="results match the level — no clear edge";vc="var(--muted)";}
     summary=`<div class="xgd-sum"><span class="m">out-created ${back} of ${n}${fade?`, ${fade} against`:''}${vsStr?` · ${vsStr} vs stronger`:''} → </span><b style="color:${vc}">${verd}</b></div>`;
   }
@@ -1219,13 +1217,19 @@ function renderLeague(d){
       dsets=M.filter(m=>started[m]).map(m=>({label:LB_LABELS[m]||m,data:cum[m],borderColor:LB_COLORS[m],backgroundColor:LB_COLORS[m],borderWidth:2,tension:.2,pointRadius:2,spanGaps:false}));
       dsets.push({label:"You",data:youCum,borderColor:"#22d3ee",backgroundColor:"#22d3ee",borderWidth:2,borderDash:[5,4],tension:.2,pointRadius:2});
       title="running pool points — higher is better";
-      yScale={beginAtZero:true,ticks:{color:"#6b7a90",precision:0},grid:{color:"#1f2c44"}};
+      yScale={ticks:{color:"#6b7a90",precision:0},grid:{color:"#1f2c44"}};   // auto-range so the last-N window spreads (not bunched near the top)
     }
+    // show only the last N games so the x-axis doesn't cluster; the lines keep their
+    // running totals, just windowed to the recent stretch (where every model incl. Market has data)
+    const NSHOW=10;
+    const labels=lb.games.map((g,i)=>i+1).slice(-NSHOW);
+    dsets.forEach(ds=>{ ds.data=ds.data.slice(-NSHOW); });
+    if(lb.games.length>NSHOW) title+=` · last ${NSHOW}`;
     lbChart=new Chart(document.getElementById("lbchart"),{type:"line",
-      data:{labels:lb.games.map((g,i)=>i+1),datasets:dsets},
+      data:{labels,datasets:dsets},
       options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
         plugins:{legend:{labels:{color:"#90a0b8",boxWidth:10,font:{size:11}}},title:{display:true,text:title,color:"#6b7a90",font:{size:11}}},
-        scales:{x:{ticks:{color:"#6b7a90",maxTicksLimit:8},grid:{color:"#1f2c44"}},y:yScale}}});
+        scales:{x:{ticks:{color:"#6b7a90",maxTicksLimit:10},grid:{color:"#1f2c44"}},y:yScale}}});
   }
 }
 
@@ -1246,15 +1250,20 @@ function renderOdds(){
   let sel="";
   if(avail.length>1){ sel=`<div class="oddsel">`+avail.map(m=>`<span class="opt ${m===oddsModel?'on':''}" onclick="oddsModel='${m}';renderOdds()">${LB_LABELS[m]||m}</span>`).join("")+`</div>`; }
   let html=`<div class="subline">Each nation's chance to <b>win the World Cup</b> from 20,000 simulated tournaments — by ${LB_LABELS[oddsModel]||'the ensemble'}. Banks results so far; eliminated teams drop off.</div>`+sel;
-  html+=live.map((r,i)=>`<div class="orow">
+  // only show stages still UNDECIDED for this team — a round already reached (prob ≈1) is
+  // dropped, so "last 32" disappears now the R32 is set; deepest round first.
+  const STAGES=[["Final","final"],["SF","semis"],["QF","last 8"],["R16","last 16"],["advance","last 32"]];
+  html+=live.map((r,i)=>{
+    const sline=STAGES.filter(([k])=>r[k]!=null&&r[k]>0&&r[k]<0.999).map(([k,l])=>`${l} ${pc(r[k])}%`).join(" · ");
+    return `<div class="orow">
       <div class="rank">${i+1}</div>
       <div style="flex:1;min-width:0">
         <div class="rname">${flagImg(r.team)}${code3(r.team)}</div>
         <div class="obar"><i style="width:${Math.max(2,Math.round(r.champion/mx*100))}%"></i></div>
-        <div style="font-size:10.5px;color:var(--muted);margin-top:4px">final ${pc(r.Final)}% · semis ${pc(r.SF)}% · last 8 ${pc(r.QF)}% · last 32 ${pc(r.advance)}%</div>
+        <div style="font-size:10.5px;color:var(--muted);margin-top:4px">${sline||'through to the final'}</div>
       </div>
       <div style="text-align:right"><div style="font-weight:700;color:var(--good)">${(r.champion*100).toFixed(1)}%</div><div style="font-size:10px;color:var(--muted)">title</div></div>
-    </div>`).join("");
+    </div>`;}).join("");
   if(out.length) html+=`<div style="margin-top:14px;font-size:11px;color:var(--muted);line-height:1.9"><b style="color:var(--ink)">Out (${out.length}):</b> ${out.map(t=>teamTag(t,true)).join("　")}</div>`;
   $("#odds").innerHTML=html;
 }
