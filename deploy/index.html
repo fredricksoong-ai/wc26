@@ -237,8 +237,6 @@
 <div id="bbtoast" class="bbtoast"></div>
 <div id="sheetActions" class="bsheet bsheet-l hidden">
   <div class="brow" onclick="barAction('export',event)"><span class="bic">⤒</span>Export picks</div>
-  <div class="brow" onclick="barAction('sync',event)"><span class="bic">⇪</span>Sync xG</div>
-  <div class="brow" onclick="barAction('resetxg',event)"><span class="bic">⌫</span>Reset xG to feed</div>
 </div>
 <div id="sheetTabs" class="bsheet bsheet-r hidden"></div>
 <div class="bbhit bbhit-l" onclick="toggleSheet('actions',event)" aria-hidden="true"></div>
@@ -289,51 +287,14 @@
 
 <script>
 const $=s=>document.querySelector(s), pc=x=>Math.round((x||0)*100);
-const LSKEY="wc26picks", XGKEY="wc26xg";
+const LSKEY="wc26picks";
 let DATA=null, RP=2, EP=3, BONUS=1, ALLFIX=[];   // BONUS=EP-RP: exact's marginal over result (scoring is non-additive)
 
 const loadPicks=()=>{try{return JSON.parse(localStorage.getItem(LSKEY))||{}}catch(e){return{}}};
 const savePicks=o=>localStorage.setItem(LSKEY,JSON.stringify(o));
 const keyOf=f=>`${f.date}|${f.team1}|${f.team2}`;
-// measured match xG you type in from FotMob, per game, on this device until synced.
-const loadXG=()=>{try{return JSON.parse(localStorage.getItem(XGKEY))||{}}catch(e){return{}}};
-const saveXG=o=>localStorage.setItem(XGKEY,JSON.stringify(o));
-// "dirty" set = games edited since the last successful sync, so Sync only pushes what changed.
-// First run after this lands: seed it with everything already entered (one full sync), then deltas.
-const DKEY="wc26xgd";
-function loadDirty(){ if(localStorage.getItem(DKEY)==null){const all=new Set(Object.keys(loadXG()));localStorage.setItem(DKEY,JSON.stringify([...all]));return all;} try{return new Set(JSON.parse(localStorage.getItem(DKEY))||[])}catch(e){return new Set()} }
-const saveDirty=s=>localStorage.setItem(DKEY,JSON.stringify([...s]));
-function markXGDirty(k){const d=loadDirty();d.add(k);saveDirty(d);}
-function xgFor(f){ const X=loadXG(), k=keyOf(f); if(X[k])return X[k];
-  if(f.xg_meas_home!=null)return[f.xg_meas_home,f.xg_meas_away]; return null; }
-// drop this device's local xG overrides so the page uses the committed (RealGM) feed.
-// Needed once when switching from hand-entry to the auto-collected feed, else the old
-// localStorage values keep winning (and a stray Sync would push them back).
-function resetXG(){
-  if(!confirm("Clear xG saved on this device and use the synced feed (RealGM) instead?")) return;
-  localStorage.removeItem(XGKEY); localStorage.removeItem(DKEY);
-  toast("Local xG cleared — using the feed",2600);
-  if(activeView==="xg")renderXG();
-}
-function setXG(key,side,val,i){
-  const X=loadXG(), cur=(X[key]?X[key].slice():[null,null]);
-  let v=parseFloat(val); if(val===""||isNaN(v))v=null; else v=Math.max(0,Math.min(10,Math.round(v*100)/100));
-  cur[side]=v;
-  if(cur[0]==null&&cur[1]==null)delete X[key]; else X[key]=cur;
-  saveXG(X); markXGDirty(key);
-  const el=document.getElementById("xgv-"+i); if(el)el.innerHTML=xgVerdict(X[key], +el.dataset.gh, +el.dataset.ga, el.dataset.t1, el.dataset.t2);
-}
-// reads measured xG against the actual scoreline: did the result flatter someone?
-function xgVerdict(ax,gh,ga,t1,t2){
-  if(!ax||ax[0]==null||ax[1]==null)return `<span style="color:var(--muted)">add match xG to teach the model</span>`;
-  const xd=ax[0]-ax[1], xs=Math.sign(xd), gs=Math.sign(gh-ga), tag=`xG ${ax[0]}–${ax[1]}`;
-  const led=xs>0?code3(t1):xs<0?code3(t2):null, won=gh>ga?code3(t1):gh<ga?code3(t2):null;
-  if(gs===0) return Math.abs(xd)>=0.7
-    ? `<span style="color:var(--muted)">drew, but ${led} shaded the xG · ${tag}</span>`
-    : `<span style="color:var(--good)">even game, fair draw · ${tag}</span>`;
-  if(xs===gs) return `<span style="color:var(--good)">deserved by ${won} · ${tag}</span>`;
-  return `<span style="color:var(--bad)">flattering for ${won} · ${tag}</span>`;
-}
+// measured match xG, read straight from the committed feed (RealGM), collected automatically.
+function xgFor(f){ return f.xg_meas_home!=null?[f.xg_meas_home,f.xg_meas_away]:null; }
 function seedArr(f){ if(f.your_pick){const[a,b]=f.your_pick.split("-");return[+a,+b]} return null; }
 function pickArr(f){ const P=loadPicks(); if(P[keyOf(f)])return P[keyOf(f)]; return seedArr(f); }
 function userPickFor(key){ const P=loadPicks(); if(P[key]&&P[key][0]!=null)return P[key];
@@ -443,7 +404,7 @@ document.addEventListener("touchend",e=>{
   _lastTap=t;
 },{passive:false});
 function barAction(a,e){ if(e)e.stopPropagation(); closeSheets();
-  if(a==="refresh")triggerRefresh(); else if(a==="export")openPicksModal(); else if(a==="sync")syncXG(); else if(a==="resetxg")resetXG(); }
+  if(a==="refresh")triggerRefresh(); else if(a==="export")openPicksModal(); }
 const NAV_TOP=16;          // where the chosen card snaps (px from top)
 let _nav={view:null,idx:-1,t:0};
 function nextCard(){
@@ -879,44 +840,10 @@ function resultCard(f){
     </div>
     ${probBar}
     <div class="rgrid">${head}${youRow}${modelRows}</div>
-    ${xgEditRow(f,i)}
     <div class="cardfoot" style="justify-content:flex-end;margin-top:8px"><button class="editbtn" onclick="editPick(${i})" title="Fix your pick">✎</button></div>
   </div>`;
 }
 
-// per-game measured-xG entry: predicted (model) shown for reference, two decimal inputs
-// for what FotMob recorded, and a one-line read on whether the result was deserved.
-function xgEditRow(f,i){
-  const xk=keyOf(f), ax=xgFor(f);
-  const pred=f.xg_home!=null?`<span style="color:var(--muted);font-weight:400">model ${f.xg_home}–${f.xg_away}</span>`:"";
-  const v0=ax&&ax[0]!=null?ax[0]:"", v1=ax&&ax[1]!=null?ax[1]:"";
-  const inp=(side,val)=>`<input class="xgin" type="text" inputmode="decimal" value="${val}" placeholder="–" onchange="setXG('${xk}',${side},this.value,${i})">`;
-  return `<div class="rrow2 xgrow">
-    <span class="lbl" style="min-width:auto;color:var(--home)">Match xG</span>${pred}
-    <span class="xgins">${inp(0,v0)}<span style="color:var(--muted)">–</span>${inp(1,v1)}</span>
-    <span id="xgv-${i}" data-gh="${f.actual[0]}" data-ga="${f.actual[1]}" data-t1="${f.team1}" data-t2="${f.team2}" class="xgverdict">${xgVerdict(ax,f.actual[0],f.actual[1],f.team1,f.team2)}</span>
-  </div>`;
-}
-// slim hint at the top of Results: enter xG on the cards, then push it from the ⋯ menu
-function syncBar(){
-  return `<div class="syncbar"><span class="sb-note">Add each game's xG below, then push it to the model from <b style="color:var(--ink)">⋯ → Sync xG</b>.</span></div>`;
-}
-async function syncXG(){
-  const dots=document.getElementById("bbDots");
-  const X=loadXG(), dirty=loadDirty();
-  const keys=[...dirty].filter(k=>X[k]);          // only the games changed since the last sync
-  if(!keys.length){ toast("No new xG to sync",2500); return; }
-  if(dots.classList.contains("busy"))return;
-  const payload={}; keys.forEach(k=>payload[k]=X[k]); const n=keys.length;
-  bbBusy(true); toast(`Syncing ${n} game${n>1?'s':''}…`,0);
-  const fin=(m,ms)=>{ bbBusy(false); toast(m,ms); };
-  try{
-    const r=await fetch("/sync-xg",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({xg:payload})});
-    const j=await r.json().catch(()=>({}));
-    if(r.ok&&j.ok){ const d=loadDirty(); keys.forEach(k=>d.delete(k)); saveDirty(d); fin(`Synced ${n} game${n>1?'s':''} ✓ — model rebuilds shortly`,5000); }
-    else fin("Sync failed: "+((j&&j.error)||("HTTP "+r.status)),5000);
-  }catch(e){ fin("Sync failed: "+e,5000); }
-}
 
 // Results header: your record + standout calls (the You/Ensemble/Market comparison
 // lives in the header pills now, on every page, so the tiles were dropped here).
@@ -1014,7 +941,7 @@ function xgRows(cap){
 }
 function renderXG(){
   const g=xgPlayed();
-  if(!g.length){ $("#xg").innerHTML=`<div class="err">Add each game's xG on the Results cards, then ⋯ → Sync xG.</div>`; return; }
+  if(!g.length){ $("#xg").innerHTML=`<div class="err">xG appears here once games are played and the feed updates.</div>`; return; }
   const maxG=xgMaxGames();
   if(xgCutoff==null||xgCutoff>maxG) xgCutoff=maxG;
   const views=[["bars","Bars"],["map","Map"],["luck","Luck"],["finish","Finishing"]];
