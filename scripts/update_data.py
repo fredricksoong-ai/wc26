@@ -71,67 +71,74 @@ def _xg_side(s):
     return name, float(m.group())
 
 
-def update_xg_from_realgm(xg_path: str):
-    """Refresh the committed xg.json from RealGM. Returns (updated, added). Raises on
-    fetch/parse failure — the caller keeps it fail-soft so a bad scrape never sinks the run."""
-    from src.fixtures import fold                          # accent/punct-insensitive key
+def _parse_xg(text: str):
+    """Tag-stripped RealGM text -> {frozenset(pair): (date, {team: xg})}, names spec-renamed.
+    A pair plays at most once all tournament, so the unordered pair is a safe match key —
+    robust to RealGM dating a game a day off from our fixtures."""
+    from src.fixtures import fold
     spec = {fold("Türkiye"): "Turkey", fold("Côte d'Ivoire"): "Ivory Coast",
             fold("Czechia"): "Czech Republic", fold("Congo DR"): "DR Congo"}
-
-    resp = requests.get(XG_URL, headers=_UA, timeout=30)
-    resp.raise_for_status()
-    text = re.sub(r"(?i)<br\s*/?>", "\n", resp.text)
-    text = re.sub(r"(?i)</(p|div|li|tr|h2|h3)>", "\n", text)
-    text = _html.unescape(re.sub(r"<[^>]+>", "", text))
-
-    xg = json.load(open(xg_path)) if os.path.exists(xg_path) else {}
-    canon = {t for k in xg for t in k.split("|")[1:]}      # the 48 model team names
-    foldidx = {fold(t): t for t in canon}
-
-    def to_model(name):
-        f = fold(name)
-        if f in spec:
-            return spec[f]
-        if name in canon:
-            return name
-        return foldidx.get(f, name)
-
-    lut = {}                                               # (date, frozenset(pair)) -> {team: xg}
+    ren = lambda n: spec.get(fold(n), n)
+    out = {}
     for line in text.splitlines():
         md = re.search(r"\b(June|July)\s+(\d{1,2})\b", line)
         if not md or " vs. " not in line:
             continue
         date = f"2026-{6 if md.group(1)=='June' else 7:02d}-{int(md.group(2)):02d}"
         left, right = line.split(" vs. ", 1)
-        left = re.split(r":\s+", left)[-1]                 # strip the 'June DD (Group X): ' prefix
-        n1, x1 = _xg_side(left)
+        n1, x1 = _xg_side(re.split(r":\s+", left)[-1])     # drop the 'June DD (Group X): ' prefix
         n2, x2 = _xg_side(right)
         if x1 is None or x2 is None or not n1 or not n2:
             continue
-        n1, n2 = to_model(n1), to_model(n2)
-        lut[(date, frozenset((n1, n2)))] = {n1: x1, n2: x2}
+        n1, n2 = ren(n1), ren(n2)
+        out[frozenset((n1, n2))] = (date, {n1: x1, n2: x2})
+    return out
 
-    if not lut:
-        raise ValueError("parsed 0 matches — RealGM layout may have changed")
 
+def _merge_xg(xg: dict, lut: dict):
+    """Merge a pair-keyed lut into xg in place. Existing games are matched by PAIR (so a
+    date-label mismatch updates in place instead of duplicating); new ones are appended."""
+    from src.fixtures import fold
+    canon = {t for k in xg for t in k.split("|")[1:]}
+    foldidx = {fold(t): t for t in canon}
+    norm = lambda n: n if n in canon else foldidx.get(fold(n), n)
+    lutn = {}                                              # snap names onto our exact spellings
+    for pair, (date, rec) in lut.items():
+        nrec = {norm(t): v for t, v in rec.items()}
+        lutn[frozenset(nrec)] = (date, nrec)
     updated = added = 0
     have = set()
-    for key in list(xg):                                   # refresh existing games in place
+    for key in list(xg):
         d, t1, t2 = key.split("|")
-        have.add((d, frozenset((t1, t2))))
-        rec = lut.get((d, frozenset((t1, t2))))
-        if rec and t1 in rec and t2 in rec:
+        pair = frozenset((t1, t2)); have.add(pair)
+        rec = lutn.get(pair, (None, {}))[1]
+        if t1 in rec and t2 in rec:
             nv = [round(rec[t1], 2), round(rec[t2], 2)]
             if nv != xg[key]:
                 xg[key] = nv
                 updated += 1
-    for (d, pair), rec in lut.items():                     # add new games (knockouts) as logged
-        if (d, pair) in have:
+    for pair, (d, rec) in lutn.items():
+        if pair in have:
             continue
         (a, x_a), (b, x_b) = list(rec.items())
         xg[f"{d}|{a}|{b}"] = [round(x_a, 2), round(x_b, 2)]
         added += 1
+    return updated, added
 
+
+def update_xg_from_realgm(xg_path: str):
+    """Refresh the committed xg.json from RealGM. Returns (updated, added). Raises on
+    fetch/parse failure — the caller keeps it fail-soft so a bad scrape never sinks the run."""
+    resp = requests.get(XG_URL, headers=_UA, timeout=30)
+    resp.raise_for_status()
+    text = re.sub(r"(?i)<br\s*/?>", "\n", resp.text)
+    text = re.sub(r"(?i)</(p|div|li|tr|h2|h3)>", "\n", text)
+    text = _html.unescape(re.sub(r"<[^>]+>", "", text))
+    lut = _parse_xg(text)
+    if not lut:
+        raise ValueError("parsed 0 matches — RealGM layout may have changed")
+    xg = json.load(open(xg_path)) if os.path.exists(xg_path) else {}
+    updated, added = _merge_xg(xg, lut)
     fd, tmp = tempfile.mkstemp(dir=os.path.dirname(xg_path))
     try:
         with os.fdopen(fd, "w") as f:
