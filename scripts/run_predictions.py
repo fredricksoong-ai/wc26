@@ -370,6 +370,15 @@ def main() -> int:
     # measured match xG you sync from the dashboard (committed deploy/xg.json).
     # Phase A: surfaced for display only; Phase B will feed it into the strength update.
     xg_meas = json.load(open(XG_FILE)) if os.path.exists(XG_FILE) else {}
+    # index measured xG by date + unordered pair so a fixture matches regardless of which
+    # side the source listed as home (e.g. RealGM 'Canada v South Africa' vs the bracket's
+    # '2A(South Africa) v 2B(Canada)'); values re-oriented to the fixture's team1/team2.
+    xg_idx = {}
+    for _k, _v in xg_meas.items():
+        if isinstance(_v, list) and len(_v) == 2:
+            _p = _k.split("|")
+            if len(_p) == 3:
+                xg_idx[(_p[0], frozenset((_p[1], _p[2])))] = {_p[1]: _v[0], _p[2]: _v[1]}
 
     fixtures_out = []
     fpath = os.path.join(RAW, "worldcup2026.json")
@@ -452,10 +461,10 @@ def main() -> int:
                     out.update(your_earned=ysc["points"], your_result_hit=ysc["result_hit"],
                                your_exact_hit=ysc["exact_hit"])
 
-            # measured match xG (synced from the dashboard) — display only for now
-            mx = xg_meas.get(k)
-            if isinstance(mx, list) and len(mx) == 2:
-                out["xg_meas_home"], out["xg_meas_away"] = mx[0], mx[1]
+            # measured match xG (from the RealGM feed) — matched by date+pair, re-oriented
+            rec = xg_idx.get((date, frozenset((r.team1, r.team2))))
+            if rec and r.team1 in rec and r.team2 in rec:
+                out["xg_meas_home"], out["xg_meas_away"] = rec[r.team1], rec[r.team2]
             fixtures_out.append(out)
     else:
         print("  WARN no worldcup2026.json — run scripts/update_data.py first.")
