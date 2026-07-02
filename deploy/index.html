@@ -414,6 +414,7 @@ function nextCard(){
 }
 // hand-maintained: one line per shipped change, newest first
 const CHANGELOG=[
+  ["01 Jul","xG charts: round tabs (All · R32 · R16 · …) — filter to the teams that reached each round, eliminated ones muted; every team labelled once the field narrows"],
   ["28 Jun","xG is now auto-collected from a single source — no more manual entry or syncing; the page just reads the feed"],
   ["28 Jun","Header: tappable '↻ ago' age pill (tap to rebuild); the odds gauge now shows only when credits run low"],
   ["28 Jun","xG charts read intuitively now (green = good); knocked-out teams are muted; League chart trimmed to the last 10 games"],
@@ -912,7 +913,7 @@ function modelSays(f){
 // xG table: measured xG vs actual goals per team, surfacing over/under-performance.
 // Pulls measured xG from xgFor() (your synced numbers, localStorage-first) so it
 // populates even before a rebuild carries xg_meas into predictions.json.
-let xgMode="xg", xgView="bars", xgCutoff=null, xgFocus="";
+let xgMode="xg", xgView="bars", xgCutoff=null, xgFocus="", xgRound="all";
 // played games with synced xG, oldest first (so the games slider can replay the season)
 function xgPlayed(){
   return (ALLFIX||[]).filter(f=>f.played&&f.actual&&xgFor(f)).sort((a,b)=>(a.kickoff_sgt||a.date||"").localeCompare(b.kickoff_sgt||b.date||""));
@@ -924,6 +925,12 @@ function xgEliminated(){
   const alive=r=>r.champion>0||["advance","R16","QF","SF","Final"].some(k=>r[k]>0&&r[k]<1);
   const e=new Set(); Object.entries(t).forEach(([k,r])=>{if(r&&typeof r==="object"&&!alive(r))e.add(k);}); return e;
 }
+// round filter: the set of real teams that REACHED a given knockout round (appear in a
+// resolved fixture of that round). "all" = no filter. Group games identify the 48 real teams.
+const XG_ROUNDS=[["all","All"],["Round of 32","R32"],["Round of 16","R16"],["Quarter-final","QF"],["Semi-final","SF"],["Final","Final"]];
+function xgRealTeams(){ const s=new Set(); (ALLFIX||[]).forEach(f=>{ if(f.group){s.add(f.team1);s.add(f.team2);} }); return s; }
+function xgRoundTeams(round){ if(round==="all")return null; const real=xgRealTeams(), s=new Set();
+  ((DATA&&DATA.fixtures)||[]).forEach(f=>{ if(f.round===round)[f.team1,f.team2].forEach(t=>{ if(real.has(t))s.add(t); }); }); return s; }
 // cap = max games PER COUNTRY to include (the slider counts each team's games, i.e. matchday)
 function xgRows(cap){
   const g=xgPlayed(), teams={}, cnt={};
@@ -941,18 +948,26 @@ function renderXG(){
   if(xgCutoff==null||xgCutoff>maxG) xgCutoff=maxG;
   const views=[["bars","Bars"],["map","Map"],["luck","Luck"],["finish","Finishing"]];
   const vt=`<div class="oddsel" style="margin-top:8px">`+views.map(([k,l])=>`<span class="opt ${xgView===k?'on':''}" onclick="xgView='${k}';renderXG()">${l}</span>`).join("")+`</div>`;
+  // round filter (only rounds that have teams so far); the eliminated-dimming then mutes
+  // whoever from that cohort has since dropped out
+  const rounds=XG_ROUNDS.filter(([k])=>k==="all"||(xgRoundTeams(k)||new Set()).size>0);
+  if(!rounds.some(([k])=>k===xgRound)) xgRound="all";
+  const rt=rounds.length>1?`<div class="oddsel" style="margin-top:6px">`+rounds.map(([k,l])=>`<span class="opt ${xgRound===k?'on':''}" onclick="xgRound='${k}';renderXG()">${l}</span>`).join("")+`</div>`:"";
   const allT=[...new Set(g.flatMap(f=>[f.team1,f.team2]))].sort();
   const sel=`<select class="xgsel" onchange="xgFocus=this.value;refreshXGChart()"><option value="">Find a team…</option>${allT.map(t=>`<option value="${t}" ${t===xgFocus?'selected':''}>${code3(t)} · ${t}</option>`).join("")}</select>`;
   const reset=`<button class="xgreset" onclick="xgFocus='';xgCutoff=null;renderXG()" title="Reset view" aria-label="Reset view"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11a9 9 0 0 1 15-5l3 3M21 13a9 9 0 0 1-15 5l-3-3"/><path d="M21 4v5h-5M3 20v-5h5"/></svg></button>`;
   const slider=maxG>1?`<div class="xgslide" style="margin-top:12px"><span class="m" style="min-width:78px" id="xgcut"></span><input type="range" min="1" max="${maxG}" value="${xgCutoff}" oninput="xgCutoff=+this.value;refreshXGChart()"></div>`:"";
-  $("#xg").innerHTML=vt+`<div class="xgctl">${sel}${reset}</div><div id="xgchart"></div>${slider}`;
+  $("#xg").innerHTML=vt+rt+`<div class="xgctl">${sel}${reset}</div><div id="xgchart"></div>${slider}`;
   refreshXGChart();
 }
 // re-renders ONLY the chart (controls stay put so the slider keeps focus while dragging)
 function refreshXGChart(){
   const el=document.getElementById("xgchart"); if(!el)return;
-  const rows=xgRows(xgCutoff);
+  const all=xgRows(xgCutoff);
+  const rteams=xgRoundTeams(xgRound);
+  const rows=rteams?all.filter(r=>rteams.has(r.t)):all;   // filter to the teams that reached this round
   const cut=document.getElementById("xgcut"); if(cut)cut.textContent= xgCutoff>=xgMaxGames() ? "All games" : "thru GW"+xgCutoff;
+  if(!rows.length){ el.innerHTML=`<div class="err" style="margin-top:10px">No xG yet for teams in this round.</div>`; return; }
   if(xgView!=="bars"){ el.innerHTML=xgChart(rows,xgView,xgFocus,xgEliminated())+`<div id="xgdetail" class="xgdetail"></div>`; if(xgFocus)xgPoint(code3(xgFocus)); return; }
   const metric=r=> xgMode==="luck" ? r.luck : r.xgd;
   rows.sort((a,b)=>metric(b)-metric(a));
@@ -1007,12 +1022,13 @@ function xgChart(rows,view,focus,elim){
   const colDiff=d=>d>0.4?'#1d9e75':d<-0.4?'#e24b4a':'#9a9aae';
   const k=Math.max(1,Math.round(rows.length*0.1));
   const pick=acc=>{const srt=[...rows].sort((a,b)=>acc(b)-acc(a));return new Set([...srt.slice(0,k),...srt.slice(-k)].map(r=>r.t));};
+  const labelAll=rows.length<=16;   // small (round-filtered) sets: label every point, not just outliers
   let items,cfg;
   if(view==="map"){
     const xf=r=>r.xf/r.gp, ya=r=>r.xa/r.gp, net=r=>xf(r)-ya(r);
     const xmax=Math.max(2,Math.ceil(Math.max(...rows.map(xf))+0.2)), ymax=Math.max(2,Math.ceil(Math.max(...rows.map(ya))+0.2));
     const lab=pick(net), mxf=avg(rows.map(xf)), mxa=avg(rows.map(ya));
-    items=rows.map(r=>({x:xf(r),y:ya(r),code:code3(r.t),team:r.t,big:lab.has(r.t),col:colNet(net(r))}));
+    items=rows.map(r=>({x:xf(r),y:ya(r),code:code3(r.t),team:r.t,big:labelAll||lab.has(r.t),col:colNet(net(r))}));
     cfg={xmin:0,xmax,ymin:0,ymax,flipY:true,diag:false,xlab:"xG created →",ylab:"← xG conceded",aria:"attack vs defence",
       zones:[{x0:mxf,x1:xmax,y0:0,y1:mxa,fill:'rgba(29,158,117,.08)'},{x0:0,x1:mxf,y0:mxa,y1:ymax,fill:'rgba(226,75,74,.08)'}],
       notes:[{x:xmax-0.06,y:0.2,t:'dominant',col:'#5dcaa5',anchor:'end'},{x:0.06,y:ymax-0.1,t:'outclassed',col:'#ef9f27',anchor:'start'}]};
@@ -1020,7 +1036,7 @@ function xgChart(rows,view,focus,elim){
     const xd=r=>(r.xf-r.xa)/r.gp, yd=r=>(r.gf-r.ga)/r.gp, luck=r=>yd(r)-xd(r);
     const m=Math.max(1,Math.ceil(Math.max(...rows.map(r=>Math.max(Math.abs(xd(r)),Math.abs(yd(r)))))+0.2));
     const lab=pick(luck);
-    items=rows.map(r=>({x:xd(r),y:yd(r),code:code3(r.t),team:r.t,big:lab.has(r.t),col:colDiff(luck(r))}));   // intuitive: over = green (good results), under = red
+    items=rows.map(r=>({x:xd(r),y:yd(r),code:code3(r.t),team:r.t,big:labelAll||lab.has(r.t),col:colDiff(luck(r))}));   // intuitive: over = green (good results), under = red
     cfg={xmin:-m,xmax:m,ymin:-m,ymax:m,flipY:false,diag:true,xlab:"xG diff →",ylab:"goal diff ↑",aria:"over/under-performance vs xG",
       tris:[{pts:[[-m,m],[-m,-m],[m,m]],fill:'rgba(29,158,117,.07)'},{pts:[[m,-m],[-m,-m],[m,m]],fill:'rgba(226,75,74,.07)'}],
       notes:[{x:-m+0.12,y:m-0.18,t:'overperforming',col:'#5dcaa5',anchor:'start'},{x:m-0.12,y:-m+0.35,t:'underperforming',col:'#e24b4a',anchor:'end'}]};
@@ -1028,7 +1044,7 @@ function xgChart(rows,view,focus,elim){
     const xf=r=>r.xf/r.gp, gf=r=>r.gf/r.gp, fin=r=>gf(r)-xf(r);
     const mx=Math.max(2,Math.ceil(Math.max(...rows.map(xf),...rows.map(gf))+0.2));
     const lab=pick(fin);
-    items=rows.map(r=>({x:xf(r),y:gf(r),code:code3(r.t),team:r.t,big:lab.has(r.t),col:colDiff(fin(r))}));   // intuitive: clinical = green (good finishing), wasteful = red
+    items=rows.map(r=>({x:xf(r),y:gf(r),code:code3(r.t),team:r.t,big:labelAll||lab.has(r.t),col:colDiff(fin(r))}));   // intuitive: clinical = green (good finishing), wasteful = red
     cfg={xmin:0,xmax:mx,ymin:0,ymax:mx,flipY:false,diag:true,xlab:"xG created →",ylab:"goals scored ↑",aria:"finishing efficiency",
       tris:[{pts:[[0,mx],[0,0],[mx,mx]],fill:'rgba(29,158,117,.07)'},{pts:[[mx,0],[0,0],[mx,mx]],fill:'rgba(226,75,74,.07)'}],
       notes:[{x:0.12,y:mx-0.18,t:'clinical',col:'#5dcaa5',anchor:'start'},{x:mx-0.12,y:0.35,t:'wasteful',col:'#e24b4a',anchor:'end'}]};
