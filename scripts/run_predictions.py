@@ -462,9 +462,9 @@ def main() -> int:
                                your_exact_hit=ysc["exact_hit"])
 
             # measured match xG (from the RealGM feed) — matched by date+pair, re-oriented
-            rec = xg_idx.get((date, frozenset((r.team1, r.team2))))
-            if rec and r.team1 in rec and r.team2 in rec:
-                out["xg_meas_home"], out["xg_meas_away"] = rec[r.team1], rec[r.team2]
+            xgm = xg_idx.get((date, frozenset((r.team1, r.team2))))
+            if xgm and r.team1 in xgm and r.team2 in xgm:
+                out["xg_meas_home"], out["xg_meas_away"] = xgm[r.team1], xgm[r.team2]
             fixtures_out.append(out)
     else:
         print("  WARN no worldcup2026.json — run scripts/update_data.py first.")
