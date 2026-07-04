@@ -42,7 +42,8 @@ def _parse_xg(text: str):
     """RealGM page text -> {frozenset(pair): (date, {team: xg})}, names spec-renamed."""
     from src.fixtures import fold
     spec = {fold("Türkiye"): "Turkey", fold("Côte d'Ivoire"): "Ivory Coast",
-            fold("Czechia"): "Czech Republic", fold("Congo DR"): "DR Congo"}
+            fold("Czechia"): "Czech Republic", fold("Congo DR"): "DR Congo",
+            fold("Bosnia-Herzegovina"): "Bosnia and Herzegovina"}   # RealGM drops the 'and' in KO rounds
     ren = lambda n: spec.get(fold(n), n)
     out = {}
     for line in text.splitlines():
