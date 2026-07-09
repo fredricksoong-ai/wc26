@@ -20,6 +20,7 @@ import json
 import os
 import sys
 import tempfile
+import time
 from datetime import datetime, timedelta, timezone
 
 import requests
@@ -38,6 +39,11 @@ FILES = {
     "former_names.csv": f"{MARTJ42}/former_names.csv",
     "worldcup2026.json": f"{OPENFOOTBALL}/2026/worldcup.json",
 }
+# Only these two actually drive the model + fixtures. A transient failure on any other
+# file (GitHub rate-limits happen) must NOT sink the deploy — the atomic download keeps
+# the previous copy, so we warn and carry on.
+CRITICAL = {"results.csv", "worldcup2026.json"}
+_UA = {"User-Agent": "wc26-updater (github-actions)"}
 
 # Odds are fetched on a fixed schedule — 6pm and 10pm Singapore time — plus a 12h
 # safety floor. The pipeline carries deploy/odds.json forward from the live site
@@ -81,9 +87,18 @@ def _should_fetch_odds(path: str):
 
 
 def download(url: str, dest: str, timeout: int = 60) -> int:
-    """Stream `url` to `dest` atomically. Returns bytes written."""
-    resp = requests.get(url, timeout=timeout)
-    resp.raise_for_status()
+    """Stream `url` to `dest` atomically. Returns bytes written. Retries transient
+    errors (GitHub raw occasionally 429s / 5xx) with a short backoff."""
+    resp = None
+    for attempt in range(3):
+        try:
+            resp = requests.get(url, timeout=timeout, headers=_UA)
+            resp.raise_for_status()
+            break
+        except Exception:
+            if attempt == 2:
+                raise
+            time.sleep(2 * (attempt + 1))     # 2s, 4s
     os.makedirs(os.path.dirname(dest), exist_ok=True)
     fd, tmp = tempfile.mkstemp(dir=os.path.dirname(dest))
     try:
@@ -142,9 +157,13 @@ def main() -> int:
     except Exception as e:
         print(f"  (could not summarise results.csv: {e})")
 
-    if failures:
-        print(f"DONE with {len(failures)} failure(s): {failures}")
+    crit = [f for f in failures if f in CRITICAL]
+    if crit:
+        print(f"DONE — CRITICAL failure(s) after retries: {crit}")
         return 1
+    if failures:  # non-critical: kept the prior copy, deploy proceeds
+        print(f"DONE — {len(failures)} non-critical failure(s) (kept prior copy): {failures}")
+        return 0
     print("DONE — all sources updated.")
     return 0
 
